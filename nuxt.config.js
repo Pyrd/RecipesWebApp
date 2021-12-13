@@ -1,6 +1,8 @@
 import colors from 'vuetify/es5/util/colors'
 import shrinkRay from 'shrink-ray-current'
 export default {
+
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - Recepies',
@@ -19,13 +21,17 @@ export default {
     ]
   },
 
+  router: {
+    middleware: ['auth']
+  },
+
+  plugins: [
+    '~/plugins/axios',
+  ],
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   // components: true,
@@ -41,13 +47,60 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     'nuxt-speedkit',
-    '@nuxtjs/axios'
+    '@nuxtjs/auth-next',
+    '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  auth: {
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          maxAge: 1800,
+          global: true,
+          // type: 'Bearer'
+        },
+        refreshToken: {
+          property: 'refresh',
+          data: 'Refresh',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/auth/login', method: 'post' },
+          refresh: { url: '/auth/refresh', method: 'post' },
+          user: { url: '/user/me', method: 'get' },
+          logout: { url: '/auth/logout', method: 'post' }
+        },
+        // autoLogout: false
+      }
+    }
+  },
 
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
+
+  // Axios module
+  axios: {
+    baseURL: 'http://localhost:8000/api',
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.BROWSER_BASE_URL
+    }
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.BASE_URL
+    }
+  },
+
+  // Vuetify module
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {

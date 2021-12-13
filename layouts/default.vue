@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  // middleware: 'auth',
   speedkitComponents: {
     Appbar: () => import("~/components/core/appbar"),
     Footer: () => import("~/components/core/footer"),
