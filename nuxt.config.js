@@ -25,9 +25,16 @@ export default {
     middleware: ['auth']
   },
 
+  serverMiddleware: [
+    "~/middleware/api/cache", // in-memory cache for requests to use
+  ],
+
   plugins: [
     '~/plugins/axios',
   ],
+
+
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
@@ -47,45 +54,25 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     'nuxt-speedkit',
-    '@nuxtjs/auth-next',
     '@nuxtjs/axios',
+    "@nuxtjs/proxy",
+    '@nuxtjs/router-extras',
     'cookie-universal-nuxt',
   ],
 
-  auth: {
-    strategies: {
-      local: {
-        scheme: 'refresh',
-        token: {
-          property: 'access_token',
-          maxAge: 1800,
-          global: true,
-          // type: 'Bearer'
-        },
-        refreshToken: {
-          property: 'refresh',
-          data: 'Refresh',
-          maxAge: 60 * 60 * 24 * 30
-        },
-        user: {
-          property: 'user',
-          // autoFetch: true
-        },
-        endpoints: {
-          login: { url: '/auth/login', method: 'post' },
-          refresh: { url: '/auth/refresh', method: 'post' },
-          user: { url: '/user/me', method: 'get' },
-          logout: { url: '/auth/logout', method: 'post' }
-        },
-        // autoLogout: false
-      }
-    }
+  // Proxy configuration
+  proxy: {
+    "/api": {
+      target: "http://localhost:8000/api", // of course, you can use process.env here!
+      pathRewrite: { "^/api": "/" },
+    },
   },
 
 
   // Axios module
   axios: {
-    baseURL: 'http://localhost:8000/api',
+    proxy: true,
+    credentials: true
   },
 
   publicRuntimeConfig: {

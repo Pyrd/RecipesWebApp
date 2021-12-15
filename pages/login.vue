@@ -53,12 +53,12 @@ export default {
             // this.$store.commit('auth/setUser', resp.user)
             // this.$router.push('/')
             try {
-                let response = await this.$auth.loginWith('local', {
-                    data: {
-                        email: this.email,
-                        password: this.password
-                    }
-                })
+                // let response = await this.$auth.loginWith('local', {
+                //     data: {
+                //         email: this.email,
+                //         password: this.password
+                //     }
+                // })
                 console.log(response)
             } catch (err) {
                 console.log(err)
