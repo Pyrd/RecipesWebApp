@@ -39,8 +39,8 @@ export default {
     auth: 'guest',
     data: () => ({
         formValid: true,
-        email: "",
-        password: "",
+        email: "test@test.com",
+        password: "test",
     }),
     methods: {
         async login() {
@@ -53,12 +53,28 @@ export default {
             // this.$store.commit('auth/setUser', resp.user)
             // this.$router.push('/')
             try {
-                let response = await this.$auth.loginWith('local', {
-                    data: {
-                        email: this.email,
-                        password: this.password
-                    }
-                })
+                let response = await this.$auth
+                    .loginWith('localRefresh', {
+                        data: {
+                            email: this.email,
+                            password: this.password
+                        }
+                    })
+                    .catch((err) => {
+                        // eslint-disable-next-line no-console
+                        console.error(err)
+                        this.error = err.response?.data
+                    })
+                // let response = await this.$auth.loginWith('local', {
+                //     data: {
+                //         email: this.email,
+                //         password: this.password
+                //     }
+                // })
+                if (response.status == 200) {
+                    console.log("oui")
+                    this.$router.push('/secure')
+                }
                 console.log(response)
             } catch (err) {
                 console.log(err)

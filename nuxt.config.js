@@ -21,9 +21,9 @@ export default {
     ]
   },
 
-  router: {
-    middleware: ['auth']
-  },
+  // router: {
+  //   middleware: ['auth']
+  // },
 
   plugins: [
     '~/plugins/axios',
@@ -38,9 +38,7 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
-    // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
 
@@ -52,40 +50,133 @@ export default {
     'cookie-universal-nuxt',
   ],
 
-  auth: {
-    strategies: {
-      local: {
-        scheme: 'refresh',
-        token: {
-          property: 'access_token',
-          maxAge: 1800,
-          global: true,
-          // type: 'Bearer'
-        },
-        refreshToken: {
-          property: 'refresh',
-          data: 'Refresh',
-          maxAge: 60 * 60 * 24 * 30
-        },
-        user: {
-          property: 'user',
-          // autoFetch: true
-        },
-        endpoints: {
-          login: { url: '/auth/login', method: 'post' },
-          refresh: { url: '/auth/refresh', method: 'post' },
-          user: { url: '/user/me', method: 'get' },
-          logout: { url: '/auth/logout', method: 'post' }
-        },
-        // autoLogout: false
-      }
+  axios: {
+    proxy: true,
+    proxyHeaders: false
+  },
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8000/api',
+      pathRewrite: { '^/api': '/' }
     }
   },
+
+  router: {
+    middleware: ['auth']
+  },
+
+  auth: {
+    // redirect: {
+    //   login: "/login",
+    //   logout: "/login",
+    //   callback: "/login",
+    //   home: false,
+    // },
+    strategies: {
+      local: false,
+      cookie: {
+        token: {
+          property: "data.access_token",
+          required: true,
+          type: "Bearer",
+        },
+        user: {
+          property: "data",
+        },
+        endpoints: {
+          login: {
+            url: "/api/auth/login",
+            method: "post",
+          },
+          logout: { url: "/api/auth/logout", method: "post" },
+          user: { url: "/api/user/me", method: "get" },
+        },
+      },
+      localRefresh: {
+        scheme: 'refresh',
+        token: {
+          property: 'token.access_token',
+          maxAge: 15
+        },
+        refreshToken: {
+          property: 'token.refresh_token',
+          data: 'refresh_token',
+          maxAge: false
+        }
+      },
+    },
+  },
+
+  // auth: {
+  //   localStorage: false,
+  //   redirect: {
+  //     callback: '/callback',
+  //     logout: '/signout'
+  //   },
+  //   strategies: {
+  //     localRefresh: {
+  //       scheme: 'refresh',
+  //       token: {
+  //         property: 'access_token',
+  //         maxAge: 1800,
+  //         global: true,
+  //       },
+  //       refreshToken: {
+  //         property: 'refresh_token',
+  //         data: 'refresh_token',
+  //         maxAge: false
+  //       }
+  //     },
+  //     local: {
+  //       scheme: 'refresh',
+  //       cookie: {
+  //         // (optional) If set, we check this cookie existence for loggedIn check
+  //         name: 'access_token',
+  //       },
+  //       token: {
+  //         property: 'access_token',
+  //         type: 'Bearer',
+  //         required: true,
+  //         maxAge: 1800,
+  //         global: true,
+  //       },
+  //       refreshToken: {
+  //         property: 'refresh_token',
+  //         data: 'refresh_token',
+  //         maxAge: 60 * 60 * 24 * 30,
+  //       },
+  //       user: {
+  //         property: false,
+  //         autoFetch: true
+  //       },
+  //       endpoints: {
+  //         login: { url: 'api/auth/login', method: 'post', propertyName: false },
+  //         refresh: { url: 'api/auth/refresh', method: 'get' },
+  //         user: { url: 'api/user/me', method: 'get', propertyName: false },
+  //         logout: { url: 'api/auth/logout', method: 'post' }
+  //       },
+  //       autoLogout: true,
+  //       tokenRequired: false,
+  //       tokenType: false
+  //     },
+  //     cookie: {
+  //       user: {
+  //         property: false,
+  //         autoFetch: false,
+  //       },
+  //       endpoints: {
+  //         login: { url: '/api/auth/login', method: 'post' },
+  //       }
+  //     }
+  //   }
+  // },
 
 
   // Axios module
   axios: {
-    baseURL: 'http://localhost:8000/api',
+    // baseURL: 'http://localhost:8000/api',
+    credentials: true,
+    proxy: true
   },
 
   publicRuntimeConfig: {
