@@ -24,7 +24,7 @@
                 >
                     <v-list-item-icon class="mr-4">
                         <client-only>
-                            <unicon :name="item.icon" fill></unicon>
+                            <unicon :name="item.icon" fill="contrast"></unicon>
                         </client-only>
                     </v-list-item-icon>
                     <v-list-item-content>
@@ -45,7 +45,7 @@ export default {
         return {
             navigation: [
                 { icon: 'user-circle', title: 'Profile', action: 'goto', data: '/user/profile' },
-                { icon: 'user-circle', title: 'Settings', action: 'goto', data: '/user/settings' },
+                { icon: 'setting', title: 'Settings', action: 'goto', data: '/user/settings' },
                 { icon: 'signout', title: 'Sign out', action: 'signout', data: '' },
             ],
         }

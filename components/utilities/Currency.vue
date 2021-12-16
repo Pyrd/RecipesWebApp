@@ -1,11 +1,7 @@
 <template>
-  <v-menu
-    offset-y
-    left
-    transition="slide-y-transition"
-  >
+  <v-menu offset-y left transition="slide-y-transition">
     <template v-slot:activator="{ on }">
-      <v-btn icon v-on="on">{{ `${currency.currencySymbol} ${currency.label}` }}</v-btn>
+      <v-btn text v-on="on">{{ `${currency.currencySymbol} ${currency.label}` }}</v-btn>
     </template>
 
     <!-- currencies list -->

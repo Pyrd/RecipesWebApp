@@ -9,7 +9,8 @@ export default {
     error: '#FF5252',
     info: '#2196F3',
     success: '#4CAF50',
-    warning: '#FFC107'
+    warning: '#FFC107',
+    contrast: '#fff'
   },
 
   // light theme colors
@@ -22,6 +23,8 @@ export default {
     error: '#ef476f',
     info: '#2196F3',
     success: '#06d6a0',
-    warning: '#ffd166'
+    warning: '#ffd166',
+    contrast: '#000'
+
   }
 }

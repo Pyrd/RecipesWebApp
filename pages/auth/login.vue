@@ -75,7 +75,7 @@ export default {
                 //     }
                 // })
                 if (response.status == 200) {
-                    this.$router.push('/')
+                    this.$router.push('/dashboard/analytics')
                 }
                 console.log(response)
             } catch (err) {

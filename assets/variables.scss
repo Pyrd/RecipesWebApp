@@ -18,3 +18,8 @@ $body-font-family: Poppins;
 .fill-width {
     width: 100%;
 }
+
+.unicon svg {
+    transition: 0.2s all;
+    fill: var(--v-contrast-base);
+}
