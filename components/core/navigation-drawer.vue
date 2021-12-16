@@ -2,20 +2,19 @@
     <v-navigation-drawer v-model="drawer" app clipped>
         <v-list nav dense>
             <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
-                <v-list-item>
-                    <v-list-item-title>Foo</v-list-item-title>
-                </v-list-item>
+                <v-list-item v-for="(nav, i) in navigation" :key="i" link @click="goTo(nav.to)">
+                    <!-- <v-list-item-icon>
 
-                <v-list-item>
-                    <v-list-item-title>Bar</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item>
-                    <v-list-item-title>Fizz</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item>
-                    <v-list-item-title>Buzz</v-list-item-title>
+                    </v-list-item-icon>
+                    <v-list-item-title>{{ nav.title }}</v-list-item-title>-->
+                    <v-list-item-icon class="mr-4">
+                        <client-only>
+                            <unicon :name="nav.icon" fill></unicon>
+                        </client-only>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title style="line-height: 1.125rem;">{{ nav.title }}</v-list-item-title>
+                    </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
         </v-list>
@@ -28,6 +27,10 @@ import { mapGetters } from 'vuex'
 export default {
     data: () => ({
         group: null,
+        navigation: [
+            { title: "Dashboard", icon: 'dashboard', to: "dashboard" },
+            { title: "Users", icon: 'tachometer-fast-alt', to: "users" }
+        ]
     }),
     computed: {
         // ...mapGetters({
@@ -47,5 +50,10 @@ export default {
             this.$store.commit('app/setDrawer', false)
         },
     },
+    methods: {
+        goTo(path) {
+            this.$router.push({ name: path })
+        }
+    }
 }
 </script>

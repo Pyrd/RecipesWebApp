@@ -1,5 +1,6 @@
-import colors from 'vuetify/es5/util/colors'
-import shrinkRay from 'shrink-ray-current'
+import config from './configs'
+
+const { locale, availableLocales, fallbackLocale } = config.locales
 export default {
 
 
@@ -27,27 +28,30 @@ export default {
 
   plugins: [
     '~/plugins/axios',
-    { src: '~/plugins/tablers-icon', mode: 'client' }
+    { src: '~/plugins/tablers-icon', mode: 'client' },
+    { src: '~/plugins/apexcharts.js', mode: 'client' },
+    { src: '~/plugins/clipboard.js', mode: 'client' },
+    // Filters
+    { src: '~/filters/capitalize.js' },
+    { src: '~/filters/lowercase.js' },
+    { src: '~/filters/uppercase.js' },
+    { src: '~/filters/formatCurrency.js' },
+    { src: '~/filters/formatDate.js' }
   ],
-  // Global CSS: https://go.nuxtjs.dev/config-css
+  // Global CSS
   css: [
   ],
 
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
-  // components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
   ],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
+  // Modules
   modules: [
     'nuxt-speedkit',
     '@nuxtjs/auth-next',
-    '@nuxtjs/axios',
+    '@nuxtjs/axios', '@nuxtjs/i18n',
     'cookie-universal-nuxt',
   ],
 
@@ -66,13 +70,21 @@ export default {
     middleware: ['auth']
   },
 
+  i18n: {
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected'
+    },
+    locales: availableLocales,
+    lazy: true,
+    langDir: 'translations/',
+    defaultLocale: locale,
+    vueI18n: {
+      fallbackLocale
+    }
+  },
+
   auth: {
-    // redirect: {
-    //   login: "/login",
-    //   logout: "/login",
-    //   callback: "/login",
-    //   home: false,
-    // },
     strategies: {
       local: false,
       cookie: {
@@ -91,85 +103,8 @@ export default {
           user: { url: "/api/user/me", method: "get" },
         },
       },
-      // localRefresh: {
-      //   scheme: 'refresh',
-      //   token: {
-      //     property: 'token.access_token',
-      //     maxAge: 15
-      //   },
-      //   refreshToken: {
-      //     property: 'token.refresh_token',
-      //     data: 'refresh_token',
-      //     maxAge: false
-      //   }
-      // },
     },
   },
-
-  // auth: {
-  //   localStorage: false,
-  //   redirect: {
-  //     callback: '/callback',
-  //     logout: '/signout'
-  //   },
-  //   strategies: {
-  //     localRefresh: {
-  //       scheme: 'refresh',
-  //       token: {
-  //         property: 'access_token',
-  //         maxAge: 1800,
-  //         global: true,
-  //       },
-  //       refreshToken: {
-  //         property: 'refresh_token',
-  //         data: 'refresh_token',
-  //         maxAge: false
-  //       }
-  //     },
-  //     local: {
-  //       scheme: 'refresh',
-  //       cookie: {
-  //         // (optional) If set, we check this cookie existence for loggedIn check
-  //         name: 'access_token',
-  //       },
-  //       token: {
-  //         property: 'access_token',
-  //         type: 'Bearer',
-  //         required: true,
-  //         maxAge: 1800,
-  //         global: true,
-  //       },
-  //       refreshToken: {
-  //         property: 'refresh_token',
-  //         data: 'refresh_token',
-  //         maxAge: 60 * 60 * 24 * 30,
-  //       },
-  //       user: {
-  //         property: false,
-  //         autoFetch: true
-  //       },
-  //       endpoints: {
-  //         login: { url: 'api/auth/login', method: 'post', propertyName: false },
-  //         refresh: { url: 'api/auth/refresh', method: 'get' },
-  //         user: { url: 'api/user/me', method: 'get', propertyName: false },
-  //         logout: { url: 'api/auth/logout', method: 'post' }
-  //       },
-  //       autoLogout: true,
-  //       tokenRequired: false,
-  //       tokenType: false
-  //     },
-  //     cookie: {
-  //       user: {
-  //         property: false,
-  //         autoFetch: false,
-  //       },
-  //       endpoints: {
-  //         login: { url: '/api/auth/login', method: 'post' },
-  //       }
-  //     }
-  //   }
-  // },
-
 
   // Axios module
   axios: {
@@ -193,23 +128,11 @@ export default {
   // Vuetify module
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
-    theme: {
-      dark: false,
-      themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        },
-        light: {
-          primary: "#F50057"
-        }
-      }
+    optionsPath: '~/configs/vuetify.js',
+    defaultAssets: {
+      font: false
     },
+
     treeShake: true,
   },
 

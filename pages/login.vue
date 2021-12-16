@@ -30,7 +30,7 @@
                 </v-card-actions>
             </v-card>
         </v-col>
-        <Keypress key-event="keyup" :key-code="'enter'" @success="login" />
+        <Keypress key-event="keyup" :key-code="13" @success="login" />
     </v-row>
 </template>
 

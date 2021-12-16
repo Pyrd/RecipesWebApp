@@ -4,7 +4,9 @@
     <NavigationDrawer></NavigationDrawer>
     <v-main>
       <v-container>
-        <Nuxt />
+        <transition name="fade" mode="out-in">
+          <Nuxt />
+        </transition>
       </v-container>
     </v-main>
     <Footer></Footer>
