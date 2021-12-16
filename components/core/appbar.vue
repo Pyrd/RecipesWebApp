@@ -10,20 +10,28 @@
 
         <v-spacer></v-spacer>
 
-        <v-menu bottom offset-y open-on-hover>
+        <v-menu bottom offset-y>
+            <!-- open-on-hover -->
             <template v-slot:activator="{ on, attrs }">
                 <v-avatar color="primary" size="56" v-bind="attrs" v-on="on">
                     <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
                 </v-avatar>
             </template>
 
-            <v-list>
+            <v-list dense>
                 <v-list-item
                     v-for="(item, i) in navigation"
                     :key="i"
                     @click="navigationReducer(item)"
                 >
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-icon class="mr-4">
+                        <client-only>
+                            <unicon :name="item.icon" fill></unicon>
+                        </client-only>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title style="line-height: 1.125rem;">{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -32,13 +40,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
+    components: {
+    },
     data: () => {
         return {
             navigation: [
-                { title: 'Profile', action: 'goto', data: '/profile' },
-                { title: 'Sign out', action: 'signout', data: '' },
+                { icon: 'user-circle', title: 'Profile', action: 'goto', data: '/profile' },
+                { icon: 'signout', title: 'Sign out', action: 'signout', data: '' },
             ],
         }
     },

@@ -26,21 +26,24 @@
                     </v-form>
                 </v-card-actions>
                 <v-card-actions class="px-4 py-4">
-                    <v-btn block color="primary" @click.stop="login">Login</v-btn>
+                    <v-btn block color="primary" v-on:keyup.enter="login" @click.stop="login">Login</v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
+        <Keypress key-event="keyup" :key-code="'enter'" @success="login" />
     </v-row>
 </template>
 
 <script>
+
 export default {
+    components: { Keypress: () => import('vue-keypress') },
     layout: 'empty',
     auth: 'guest',
     data: () => ({
         formValid: true,
-        email: "",
-        password: "",
+        email: "test@test.com",
+        password: "test",
     }),
     methods: {
         async login() {

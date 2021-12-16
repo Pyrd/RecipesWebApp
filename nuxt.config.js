@@ -27,6 +27,7 @@ export default {
 
   plugins: [
     '~/plugins/axios',
+    { src: '~/plugins/tablers-icon', mode: 'client' }
   ],
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
