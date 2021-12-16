@@ -57,7 +57,7 @@ export default {
   proxy: {
     '/api': {
       target: 'http://localhost:8000/api',
-      pathRewrite: { '^/api': '/' }
+      pathRewrite: { '^/api': '' }
     }
   },
 
@@ -76,12 +76,10 @@ export default {
       local: false,
       cookie: {
         token: {
-          property: "data.access_token",
           required: true,
-          type: "Bearer",
         },
         user: {
-          property: "data",
+          property: false,//"data",
         },
         endpoints: {
           login: {
@@ -92,18 +90,18 @@ export default {
           user: { url: "/api/user/me", method: "get" },
         },
       },
-      localRefresh: {
-        scheme: 'refresh',
-        token: {
-          property: 'token.access_token',
-          maxAge: 15
-        },
-        refreshToken: {
-          property: 'token.refresh_token',
-          data: 'refresh_token',
-          maxAge: false
-        }
-      },
+      // localRefresh: {
+      //   scheme: 'refresh',
+      //   token: {
+      //     property: 'token.access_token',
+      //     maxAge: 15
+      //   },
+      //   refreshToken: {
+      //     property: 'token.refresh_token',
+      //     data: 'refresh_token',
+      //     maxAge: false
+      //   }
+      // },
     },
   },
 

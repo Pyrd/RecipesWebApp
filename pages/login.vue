@@ -39,8 +39,8 @@ export default {
     auth: 'guest',
     data: () => ({
         formValid: true,
-        email: "test@test.com",
-        password: "test",
+        email: "",
+        password: "",
     }),
     methods: {
         async login() {
@@ -54,7 +54,7 @@ export default {
             // this.$router.push('/')
             try {
                 let response = await this.$auth
-                    .loginWith('localRefresh', {
+                    .loginWith('cookie', {
                         data: {
                             email: this.email,
                             password: this.password
@@ -72,8 +72,7 @@ export default {
                 //     }
                 // })
                 if (response.status == 200) {
-                    console.log("oui")
-                    this.$router.push('/secure')
+                    this.$router.push('/')
                 }
                 console.log(response)
             } catch (err) {
