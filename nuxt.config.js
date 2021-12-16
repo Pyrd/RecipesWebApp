@@ -85,9 +85,13 @@ export default {
   },
 
   auth: {
+    redirect: {
+      login: "/auth/login"
+    },
     strategies: {
       local: false,
       cookie: {
+
         token: {
           required: true,
         },
@@ -102,6 +106,7 @@ export default {
           logout: { url: "/api/auth/logout", method: "post" },
           user: { url: "/api/user/me", method: "get" },
         },
+
       },
     },
   },
