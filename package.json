@@ -1,6 +1,6 @@
 {
   "name": "receipes-webapp",
-  "version": "1.0.0",
+  "version": "alpha-0.0.1",
   "private": true,
   "scripts": {
     "dev": "nuxt",
