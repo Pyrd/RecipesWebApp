@@ -1,19 +1,22 @@
 <template>
-  <v-menu
-    offset-y
-    left
-    transition="slide-y-transition"
-  >
+  <v-menu offset-y left transition="slide-y-transition">
     <template v-slot:activator="{ on }">
       <v-btn text :icon="$vuetify.breakpoint.smAndDown" v-on="on">
         <flag-icon :round="$vuetify.breakpoint.smAndDown" :flag="currentLocale.flag"></flag-icon>
-        <span v-show="$vuetify.breakpoint.mdAndUp && showLabel" :class="[$vuetify.rtl ? 'mr-1' : 'ml-1']">{{ currentLocale.name }}</span>
+        <span
+          v-show="$vuetify.breakpoint.mdAndUp && showLabel"
+          :class="[$vuetify.rtl ? 'mr-1' : 'ml-1']"
+        >{{ currentLocale.name }}</span>
         <v-icon v-if="showArrow" right>mdi-chevron-down</v-icon>
       </v-btn>
     </template>
 
     <v-list dense nav>
-      <v-list-item v-for="locale in availableLocales" :key="locale.code" @click="setLocale(locale.code)">
+      <v-list-item
+        v-for="locale in availableLocales"
+        :key="locale.code"
+        @click="setLocale(locale.code)"
+      >
         <flag-icon :class="[$vuetify.rtl ? 'ml-1' : 'mr-1']" :flag="locale.flag"></flag-icon>
         <v-list-item-title>{{ locale.name }}</v-list-item-title>
       </v-list-item>
@@ -53,7 +56,7 @@ export default {
     currentLocale() {
       return this.$i18n.locales.find((i) => i.code === this.$i18n.locale)
     },
-    availableLocales () {
+    availableLocales() {
       return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
     }
   },

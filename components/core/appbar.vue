@@ -13,9 +13,7 @@
         <v-menu bottom offset-y>
             <!-- open-on-hover -->
             <template v-slot:activator="{ on, attrs }">
-                <v-avatar color="primary" size="56" v-bind="attrs" v-on="on">
-                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-                </v-avatar>
+                <v-avatar color="primary" size="56" v-bind="attrs" v-on="on">U</v-avatar>
             </template>
 
             <v-list dense>
@@ -46,7 +44,8 @@ export default {
     data: () => {
         return {
             navigation: [
-                { icon: 'user-circle', title: 'Profile', action: 'goto', data: '/profile' },
+                { icon: 'user-circle', title: 'Profile', action: 'goto', data: '/user/profile' },
+                { icon: 'user-circle', title: 'Settings', action: 'goto', data: '/user/settings' },
                 { icon: 'signout', title: 'Sign out', action: 'signout', data: '' },
             ],
         }

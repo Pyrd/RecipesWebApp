@@ -28,8 +28,8 @@ export default {
     data: () => ({
         group: null,
         navigation: [
-            { title: "Dashboard", icon: 'dashboard', to: "dashboard" },
-            { title: "Users", icon: 'tachometer-fast-alt', to: "users" }
+            { title: "Dashboard", icon: 'dashboard', to: "/dashboard/analytics" },
+            { title: "Users", icon: 'tachometer-fast-alt', to: "/users" }
         ]
     }),
     computed: {
@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         goTo(path) {
-            this.$router.push({ name: path })
+            this.$router.push(path)
         }
     }
 }
