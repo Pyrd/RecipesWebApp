@@ -1,6 +1,8 @@
 import pkg from '~/package.json'
 import configs from '../configs'
 
+let vuetify = null
+
 const { time, theme, currencies } = configs
 
 const { currency, availableCurrencies } = currencies
@@ -30,6 +32,7 @@ export const mutations = {
     state.drawer = drawer
   },
   setTheme: (state, theme) => {
+    // this.$vuetify.framework.theme.dark = theme === 'dark'
     state.theme = theme
   },
   setTimeZone: (state, zone) => {
@@ -62,4 +65,10 @@ export const mutations = {
       timeout: 3000
     }
   },
+  initTheme(state, payload) {
+    console.log("STORE", state, "keys=", payload)
+    payload.context.$vuetify.theme.dark = state.theme == 'dark'
+    // vuetify.theme.dark = state.theme == 'dark'
+
+  }
 }

@@ -8,11 +8,7 @@
             </v-card-title>-->
             <div class="d-flex align-center pa-2">
                 <client-only>
-                    <unicon
-                        class="d-flex align-center mr-2"
-                        name="setting"
-                        fill="--v-contrast-base"
-                    ></unicon>
+                    <unicon class="d-flex align-center mr-2" name="setting"></unicon>
                 </client-only>
                 <div class="title">Settings</div>
             </div>
@@ -54,7 +50,12 @@
                     <v-list-item>
                         <v-list-item-content>Theme</v-list-item-content>
                         <v-list-item-action>
-                            <v-btn-toggle v-model="theme" color="primary" mandatory class="mb-2">
+                            <v-btn-toggle
+                                v-model="theme_index"
+                                color="primary"
+                                mandatory
+                                class="mb-2"
+                            >
                                 <v-btn x-large>Light</v-btn>
                                 <v-btn x-large>Dark</v-btn>
                             </v-btn-toggle>
@@ -94,7 +95,7 @@ export default {
     data() {
         return {
             right: false,
-            theme: 0,
+            theme_index: 0,
             color: '#0096c7',
             swatches: [
                 ['#0096c7', '#31944f'],
@@ -117,24 +118,31 @@ export default {
         }
     },
     computed: {
-        ...mapState('app', ['time', 'currency', 'availableCurrencies'])
+        ...mapState('app', ['time', 'currency', 'availableCurrencies', 'theme'])
     },
     watch: {
         color(val) {
             const { isDark } = this.$vuetify.theme
-
             this.$vuetify.theme.themes.dark.primary = val
             this.$vuetify.theme.themes.light.primary = val
         },
-        theme(val) {
+        theme_index(val) {
+            console.log("Watch1", val)
+
             this.setGlobalTheme((val === 0 ? 'light' : 'dark'))
         },
+        theme(val) {
+            console.log("Watch2", val)
+            this.$vuetify.theme.dark = val === 'dark'
+            this.theme_index = val == 'dark' ? 1 : 0
+        }
 
     },
     methods: {
         ...mapMutations('app', ['setTheme', 'setTimeZone', 'setTimeFormat', 'setCurrency',]),
         setGlobalTheme(val) {
-            this.$vuetify.theme.dark = val === 'dark'
+            // this.$vuetify.theme.dark = val === 'dark'
+            console.log("setGlobalTheme", val)
             this.setTheme(val)
         },
     }

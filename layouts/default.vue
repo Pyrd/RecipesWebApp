@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   speedkitComponents: {
@@ -37,6 +37,7 @@ export default {
   },
   computed: {
     ...mapState('app', ['toast']),
+
     isRouterLoaded: function () {
       if (this.$route.name !== null) return true
 
@@ -48,6 +49,18 @@ export default {
       return layout + 'Layout'
     }
   },
+  methods: {
+    ...mapMutations({
+      initTheme: 'app/initTheme' // attacher `this.add()` à `this.$store.commit('increment')`
+    }),
+  },
+  created() {
+    console.log("created")
+    this.initTheme({
+      context: this,
+    },
+    )
+  }
 }
 </script>
 
