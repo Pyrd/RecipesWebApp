@@ -6,9 +6,7 @@
         <v-breadcrumbs :items="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
       </div>
       <v-spacer></v-spacer>
-      <v-btn color="primary">
-        Create User
-      </v-btn>
+      <v-btn color="primary">Create User</v-btn>
     </div>
 
     <v-card>
@@ -37,7 +35,6 @@
               </v-list-item>
             </v-list>
           </v-menu>
-
         </v-col>
         <v-col cols="6" class="d-flex text-right align-center">
           <v-text-field
@@ -51,13 +48,7 @@
             placeholder="e.g. filter for id, email, name, etc"
             @keyup.enter="searchUser(searchQuery)"
           ></v-text-field>
-          <v-btn
-            :loading="isLoading"
-            icon
-            small
-            class="ml-2"
-            @click
-          >
+          <v-btn :loading="isLoading" icon small class="ml-2" @click>
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-col>
@@ -72,7 +63,10 @@
         class="flex-grow-1"
       >
         <template v-slot:item.id="{ item }">
-          <div class="font-weight-bold"># <copy-label :text="item.id + ''" /></div>
+          <div class="font-weight-bold">
+            #
+            <copy-label :text="item.id + ''" />
+          </div>
         </template>
 
         <template v-slot:item.email="{ item }">
@@ -85,18 +79,21 @@
             </div>
           </div>
         </template>
-
-        <template v-slot:item.verified="{ item }">
-          <v-icon v-if="item.verified" small color="success">
-            mdi-check-circle
-          </v-icon>
-          <v-icon v-else small>
-            mdi-circle-outline
-          </v-icon>
+        <template v-slot:item.name="{ item }">
+          <div class="d-flex align-center py-1">
+            <div class="ml-1 caption font-weight-bold">
+              {{ item.firstname }}
+              {{ item.lastname }}
+            </div>
+          </div>
+        </template>
+        <template v-slot:item.confirmed="{ item }">
+          <v-icon v-if="item.confirmed" small color="success">mdi-check-circle</v-icon>
+          <v-icon v-else small>mdi-circle-outline</v-icon>
         </template>
 
-        <template v-slot:item.disabled="{ item }">
-          <div>{{ item.disabled.toString() | capitalize }}</div>
+        <template v-slot:item.disable="{ item }">
+          <div>{{ item.disable.toString() | capitalize }}</div>
         </template>
 
         <template v-slot:item.role="{ item }">
@@ -112,13 +109,13 @@
           <div>{{ item.created | formatDate('ll') }}</div>
         </template>
 
-        <template v-slot:item.lastSignIn="{ item }">
-          <div>{{ item.lastSignIn | formatDate('lll') }}</div>
+        <template v-slot:item.lastLogin="{ item }">
+          <div>{{ item.lastLogin | formatDate('lll') }}</div>
         </template>
 
-        <template v-slot:item.action="{ }">
+        <template v-slot:item.action="{ item }">
           <div class="actions">
-            <v-btn icon :to="localePath('/users/edit')">
+            <v-btn icon :to="localePath(`/users/edit?id=${item.id}`)">
               <v-icon>mdi-open-in-new</v-icon>
             </v-btn>
           </div>
@@ -129,12 +126,17 @@
 </template>
 
 <script>
-import users from './content/users'
 import CopyLabel from '../../components/common/CopyLabel'
 
 export default {
   components: {
     CopyLabel
+  },
+  async asyncData({ $axios }) {
+    const resp = await $axios.$get('/api/user')
+    return {
+      users: resp
+    }
   },
   data() {
     return {
@@ -152,16 +154,14 @@ export default {
       headers: [
         { text: 'Id', align: 'left', value: 'id' },
         { text: 'Email', value: 'email' },
-        { text: 'Verified', value: 'verified' },
+        { text: 'Confirmed', value: 'confirmed' },
         { text: 'Name', align: 'left', value: 'name' },
         { text: 'Role', value: 'role' },
         { text: 'Created', value: 'created' },
-        { text: 'Last SignIn', value: 'lastSignIn' },
-        { text: 'Disabled', value: 'disabled' },
+        { text: 'Last SignIn', value: 'lastLogin' },
+        { text: 'Disabled', value: 'disable' },
         { text: '', sortable: false, align: 'right', value: 'action' }
       ],
-
-      users
     }
   },
   watch: {
@@ -170,8 +170,8 @@ export default {
     }
   },
   methods: {
-    searchUser() {},
-    open() {}
+    searchUser() { },
+    open() { }
   }
 }
 </script>

@@ -15,7 +15,7 @@
         <v-card-title>Basic Information</v-card-title>
         <v-card-text>
           <div class="d-flex flex-column flex-sm-row">
-            <div>
+            <!-- <div>
               <v-img
                 :src="user.avatar"
                 aspect-ratio="1"
@@ -24,17 +24,15 @@
                 max-height="90"
               ></v-img>
               <v-btn class="mt-1" small>Edit Avatar</v-btn>
-            </div>
+            </div>-->
             <div class="flex-grow-1 pt-2 pa-sm-2">
-              <v-text-field v-model="user.name" label="Display name" placeholder="name"></v-text-field>
+              <v-text-field v-model="user.displayname" label="Display name" placeholder="name"></v-text-field>
               <v-text-field v-model="user.email" label="Email" hide-details></v-text-field>
 
               <div class="d-flex flex-column">
                 <v-checkbox v-model="user.verified" dense label="Email Verified"></v-checkbox>
                 <div>
-                  <v-btn
-                    v-if="!user.verified"
-                  >
+                  <v-btn v-if="!user.verified">
                     <v-icon left small>mdi-email</v-icon>Send Verification Email
                   </v-btn>
                 </div>
@@ -55,10 +53,7 @@
             <div class="mb-2">
               <div class="title">Reset User Password</div>
               <div class="subtitle mb-2">Sends a reset password email to the user.</div>
-              <v-btn
-                class="mb-2"
-                @click
-              >
+              <v-btn class="mb-2" @click>
                 <v-icon left small>mdi-email</v-icon>Send Reset Password Email
               </v-btn>
             </div>
@@ -80,11 +75,7 @@
               <div class="subtitle mb-2">Full administrator with access to this dashboard.</div>
 
               <div class="my-2">
-                <v-btn
-                  v-if="user.role === 'ADMIN'"
-                  color="primary"
-                  @click="user.role = 'USER'"
-                >
+                <v-btn v-if="user.role === 'ADMIN'" color="primary" @click="user.role = 'USER'">
                   <v-icon left small>mdi-security</v-icon>Remove admin access
                 </v-btn>
                 <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
@@ -96,18 +87,10 @@
 
               <div class="subtitle mt-3 mb-2">Prevent the user from signing in on the platform.</div>
               <div class="my-2">
-                <v-btn
-                  v-if="user.disabled"
-                  color="warning"
-                  @click="user.disabled = false"
-                >
+                <v-btn v-if="user.disabled" color="warning" @click="user.disabled = false">
                   <v-icon left small>mdi-account-check</v-icon>Enable User
                 </v-btn>
-                <v-btn
-                  v-else
-                  color="warning"
-                  @click="disableDialog = true"
-                >
+                <v-btn v-else color="warning" @click="disableDialog = true">
                   <v-icon left small>mdi-cancel</v-icon>Disable User
                 </v-btn>
               </div>

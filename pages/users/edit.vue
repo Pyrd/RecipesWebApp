@@ -6,9 +6,9 @@
         <v-breadcrumbs :items="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
       </div>
       <v-spacer></v-spacer>
-      <v-btn icon @click>
+      <!-- <v-btn icon @click>
         <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      </v-btn>-->
     </div>
 
     <div
@@ -62,24 +62,31 @@ export default {
     AccountTab,
     InformationTab
   },
+  async asyncData({ $axios, route }) {
+    console.log(`/api/user/${route.query.id}`)
+    const resp = await $axios.$get(`/api/user/${route.query.id}`)
+    return {
+      user: resp
+    }
+  },
   data() {
     return {
-      user: {
-        'id':32,
-        'email':'bfitchew0@ezinearticles.com',
-        'name':'Bartel Fitchew',
-        'verified':false,
-        'created':'2019-08-09T03:14:12Z',
-        'lastSignIn':'2019-08-14T20:00:53Z',
-        'disabled':true,
-        'role':'ADMIN',
-        'avatar':'/images/avatars/avatar1.svg'
-      },
+      // user: {
+      //   'id': 32,
+      //   'email': 'bfitchew0@ezinearticles.com',
+      //   'name': 'Bartel Fitchew',
+      //   'verified': false,
+      //   'created': '2019-08-09T03:14:12Z',
+      //   'lastSignIn': '2019-08-14T20:00:53Z',
+      //   'disabled': true,
+      //   'role': 'ADMIN',
+      //   'avatar': '/images/avatars/avatar1.svg'
+      // },
       tab: null,
       breadcrumbs: [
         {
           text: 'Users',
-          to: '/users/list',
+          to: '/users',
           exact: true
         },
         {

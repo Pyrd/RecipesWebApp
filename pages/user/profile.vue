@@ -32,7 +32,7 @@
                 label="Display name"
                 placeholder="name"
               ></v-text-field>
-              <v-text-field v-model="user.email" label="Email" hide-details></v-text-field>
+              <v-text-field readonly v-model="user.email" label="Email" hide-details></v-text-field>
 
               <div class="d-flex flex-column">
                 <v-checkbox readonly v-model="user.confirmed" dense label="Email Verified"></v-checkbox>
@@ -43,6 +43,8 @@
                 </div>
               </div>
 
+              <v-text-field readonly v-model="user.phone" label="Phone" hide-details></v-text-field>
+              <v-text-field readonly v-model="user.role" label="Role" hide-details></v-text-field>
               <!-- <div class="mt-2">
                 <v-btn color="primary" @click>Save</v-btn>
               </div>-->
