@@ -66,7 +66,7 @@ export const mutations = {
     }
   },
   initTheme(state, payload) {
-    console.log("STORE", state, "keys=", payload)
+    // console.log("STORE", state, "keys=", payload)
     payload.context.$vuetify.theme.dark = state.theme == 'dark'
     // vuetify.theme.dark = state.theme == 'dark'
 
