@@ -13,6 +13,7 @@ export const state = () => ({
   currency,
   availableCurrencies,
   theme,
+  color: theme.light.primary,
   toast: {
     show: false,
     color: 'black',
@@ -35,6 +36,11 @@ export const mutations = {
     // this.$vuetify.framework.theme.dark = theme === 'dark'
     state.theme = theme
   },
+  setColor: (state, color) => {
+    // this.$vuetify.framework.theme.dark = theme === 'dark'
+    state.color = color
+  },
+
   setTimeZone: (state, zone) => {
     state.time.zone = zone
   },
@@ -66,9 +72,16 @@ export const mutations = {
     }
   },
   initTheme(state, payload) {
-    // console.log("STORE", state, "keys=", payload)
     payload.context.$vuetify.theme.dark = state.theme == 'dark'
-    // vuetify.theme.dark = state.theme == 'dark'
+    console.log("state color", state.color)
+    // console.log(theme.dark.primary)
+    // console.log(theme.theme)
+    // console.log(theme.theme === 'dark' ? theme.dark.primary : theme.light.primary)
+    console.log("1:", payload.context.$vuetify.theme.themes.dark.primary)
+    payload.context.$vuetify.theme.themes.dark.primary = state.color
+    payload.context.$vuetify.theme.themes.light.primary = state.color
+    console.log("2:", payload.context.$vuetify.theme.themes.dark.primary)
+
 
   }
 }

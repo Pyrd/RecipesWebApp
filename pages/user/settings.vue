@@ -64,7 +64,7 @@
                     <v-list-item>
                         <v-list-item-content>Color</v-list-item-content>
                         <v-list-item-action>
-                            <ColorPicker v-model="color" :swatches="swatches" />
+                            <ColorPicker v-model="localcolor" :swatches="swatches" />
                         </v-list-item-action>
                     </v-list-item>
                 </v-list>
@@ -96,7 +96,8 @@ export default {
         return {
             right: false,
             theme_index: 0,
-            color: '#0096c7',
+            localcolor: '#fff',
+            // _color
             swatches: [
                 ['#2FC392', '#0077b5',],
                 ["#8d3271", "#c9184a",], ["#514b99", "#f60"]
@@ -116,14 +117,28 @@ export default {
             }]
         }
     },
+    created() {
+        console.log("created", this.color)
+        this.localcolor = this.color
+    },
     computed: {
-        ...mapState('app', ['time', 'currency', 'availableCurrencies', 'theme'])
+        // ...mapState('app', ['time', 'currency', 'availableCurrencies', 'theme', 'color']),
+        ...mapState('app', {
+            theme: state => state.theme,
+            availableCurrencies: state => state.availableCurrencies,
+            currency: state => state.currency,
+            time: state => state.time,
+            theme: state => state.theme,
+            color: state => state.color
+        }),
     },
     watch: {
-        color(val) {
-            const { isDark } = this.$vuetify.theme
+        localcolor(val) {
+            console.log("new color", val)
             this.$vuetify.theme.themes.dark.primary = val
             this.$vuetify.theme.themes.light.primary = val
+            this.setGlobalColor(val)
+
         },
         theme_index(val) {
             this.setGlobalTheme((val === 0 ? 'light' : 'dark'))
@@ -135,11 +150,14 @@ export default {
 
     },
     methods: {
-        ...mapMutations('app', ['setTheme', 'setTimeZone', 'setTimeFormat', 'setCurrency',]),
+        ...mapMutations('app', ['setTheme', 'setColor', 'setTimeZone', 'setTimeFormat', 'setCurrency',]),
         setGlobalTheme(val) {
-            // this.$vuetify.theme.dark = val === 'dark'
             console.log("setGlobalTheme", val)
             this.setTheme(val)
+        },
+        setGlobalColor(val) {
+            console.log("setGlobalColor", val)
+            this.setColor(val)
         },
     }
 }
