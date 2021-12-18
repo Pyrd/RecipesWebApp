@@ -8,7 +8,7 @@ const { time, theme, currencies } = configs
 const { currency, availableCurrencies } = currencies
 export const state = () => ({
   version: pkg.version,
-  drawer: false,
+  drawer: true,
   time,
   currency,
   availableCurrencies,

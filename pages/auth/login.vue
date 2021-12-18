@@ -18,15 +18,46 @@
                 >Receipes</v-card-title>
                 <v-card-actions class="px-4">
                     <v-form
+                        ref="form"
                         v-model="formValid"
+                        lazy-validation
                         class="d-flex justify-center align-center flex-column"
                     >
-                        <v-text-field solo v-model="email" label="E-mail"></v-text-field>
-                        <v-text-field solo v-model="password" label="Password" type="password"></v-text-field>
+                        <v-text-field
+                            class="fwidth"
+                            solo
+                            v-model="email"
+                            :rules="[rules.required]"
+                            :error="error"
+                            @change="resetErrors"
+                            :label="$t('login.email')"
+                        ></v-text-field>
+                        <v-text-field
+                            class="fwidth"
+                            solo
+                            v-model="password"
+                            :error="error"
+                            :rules="[rules.required]"
+                            :error-messages="errorMessages"
+                            name="password"
+                            :label="$t('login.password')"
+                            type="password"
+                            :type="showPassword ? 'text' : 'password'"
+                            @change="resetErrors"
+                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append="showPassword = !showPassword"
+                        ></v-text-field>
                     </v-form>
                 </v-card-actions>
                 <v-card-actions class="px-4 py-4">
-                    <v-btn block color="primary" v-on:keyup.enter="login" @click.stop="login">Login</v-btn>
+                    <v-btn
+                        block
+                        color="primary"
+                        v-on:keyup.enter="submit"
+                        :loading="isLoading"
+                        :disabled="isSignInDisabled"
+                        @click.stop="submit"
+                    >Login</v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
@@ -44,29 +75,43 @@ export default {
         formValid: true,
         email: "test@test.com",
         password: "test",
+        error: false,
+        errorMessages: '',
+        showPassword: false,
+        isSignInDisabled: false,
+
+        isLoading: false,
+        rules: {
+            required: (value) => (value && Boolean(value)) || 'Required'
+        }
     }),
     methods: {
-        async login() {
+        async submit() {
+            if (this.$refs.form.validate()) {
+                this.isLoading = true
+                this.isSignInDisabled = true
+                await this.login(this.email, this.password)
+                this.isLoading = false
+                this.isSignInDisabled = false
+            }
+        },
+        async login(email, password) {
             console.log(`Login in: ${this.email}`)
-            // const resp = await this.$axios.$post("auth/login", {
-            //     email: this.email, password: this.password
-            // })
-            // console.log(JSON.stringify(resp))
-            // this.$cookies.set('jwt', resp.access_token)
-            // this.$store.commit('auth/setUser', resp.user)
-            // this.$router.push('/')
             try {
                 let response = await this.$auth
                     .loginWith('cookie', {
                         data: {
-                            email: this.email,
-                            password: this.password
+                            email,
+                            password
                         }
                     })
                     .catch((err) => {
                         // eslint-disable-next-line no-console
                         console.error(err)
-                        this.error = err.response?.data
+                        this.error = true
+                        this.errorMessages = err.response?.data.message
+                        this.password = ""
+                        return
                     })
                 // let response = await this.$auth.loginWith('local', {
                 //     data: {
@@ -81,6 +126,13 @@ export default {
             } catch (err) {
                 console.log(err)
             }
+        },
+        resetErrors() {
+            this.error = false
+            this.errorMessages = ''
+
+            this.errorProvider = false
+            this.errorProviderMessages = ''
         }
     }
 }

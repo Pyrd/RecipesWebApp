@@ -29,12 +29,10 @@ export default {
   plugins: [
     '~/plugins/axios',
     '~/plugins/helpers.ts',
-    { src: '~/plugins/tablers-icon', mode: 'client' },
+    { src: '~/plugins/vue-unicon.js', mode: 'client' },
     { src: '~/plugins/apexcharts.js', mode: 'client' },
     { src: '~/plugins/clipboard.js', mode: 'client' },
-    // { src: '~/plugins/vuex-persistedstate.js', ssr: false },
     { src: '~plugins/vuex-persistedstate.js' },
-    // { src: '~/plugins/vuex-localstorage.js', ssr: false },
     // Filters
     { src: '~/filters/capitalize.js' },
     { src: '~/filters/lowercase.js' },

@@ -98,9 +98,8 @@ export default {
             theme_index: 0,
             color: '#0096c7',
             swatches: [
-                ['#0096c7', '#31944f'],
-                ['#EE4f12', '#46BBB1'],
-                ['#ee44aa', '#55BB46']
+                ['#2FC392', '#0077b5',],
+                ["#8d3271", "#c9184a",], ["#514b99", "#f60"]
             ],
             // timezones
             availableTimezones: ['America/Los_Angeles', 'America/New_York', 'Europe/London', 'Europe/Paris', 'Asia/Tokyo', 'Australia/Sydney'],
@@ -127,12 +126,9 @@ export default {
             this.$vuetify.theme.themes.light.primary = val
         },
         theme_index(val) {
-            console.log("Watch1", val)
-
             this.setGlobalTheme((val === 0 ? 'light' : 'dark'))
         },
         theme(val) {
-            console.log("Watch2", val)
             this.$vuetify.theme.dark = val === 'dark'
             this.theme_index = val == 'dark' ? 1 : 0
         }
