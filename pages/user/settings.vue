@@ -61,12 +61,12 @@
                             </v-btn-toggle>
                         </v-list-item-action>
                     </v-list-item>
-                    <v-list-item>
+                    <!-- <v-list-item>
                         <v-list-item-content>Color</v-list-item-content>
                         <v-list-item-action>
                             <ColorPicker v-model="localcolor" :swatches="swatches" />
                         </v-list-item-action>
-                    </v-list-item>
+                    </v-list-item>-->
                 </v-list>
             </v-card-text>
         </v-card>
@@ -76,14 +76,14 @@
 <script>
 import Currency from "~/components/utilities/Currency.vue"
 import Language from "~/components/utilities/Language.vue"
-import ColorPicker from "~/components/utilities/ColorPicker.vue"
+// import ColorPicker from "~/components/utilities/ColorPicker.vue"
 import { mapState, mapMutations } from 'vuex'
 
 export default {
     components: {
         Currency,
         Language,
-        ColorPicker
+        // ColorPicker
 
     },
     props: {
@@ -118,8 +118,8 @@ export default {
         }
     },
     beforeMount() {
-        console.log("beforeMount", this.color, this.theme)
-        this.localcolor = this.color
+        // console.log("beforeMount", this.color, this.theme)
+        // this.localcolor = this.color
         this.theme_index = this.theme == 'dark' ? 1 : 0
 
     },
@@ -130,7 +130,7 @@ export default {
             currency: state => state.currency,
             time: state => state.time,
             theme: state => state.theme,
-            color: state => state.color
+            // color: state => state.color
         }),
     },
     watch: {

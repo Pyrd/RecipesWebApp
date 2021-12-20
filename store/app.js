@@ -36,16 +36,13 @@ export const mutations = {
   },
   setTheme: (state, theme) => {
     // this.$vuetify.framework.theme.dark = theme === 'dark'
-    console.log("SetTheme", "state=", state.theme, " - theme: ", theme, JSON.stringify(context.$vuetify.theme.dark));
+    // console.log("SetTheme", "state=", state.theme, " - theme: ", theme, JSON.stringify(context.$vuetify.theme.dark));
     state.theme = theme
     context.$vuetify.theme.dark = theme == 'dark'
-    console.log("SetTheme", state.theme, theme, JSON.stringify(context.$vuetify.theme.dark));
-
   },
   setColor: (state, color) => {
     // this.$vuetify.framework.theme.dark = theme === 'dark'
     console.log("SetColor", state.color, color);
-
     state.color = color
     context.$vuetify.theme.themes.dark.primary = color
     context.$vuetify.theme.themes.light.primary = color
@@ -96,20 +93,20 @@ export const mutations = {
   },
   initCoreTheme(state, payload) {
     console.log("[initCoreTheme] start")
-    vuetify = payload.context.vuetify;
-    let app = payload.context
-    vuetify.preset.theme.themes.light.primary = state.color
-    vuetify.preset.theme.themes.dark.primary = state.color
-    console.log("1.", vuetify.preset.theme.themes.light.primary);
+    // vuetify = payload.context.vuetify;
+    // let app = payload.context
+    // vuetify.preset.theme.themes.light.primary = state.color
+    // vuetify.preset.theme.themes.dark.primary = state.color
+    // console.log("1.", vuetify.preset.theme.themes.light.primary);
 
-    console.log("2.", vuetify.userPreset.theme.themes.light.primary);
-    vuetify.userPreset.theme.themes.light.primary = state.color
-    vuetify.userPreset.theme.themes.dark.primary = state.color
-    console.log("2.", vuetify.userPreset.theme.themes.light.primary);
+    // console.log("2.", vuetify.userPreset.theme.themes.light.primary);
+    // vuetify.userPreset.theme.themes.light.primary = state.color
+    // vuetify.userPreset.theme.themes.dark.primary = state.color
+    // console.log("2.", vuetify.userPreset.theme.themes.light.primary);
 
-    console.log("3.", vuetify.framework.theme.themes.light.primary);
-    vuetify.framework.theme.themes.light.primary = state.color
-    vuetify.framework.theme.themes.dark.primary = state.color
-    console.log("3.", vuetify.framework.theme.themes.light.primary);
+    // console.log("3.", vuetify.framework.theme.themes.light.primary);
+    // vuetify.framework.theme.themes.light.primary = state.color
+    // vuetify.framework.theme.themes.dark.primary = state.color
+    // console.log("3.", vuetify.framework.theme.themes.light.primary);
   }
 }

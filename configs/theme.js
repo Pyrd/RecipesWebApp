@@ -3,7 +3,7 @@ export default {
   dark: {
     background: '#05090c',
     surface: '#111b27',
-    primary: '#0096c7',
+    primary: '#6F42C0',
     secondary: '#829099',
     accent: '#82B1FF',
     error: '#FF5252',
@@ -17,7 +17,7 @@ export default {
   light: {
     background: '#ffffff',
     surface: '#f2f5f8',
-    primary: '#0096c7',
+    primary: '#6F42C0',
     secondary: '#a0b9c8',
     accent: '#048ba8',
     error: '#ef476f',

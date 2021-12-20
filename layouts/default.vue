@@ -1,6 +1,6 @@
 <template>
   <v-app v-font="$getFont('Poppins', 300)">
-    <v-snackbar v-model="toast.show" :timeout="toast.timeout" :color="toast.color" bottom>
+    <!-- <v-snackbar v-model="toast.show" :timeout="toast.timeout" :color="toast.color" bottom>
       {{ toast.message }}
       <v-btn
         v-if="toast.timeout === 0"
@@ -8,7 +8,7 @@
         text
         @click="toast.show = false"
       >{{ $t('common.close') }}</v-btn>
-    </v-snackbar>
+    </v-snackbar>-->
 
     <Appbar></Appbar>
     <NavigationDrawer></NavigationDrawer>
@@ -36,8 +36,9 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('app', ['toast',]),
-
+    ...mapState('app', {
+      theme: state => state.theme,
+    }),
     isRouterLoaded: function () {
       if (this.$route.name !== null) return true
 
@@ -59,15 +60,8 @@ export default {
       context: this,
     },
     )
-    console.log(this.$store.state.app)
-  },
-  beforeMount() {
-    // this.initTheme({
-    //     context: this,
-    // },
-    // )
-    // console.log(this.theme, this.color)
-    // this.$vuetify.theme.dark = this.theme == 'dark'
+
+    this.$vuetify.theme.dark = this.theme == 'dark'
     // this.$vuetify.theme.themes.light.primary = this.color
     // this.$vuetify.theme.themes.dark.primary = this.color
   }
