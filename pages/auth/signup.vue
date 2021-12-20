@@ -79,9 +79,8 @@
           <div class="mt-5 overline">
             {{ $t('register.agree') }}
             <br />
-            <router-link to="">{{ $t('common.tos') }}</router-link>
-            &
-            <router-link to="">{{ $t('common.policy') }}</router-link>
+            <router-link to>{{ $t('common.tos') }}</router-link>&
+            <router-link to>{{ $t('common.policy') }}</router-link>
           </div>
         </v-form>
       </v-card-text>
@@ -89,9 +88,10 @@
 
     <div class="text-center mt-6">
       {{ $t('register.account') }}
-      <router-link :to="localePath('/auth/signin')" class="font-weight-bold">
-        {{ $t('register.signin') }}
-      </router-link>
+      <router-link
+        :to="localePath('/auth/signin')"
+        class="font-weight-bold"
+      >{{ $t('register.signin') }}</router-link>
     </div>
   </div>
 </template>
@@ -106,7 +106,8 @@
 |
 */
 export default {
-  layout: 'auth',
+  layout: 'empty',
+  auth: 'guest',
   data() {
     return {
       // sign up buttons
@@ -158,8 +159,8 @@ export default {
         this.signUp(this.email, this.password)
       }
     },
-    signUp(email, password) {},
-    signInProvider(provider) {},
+    signUp(email, password) { },
+    signInProvider(provider) { },
     resetErrors() {
       this.errorName = false
       this.errorEmail = false

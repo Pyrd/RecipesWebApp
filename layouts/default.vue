@@ -36,7 +36,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('app', ['toast']),
+    ...mapState('app', ['toast',]),
 
     isRouterLoaded: function () {
       if (this.$route.name !== null) return true
@@ -59,6 +59,17 @@ export default {
       context: this,
     },
     )
+    console.log(this.$store.state.app)
+  },
+  beforeMount() {
+    // this.initTheme({
+    //     context: this,
+    // },
+    // )
+    // console.log(this.theme, this.color)
+    // this.$vuetify.theme.dark = this.theme == 'dark'
+    // this.$vuetify.theme.themes.light.primary = this.color
+    // this.$vuetify.theme.themes.dark.primary = this.color
   }
 }
 </script>

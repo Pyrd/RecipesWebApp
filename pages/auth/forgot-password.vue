@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <v-card class="text-center pa-1">
+  <div class="reset-pwd-background fill-height fill-width centered">
+    <v-card class="text-center mx-4">
       <v-card-title class="justify-center display-1 mb-2">{{ $t('forgot.title') }}</v-card-title>
       <v-card-subtitle>{{ $t('forgot.subtitle') }}</v-card-subtitle>
 
       <!-- reset form -->
       <v-card-text>
-        <v-form ref="form" v-model="isFormValid" lazy-validation @submit.prevent="submit">
+        <v-form ref="form" v-model="isFormValid" @submit.prevent="submit">
           <v-text-field
             v-model="email"
             :rules="[rules.required]"
@@ -16,12 +16,12 @@
             :label="$t('forgot.email')"
             name="email"
             outlined
-            @keyup.enter="submit"
             @change="resetErrors"
           ></v-text-field>
 
           <v-btn
             :loading="isLoading"
+            :disabled="!email || email.length == 0"
             block
             x-large
             color="primary"
@@ -30,6 +30,7 @@
         </v-form>
       </v-card-text>
     </v-card>
+    <Keypress key-event="keyup" :key-code="13" @success="submit" />
 
     <div class="text-center mt-6">
       <router-link :to="localePath('/auth/login')">{{ $t('forgot.backtosign') }}</router-link>
@@ -47,7 +48,9 @@
 |
 */
 export default {
-  layout: 'auth',
+  components: { Keypress: () => import('vue-keypress') },
+  layout: 'empty',
+  auth: 'guest',
   data() {
     return {
       // reset button
@@ -68,12 +71,27 @@ export default {
     }
   },
   methods: {
-    submit(e) {
-      if (this.$refs.form.validate()) {
-        console.log('submit')
+    async submit(e) {
+      if (this.email && this.email.length > 0 && !this.isLoading) {
+        this.isLoading = true
+        await this.resetEmail(this.email)
+        this.isLoading = false
+
       }
     },
-    resetEmail(email, password) {
+    async resetEmail(email) {
+      console.log("Before")
+      const resp = await this.$axios.$post('/api/user/resetpassword', { email }).catch(err => {
+        console.log(">>>>>>>>>>><", JSON.stringify(err), err.message)
+        if (err.message == "ERROR.USER_NOT_CONFIRMED") {
+          this.$notifyError("Email not confirmed, check your emails")
+        } else {
+          this.$notifyError(`Error: ${err}`)
+        }
+      })
+      console.log(">>", resp)
+      this.email = ""
+      this.$notifySuccess('If your e-mail is valid, you should received an e-mail to reset your password !')
     },
     resetErrors() {
       this.error = false
@@ -82,3 +100,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.reset-pwd-background {
+  background: linear-gradient(
+    45deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(218, 1, 58, 1) 0%,
+    rgba(0, 213, 255, 1) 100%
+  );
+}
+</style>

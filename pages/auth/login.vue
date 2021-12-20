@@ -47,30 +47,43 @@
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             @click:append="showPassword = !showPassword"
                         ></v-text-field>
+                        <v-alert
+                            class="mx-4 text-subtitle d-flex justify-end"
+                            v-if="displayConfirmationEmailActivator"
+                            border="left"
+                            colored-border
+                            type="info"
+                            elevation="2"
+                        >
+                            <div>Do you wish to resend a confirmation e-mail ?</div>
+                            <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
+                        </v-alert>
+
+                        <v-btn
+                            :loading="isLoading"
+                            :disabled="isSignInDisabled"
+                            block
+                            x-large
+                            color="primary"
+                            @click="submit"
+                            v-on:keyup.enter="submit"
+                        >{{ $t('login.button') }}</v-btn>
+                        <div class="mt-5">
+                            <router-link
+                                :to="localePath('/auth/forgot-password')"
+                            >{{ $t('login.forgot') }}</router-link>
+                        </div>
                     </v-form>
                 </v-card-actions>
-                <v-card-actions>
-                    <v-alert
-                        class="mx-4 text-subtitle d-flex justify-end"
-                        v-if="displayConfirmationEmailActivator"
-                        border="left"
-                        colored-border
-                        type="info"
-                        elevation="2"
-                    >
-                        <div>Do you wish to resend a confirmation e-mail ?</div>
-                        <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
-                    </v-alert>
-                </v-card-actions>
-                <v-card-actions class="px-4 py-4">
-                    <v-btn
-                        block
-                        color="primary"
-                        v-on:keyup.enter="submit"
-                        :loading="isLoading"
-                        :disabled="isSignInDisabled"
-                        @click.stop="submit"
-                    >Login</v-btn>
+
+                <v-card-actions class="d-flex justify-center align-center">
+                    <div class="text-center mt-6">
+                        {{ $t('login.noaccount') }}
+                        <router-link
+                            :to="localePath('/auth/signup')"
+                            class="font-weight-bold"
+                        >{{ $t('login.create') }}</router-link>
+                    </div>
                 </v-card-actions>
             </v-card>
         </v-col>
@@ -124,7 +137,6 @@ export default {
         },
         displayErrors(errorCode) {
             let err = "An unknow error occured :(";
-            console.log(errorCode)
             switch (errorCode) {
                 case 'ERROR.USER_NOT_CONFIRMED':
                     err = "Email not confirmed"
@@ -149,7 +161,6 @@ export default {
                     })
                     .catch((err) => {
                         // eslint-disable-next-line no-console
-                        console.error(err)
                         this.error = true
                         this.displayErrors(err.response?.data.message)
                         // this.errorMessages = err.response?.data.message

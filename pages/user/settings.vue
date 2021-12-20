@@ -100,7 +100,7 @@ export default {
             // _color
             swatches: [
                 ['#2FC392', '#0077b5',],
-                ["#8d3271", "#c9184a",], ["#514b99", "#f60"]
+                ["#8d3271", "#c9184a",], ["#6F42C0", "#f60"]
             ],
             // timezones
             availableTimezones: ['America/Los_Angeles', 'America/New_York', 'Europe/London', 'Europe/Paris', 'Asia/Tokyo', 'Australia/Sydney'],
@@ -117,14 +117,15 @@ export default {
             }]
         }
     },
-    created() {
-        console.log("created", this.color)
+    beforeMount() {
+        console.log("beforeMount", this.color, this.theme)
         this.localcolor = this.color
+        this.theme_index = this.theme == 'dark' ? 1 : 0
+
     },
     computed: {
         // ...mapState('app', ['time', 'currency', 'availableCurrencies', 'theme', 'color']),
         ...mapState('app', {
-            theme: state => state.theme,
             availableCurrencies: state => state.availableCurrencies,
             currency: state => state.currency,
             time: state => state.time,
@@ -135,28 +136,22 @@ export default {
     watch: {
         localcolor(val) {
             console.log("new color", val)
-            this.$vuetify.theme.themes.dark.primary = val
-            this.$vuetify.theme.themes.light.primary = val
+            // this.$vuetify.theme.themes.dark.primary = val
+            // this.$vuetify.theme.themes.light.primary = val
             this.setGlobalColor(val)
 
         },
         theme_index(val) {
             this.setGlobalTheme((val === 0 ? 'light' : 'dark'))
         },
-        theme(val) {
-            this.$vuetify.theme.dark = val === 'dark'
-            this.theme_index = val == 'dark' ? 1 : 0
-        }
 
     },
     methods: {
         ...mapMutations('app', ['setTheme', 'setColor', 'setTimeZone', 'setTimeFormat', 'setCurrency',]),
         setGlobalTheme(val) {
-            console.log("setGlobalTheme", val)
             this.setTheme(val)
         },
         setGlobalColor(val) {
-            console.log("setGlobalColor", val)
             this.setColor(val)
         },
     }

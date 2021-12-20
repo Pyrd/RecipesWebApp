@@ -45,7 +45,7 @@ this.$router.push('/auth/verify-email')
 */
 export default {
   layout: 'empty',
-  auth: false,
+  auth: 'guest',
   async asyncData({ route, $axios, redirect }) {
     const token = route.query.token;
     if (token == null) {
