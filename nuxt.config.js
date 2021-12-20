@@ -98,7 +98,7 @@ export default {
     strategies: {
       local: false,
       cookie: {
-
+        scope: true,
         token: {
           required: true,
         },

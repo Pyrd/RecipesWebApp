@@ -131,6 +131,8 @@
 import CopyLabel from '../../components/common/CopyLabel'
 
 export default {
+  middleware: "is_admin",
+
   components: {
     CopyLabel
   },

@@ -75,10 +75,10 @@
               <div class="subtitle mb-2">Full administrator with access to this dashboard.</div>
 
               <div class="my-2">
-                <v-btn v-if="user.role === 'ADMIN'" color="primary" @click="edit.role = 'USER'">
+                <v-btn v-if="user.role === 'ADMIN'" color="primary" @click="demoteAdmin">
                   <v-icon left small>mdi-security</v-icon>Remove admin access
                 </v-btn>
-                <v-btn v-else color="primary" @click="edit.role = 'ADMIN'">
+                <v-btn v-else color="primary" @click="promoteAdmin">
                   <v-icon left small>mdi-security</v-icon>Set User as Admin
                 </v-btn>
               </div>
@@ -198,6 +198,27 @@ export default {
     }
   },
   methods: {
+
+    demoteAdmin() {
+      this.$axios.$patch('/api/user/role', {
+        userId: this.user.id,
+        role: 'USER'
+      }).then(() => {
+        this.$notifySuccess("Demoted successfully !")
+      }).catch(e => {
+        this.$notifyError(`Error: ${e}`)
+      })
+    },
+    promoteAdmin() {
+      this.$axios.$patch('/api/user/role', {
+        userId: this.user.id,
+        role: 'ADMIN'
+      }).then(() => {
+        this.$notifySuccess("Promoted successfully !")
+      }).catch(e => {
+        this.$notifyError(`Error: ${e}`)
+      })
+    },
     disableUser() {
       this.$axios.patch(`/api/user/disable/${this.user.id}`).then(() => {
         this.$emit('refresh')

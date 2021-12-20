@@ -57,6 +57,8 @@ import AccountTab from '../../components/user/AccountTab'
 import InformationTab from '../../components/user/InformationTab'
 
 export default {
+  middleware: "is_admin",
+
   components: {
     CopyLabel,
     AccountTab,

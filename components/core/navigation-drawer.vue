@@ -2,7 +2,7 @@
     <v-navigation-drawer v-model="drawer" app clipped>
         <v-list nav dense>
             <v-list-item-group v-model="group" active-class="primary--text text--accent-4">
-                <v-list-item v-for="(nav, i) in navigation" :key="i" link @click="goTo(nav.to)">
+                <v-list-item v-for="(nav, i) in getNavigation" :key="i" link @click="goTo(nav.to)">
                     <!-- <v-list-item-icon>
 
                     </v-list-item-icon>
@@ -13,7 +13,11 @@
                         </client-only>
                     </v-list-item-icon>
                     <v-list-item-content>
-                        <v-list-item-title style="line-height: 1.125rem;">{{ nav.title }}</v-list-item-title>
+                        <v-list-item-title style="line-height: 1.125rem;" class="centered">
+                            <span>{{ nav.title }}</span>
+                            <v-spacer></v-spacer>
+                            <v-chip class x-small v-if="nav.role" color="primary">{{ nav.role }}</v-chip>
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
@@ -28,14 +32,23 @@ export default {
     data: () => ({
         group: null,
         navigation: [
-            { title: "Dashboard", icon: 'dashboard', to: "/dashboard/analytics" },
-            { title: "Users", icon: 'tachometer-fast-alt', to: "/users" }
+            { title: "Dashboard", icon: 'dashboard', to: "/dashboard/analytics", },
+            { title: "Users", icon: 'tachometer-fast-alt', to: "/users", role: "ADMIN" }
         ]
     }),
     computed: {
         // ...mapGetters({
         //     drawer: 'app/getDrawer'
         // }),
+        getNavigation() {
+            const user = this.$auth.user;
+            return this.navigation.filter((e) => {
+                if (e.role && user.role != e.role) {
+                    return false
+                }
+                return true
+            })
+        },
         drawer: {
             get() {
                 return this.$store.getters['app/getDrawer']
