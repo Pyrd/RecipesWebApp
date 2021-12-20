@@ -93,7 +93,9 @@
         </template>
 
         <template v-slot:item.disable="{ item }">
-          <div>{{ item.disable.toString() | capitalize }}</div>
+          <v-chip
+            :color="item.disable ? 'error' : 'success'"
+          >{{ item.disable ? 'disabled' : "active" | capitalize }}</v-chip>
         </template>
 
         <template v-slot:item.role="{ item }">

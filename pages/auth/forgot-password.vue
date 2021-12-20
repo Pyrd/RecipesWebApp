@@ -9,7 +9,6 @@
         <v-form ref="form" v-model="isFormValid" @submit.prevent="submit">
           <v-text-field
             v-model="email"
-            :rules="[rules.required]"
             :validate-on-blur="false"
             :error="error"
             :error-messages="errorMessages"
@@ -29,12 +28,17 @@
           >{{ $t('forgot.button') }}</v-btn>
         </v-form>
       </v-card-text>
+      <v-card-text class="mt-0">
+        <div class="text-center">
+          <router-link :to="localePath('/auth/login')">{{ $t('forgot.backtosign') }}</router-link>
+        </div>
+      </v-card-text>
     </v-card>
     <Keypress key-event="keyup" :key-code="13" @success="submit" />
-
+    <!-- 
     <div class="text-center mt-6">
       <router-link :to="localePath('/auth/login')">{{ $t('forgot.backtosign') }}</router-link>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -82,14 +86,12 @@ export default {
     async resetEmail(email) {
       console.log("Before")
       const resp = await this.$axios.$post('/api/user/resetpassword', { email }).catch(err => {
-        console.log(">>>>>>>>>>><", JSON.stringify(err), err.message)
         if (err.message == "ERROR.USER_NOT_CONFIRMED") {
           this.$notifyError("Email not confirmed, check your emails")
         } else {
           this.$notifyError(`Error: ${err}`)
         }
       })
-      console.log(">>", resp)
       this.email = ""
       this.$notifySuccess('If your e-mail is valid, you should received an e-mail to reset your password !')
     },

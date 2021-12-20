@@ -1,11 +1,11 @@
 <template>
   <div class="my-2">
     <div>
-      <v-card v-if="user.disabled" class="warning mb-4" light>
+      <v-card v-if="user.disable" class="warning mb-4" light>
         <v-card-title>User Disabled</v-card-title>
         <v-card-subtitle>This user has been disabled! Login accesss has been revoked.</v-card-subtitle>
         <v-card-text>
-          <v-btn dark @click="user.disabled = false">
+          <v-btn dark @click="unDisabledUser">
             <v-icon left small>mdi-account-check</v-icon>Enable User
           </v-btn>
         </v-card-text>
@@ -87,7 +87,7 @@
 
               <div class="subtitle mt-3 mb-2">Prevent the user from signing in on the platform.</div>
               <div class="my-2">
-                <v-btn v-if="user.disabled" color="warning" @click="edit.disabled = false">
+                <v-btn v-if="user.disable" color="warning" @click="unDisabledUser">
                   <v-icon left small>mdi-account-check</v-icon>Enable User
                 </v-btn>
                 <v-btn v-else color="warning" @click="disableDialog = true">
@@ -132,7 +132,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="disableDialog = false">Cancel</v-btn>
-          <v-btn color="warning" @click="user.disabled = true; disableDialog = false">Disable</v-btn>
+          <v-btn color="warning" @click="disableUser(); disableDialog = false">Disable</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -145,7 +145,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="deleteDialog = false">Cancel</v-btn>
-          <v-btn color="error" @click="deleteDialog = false">Delete</v-btn>
+          <v-btn color="error" @click="deleteUser(); deleteDialog = false">Delete</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -198,6 +198,37 @@ export default {
     }
   },
   methods: {
+    disableUser() {
+      this.$axios.patch(`/api/user/disable/${this.user.id}`).then(() => {
+        this.$emit('refresh')
+
+        this.$notifySuccess("User disabled successfully")
+      }).catch(err => {
+        this.$notifyError(`Error: ${err}`)
+      })
+    },
+    unDisabledUser() {
+      this.$axios.patch(`/api/user/undisable/${this.user.id}`).then(() => {
+        this.$emit('refresh')
+
+        this.$notifySuccess("User disabled successfully")
+      }).catch(err => {
+        this.$notifyError(`Error: ${err}`)
+      })
+    }
+    ,
+    deleteUser() {
+      this.$axios.delete(`/api/user/${this.user.id}`).then(() => {
+
+        this.$notifySuccess("User deleted successfully, redirecting ...")
+        this.setTimeout(() => {
+          this.$router.push('/users')
+        }, 2000);
+      }).catch(err => {
+        this.$notifyError(`Error: ${err}`)
+      })
+    }
+    ,
     sendEmailConfirmationEmail() {
       const resp = this.$axios.$post(`api/user/sendconfirmationemail`, {
         email: this.user.email

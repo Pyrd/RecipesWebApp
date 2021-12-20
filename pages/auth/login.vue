@@ -143,7 +143,11 @@ export default {
                     this.displayConfirmationEmailActivator = true
                     break;
                 case 'ERROR.BAD_CREDENTIALS':
+                case 'ERROR.USER_NOT_FOUND':
                     err = "Bad credentials, try again !"
+                    break;
+                case 'ERROR.USER_DISABLED':
+                    err = "Your accound has been disabled"
                     break;
 
             }
