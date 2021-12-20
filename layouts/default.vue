@@ -55,7 +55,6 @@ export default {
     }),
   },
   created() {
-    console.log("created")
     this.initTheme({
       context: this,
     },
