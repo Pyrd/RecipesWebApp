@@ -2,7 +2,7 @@
   <div class="d-flex flex-grow-1 flex-column">
     <client-only>
       <v-row class="flex-grow-0" dense>
-        <v-col cols="12">
+        <v-col cols="12 px-8">
           <sales-card
             class="h-full"
             style="min-height: 380px"

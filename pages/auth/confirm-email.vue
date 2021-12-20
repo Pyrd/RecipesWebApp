@@ -1,32 +1,19 @@
 <template>
   <div>
     <v-card class="text-center pa-1">
-      <v-card-title class="justify-center display-1 mb-2">New password</v-card-title>
+      <v-card-title class="justify-center display-1 mb-2">
+        {{
+          $t("register.title")
+        }}
+      </v-card-title>
       <v-card-subtitle>
         Hi {{ displayName }} !
-        Please, input a brand new password for your account !
+        Please verify your email address by visiting the link below !
       </v-card-subtitle>
 
       <!-- sign up form -->
       <v-card-text>
         <v-form ref="form" v-model="isFormValid" lazy-validation>
-          <v-text-field v-model="email" readonly label="E-mail" outlined></v-text-field>
-
-          <v-text-field
-            v-model="password"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="[rules.required]"
-            :type="showPassword ? 'text' : 'password'"
-            :error="errorPassword"
-            :error-messages="errorPasswordMessage"
-            :label="$t('register.password')"
-            name="password"
-            outlined
-            @change="resetErrors"
-            @keyup.enter="submit"
-            @click:append="showPassword = !showPassword"
-          ></v-text-field>
-
           <v-btn
             :loading="isLoading"
             :disabled="isSignUpDisabled"
@@ -34,13 +21,13 @@
             x-large
             color="primary"
             @click="submit"
-          >Reset your password</v-btn>
+          >Verify</v-btn>
         </v-form>
       </v-card-text>
     </v-card>
 
     <div class="text-center mt-6">
-      No need ?
+      {{ $t("register.account") }}
       <router-link
         :to="localePath('/auth/signin')"
         class="font-weight-bold"
@@ -120,15 +107,16 @@ export default {
     },
     async signUp(token, password) {
       await this.$axios
-        .post("/api/user/confirm", { token: token, password: password })
+        .post("/api/user/confirm-email", { token: token })
         .catch((err) => {
           this.$notifyError(
             `Error while confirming your inscription ! Error: ${err}`
           );
         });
       this.isLoading = false;
-      this.$router.push("/auth/login");
+      this.$router.replace("/auth/login");
     },
+    signInProvider(provider) { },
     resetErrors() {
       this.errorName = false;
       this.errorEmail = false;

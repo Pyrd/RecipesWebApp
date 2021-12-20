@@ -64,7 +64,7 @@ export default {
   data: () => ({
     menu: false,
     gender: 'male',
-    _user: {},
+    user: {},
     edit: {},
     isEdited: false
   }),
@@ -77,11 +77,16 @@ export default {
         this.isEdited = JSON.stringify(val) != JSON.stringify(this.user)
       },
       deep: true
+    },
+    user: {
+      handler: function (val, oldVal) {
+        this.edit = { ...this.user }
+      },
+      deep: true
     }
   },
   beforeMount() {
     this.edit = { ...this.user }
-    this._user = { ...this.user }
   },
   methods: {
     save(date) {
@@ -91,14 +96,15 @@ export default {
       this.$axios.patch(`/api/user/${this.user.id}`, {
         ...this.edit
       }).then(() => {
-        this._user = { ...this.edit }
+        this.$emit('refresh')
+        this.isEdited = false
         this.$notifySuccess("User updated successfully")
       }).catch(err => {
         this.$notifyError(`Error: ${err}`)
       })
     },
     reset() {
-      this.edit = { ...this._user }
+      this.edit = { ...this.user }
     }
   }
 }

@@ -41,11 +41,11 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <account-tab ref="tabs-account" :user="user"></account-tab>
+        <account-tab ref="tabs-account" :user="user" v-on:refresh="refreshUser"></account-tab>
       </v-tab-item>
 
       <v-tab-item>
-        <information-tab ref="tabs-information" :user="user"></information-tab>
+        <information-tab ref="tabs-information" :user="user" v-on:refresh="refreshUser"></information-tab>
       </v-tab-item>
     </v-tabs-items>
   </div>
@@ -66,7 +66,13 @@ export default {
     console.log(`/api/user/${route.query.id}`)
     const resp = await $axios.$get(`/api/user/${route.query.id}`)
     return {
+      id: route.query.id,
       user: resp
+    }
+  },
+  methods: {
+    async refreshUser() {
+      this.user = await this.$axios.$get(`/api/user/${this.id}`)
     }
   },
   data() {

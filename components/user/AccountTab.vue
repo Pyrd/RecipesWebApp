@@ -189,6 +189,12 @@ export default {
         this.isEdited = JSON.stringify(val) != JSON.stringify(this.user)
       },
       deep: true
+    },
+    user: {
+      handler: function (val, oldVal) {
+        this.edit = { ...this.user }
+      },
+      deep: true
     }
   },
   methods: {
@@ -225,10 +231,10 @@ export default {
           pkg[k] = this.edit[k]
         }
       }
-      console.log(JSON.stringify(pkg))
       await this.$axios.$patch(`/api/user/${this.user.id}`, pkg).then(() => {
         this.$notifySuccess("User updated successfully")
-
+        this.$emit('refresh')
+        this.editVerified = this.user.confirmed
       }).catch(err => {
         this.$notifyError(`Error: ${err.message}`)
         return
