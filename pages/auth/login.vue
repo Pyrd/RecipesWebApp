@@ -12,7 +12,7 @@
             md="6"
             class="fill-height d-flex justify-center align-center login-background"
         >
-            <v-card>
+            <v-card width="400">
                 <v-card-title
                     class="text-h3 font-weight-black d-flex justify-center align-center"
                 >Receipes</v-card-title>
@@ -49,6 +49,19 @@
                         ></v-text-field>
                     </v-form>
                 </v-card-actions>
+                <v-card-actions>
+                    <v-alert
+                        class="mx-4 text-subtitle d-flex justify-end"
+                        v-if="displayConfirmationEmailActivator"
+                        border="left"
+                        colored-border
+                        type="info"
+                        elevation="2"
+                    >
+                        <div>Do you wish to resend a confirmation e-mail ?</div>
+                        <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
+                    </v-alert>
+                </v-card-actions>
                 <v-card-actions class="px-4 py-4">
                     <v-btn
                         block
@@ -73,13 +86,15 @@ export default {
     auth: 'guest',
     data: () => ({
         formValid: true,
-        email: "test@test.com",
+        email: "mathieu.cailly@gmail.com",
         password: "test",
         error: false,
         errorMessages: '',
         showPassword: false,
         isSignInDisabled: false,
-
+        confirmationEmail: "",
+        displayConfirmationEmailActivator: false,
+        displayConfirmationEmailModal: false,
         isLoading: false,
         rules: {
             required: (value) => (value && Boolean(value)) || 'Required'
@@ -95,6 +110,33 @@ export default {
                 this.isSignInDisabled = false
             }
         },
+        resendConfirmationEmail() {
+            this.$axios.$post(`api/user/sendconfirmationemail`, {
+                email: this.email
+            }).then(() => {
+                this.$notifySuccess("Verification Email sent successfully")
+
+            }).catch(err => {
+                this.$notifyError(`Error: ${err.message}`)
+                return
+            })
+
+        },
+        displayErrors(errorCode) {
+            let err = "An unknow error occured :(";
+            console.log(errorCode)
+            switch (errorCode) {
+                case 'ERROR.USER_NOT_CONFIRMED':
+                    err = "Email not confirmed"
+                    this.displayConfirmationEmailActivator = true
+                    break;
+                case 'ERROR.BAD_CREDENTIALS':
+                    err = "Bad credentials, try again !"
+                    break;
+
+            }
+            this.errorMessages = err
+        },
         async login(email, password) {
             console.log(`Login in: ${this.email}`)
             try {
@@ -109,9 +151,10 @@ export default {
                         // eslint-disable-next-line no-console
                         console.error(err)
                         this.error = true
-                        this.errorMessages = err.response?.data.message
+                        this.displayErrors(err.response?.data.message)
+                        // this.errorMessages = err.response?.data.message
                         this.password = ""
-                        return
+                        return err
                     })
                 // let response = await this.$auth.loginWith('local', {
                 //     data: {
@@ -119,10 +162,9 @@ export default {
                 //         password: this.password
                 //     }
                 // })
-                if (response.status == 200) {
+                if (response && response.status == 200) {
                     this.$router.push('/dashboard/analytics')
                 }
-                console.log(response)
             } catch (err) {
                 console.log(err)
             }

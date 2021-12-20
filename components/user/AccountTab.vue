@@ -26,20 +26,20 @@
               <v-btn class="mt-1" small>Edit Avatar</v-btn>
             </div>-->
             <div class="flex-grow-1 pt-2 pa-sm-2">
-              <v-text-field v-model="user.displayname" label="Display name" placeholder="name"></v-text-field>
-              <v-text-field v-model="user.email" label="Email" hide-details></v-text-field>
+              <v-text-field v-model="edit.displayname" label="Display name" placeholder="name"></v-text-field>
+              <v-text-field v-model="edit.email" label="Email" hide-details></v-text-field>
 
               <div class="d-flex flex-column">
-                <v-checkbox v-model="user.verified" dense label="Email Verified"></v-checkbox>
+                <v-checkbox v-model="edit.confirmed" dense label="Email Verified"></v-checkbox>
                 <div>
-                  <v-btn v-if="!user.verified">
+                  <v-btn v-if="!getVerified" @click="sendEmailConfirmationEmail">
                     <v-icon left small>mdi-email</v-icon>Send Verification Email
                   </v-btn>
                 </div>
               </div>
 
-              <div class="mt-2">
-                <v-btn color="primary" @click>Save</v-btn>
+              <div class="mt-2" v-if="isEdited">
+                <v-btn color="primary" @click="saveEdit">Save</v-btn>
               </div>
             </div>
           </div>
@@ -53,7 +53,7 @@
             <div class="mb-2">
               <div class="title">Reset User Password</div>
               <div class="subtitle mb-2">Sends a reset password email to the user.</div>
-              <v-btn class="mb-2" @click>
+              <v-btn class="mb-2" @click="sendResetPasswordEmail">
                 <v-icon left small>mdi-email</v-icon>Send Reset Password Email
               </v-btn>
             </div>
@@ -63,7 +63,7 @@
             <div class="my-2">
               <div class="title">Export Account Data</div>
               <div class="subtitle mb-2">Export all the platform metadata for this user.</div>
-              <v-btn class="mb-2">
+              <v-btn class="mb-2" download :href="getUserDataDownloadUrl">
                 <v-icon left small>mdi-clipboard-account</v-icon>Export User Data
               </v-btn>
             </div>
@@ -75,10 +75,10 @@
               <div class="subtitle mb-2">Full administrator with access to this dashboard.</div>
 
               <div class="my-2">
-                <v-btn v-if="user.role === 'ADMIN'" color="primary" @click="user.role = 'USER'">
+                <v-btn v-if="user.role === 'ADMIN'" color="primary" @click="edit.role = 'USER'">
                   <v-icon left small>mdi-security</v-icon>Remove admin access
                 </v-btn>
-                <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
+                <v-btn v-else color="primary" @click="edit.role = 'ADMIN'">
                   <v-icon left small>mdi-security</v-icon>Set User as Admin
                 </v-btn>
               </div>
@@ -87,7 +87,7 @@
 
               <div class="subtitle mt-3 mb-2">Prevent the user from signing in on the platform.</div>
               <div class="my-2">
-                <v-btn v-if="user.disabled" color="warning" @click="user.disabled = false">
+                <v-btn v-if="user.disabled" color="warning" @click="edit.disabled = false">
                   <v-icon left small>mdi-account-check</v-icon>Enable User
                 </v-btn>
                 <v-btn v-else color="warning" @click="disableDialog = true">
@@ -164,7 +164,75 @@ export default {
     return {
       panel: [1],
       deleteDialog: false,
-      disableDialog: false
+      disableDialog: false,
+      editVerified: false,
+      edit: {
+        confirmed: false
+      },
+      isEdited: false
+    }
+  },
+  beforeMount() {
+    this.edit = { ...this.user }
+  },
+  computed: {
+    getVerified() {
+      return this.user.confirmed || this.editVerified
+    },
+    getUserDataDownloadUrl() {
+      return `${process.env.baseURL}/user/data?id=${this.user.id}`
+    }
+  },
+  watch: {
+    edit: {
+      handler: function (val, oldVal) {
+        this.isEdited = JSON.stringify(val) != JSON.stringify(this.user)
+      },
+      deep: true
+    }
+  },
+  methods: {
+    sendEmailConfirmationEmail() {
+      const resp = this.$axios.$post(`api/user/sendconfirmationemail`, {
+        email: this.user.email
+      }).then(() => {
+        this.$notifySuccess("Verification Email sent successfully")
+
+      }).catch(err => {
+        this.$notifyError(`Error: ${err.message}`)
+        return
+      })
+
+    },
+    sendResetPasswordEmail() {
+      this.$axios.$post(`/api/user/resetpassword`, {
+        email: this.user.email
+      }).then(() => {
+        this.$notifySuccess("Password Reset Email sent successfully")
+
+      }).catch(err => {
+        this.$notifyError(`Error: ${err.message}`)
+        return
+      })
+    },
+    downloadAllUserData() {
+
+    },
+    async saveEdit() {
+      const pkg = {}
+      for (let k of Object.keys(this.user)) {
+        if (JSON.stringify(this.user[k]) != JSON.stringify(this.edit[k])) {
+          pkg[k] = this.edit[k]
+        }
+      }
+      console.log(JSON.stringify(pkg))
+      await this.$axios.$patch(`/api/user/${this.user.id}`, pkg).then(() => {
+        this.$notifySuccess("User updated successfully")
+
+      }).catch(err => {
+        this.$notifyError(`Error: ${err.message}`)
+        return
+      })
     }
   }
 }

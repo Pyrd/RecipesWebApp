@@ -6,17 +6,15 @@
           $t("register.title")
         }}
       </v-card-title>
-      <v-card-subtitle>Please check your informations and input a password for your account !</v-card-subtitle>
+      <v-card-subtitle>
+        Hi {{ displayName }} ! Welcome to Recepies 😍
+        You can now input a password for your account !
+      </v-card-subtitle>
 
       <!-- sign up form -->
       <v-card-text>
         <v-form ref="form" v-model="isFormValid" lazy-validation>
-          <v-text-field v-model="firstname" readonly label="First Name" outlined></v-text-field>
-          <v-text-field v-model="lastname" readonly label="Last name" outlined></v-text-field>
-
           <v-text-field v-model="email" readonly label="E-mail" outlined></v-text-field>
-
-          <v-text-field v-model="phone" readonly label="Phone" outlined></v-text-field>
 
           <v-text-field
             v-model="password"
@@ -68,28 +66,25 @@ export default {
   layout: 'empty',
   auth: false,
   async asyncData({ route, $axios, redirect }) {
-    console.log("okkk")
     const token = route.query.token;
     if (token == null) {
       console.error("Token");
 
-      redirect("/auth/signin");
+      redirect("/auth/login");
     }
     const user = await $axios
       .$get(`/api/user/confirmed/${route.query.token}`)
       .catch((err) => {
         console.error("Error: " + err);
-        redirect("/auth/signin");
+        redirect("/auth/login");
       });
     if (!user) {
-      redirect("/auth/signin");
+      redirect("/auth/login");
     }
     return {
-      firstname: user.firstname,
-      lastname: user.lastname,
       email: user.email,
-      phone: user.phone,
       token: token,
+      displayName: user.displayname
     };
   },
   data() {
@@ -104,9 +99,6 @@ export default {
       isFormValid: true,
       email: "",
       password: "",
-      firstname: "",
-      lastname: "",
-      phone: "",
 
       // form error
       errorPassword: false,
@@ -139,7 +131,7 @@ export default {
           );
         });
       this.isLoading = false;
-      this.$router.replace("/auth/signin");
+      this.$router.replace("/auth/login");
     },
     signInProvider(provider) { },
     resetErrors() {

@@ -62,6 +62,10 @@ export default {
     proxy: true,
     proxyHeaders: false
   },
+
+  env: {
+    baseURL: 'http://localhost:8000/api'
+  },
   proxy: {
     '/api': {
       target: 'http://localhost:8000/api',

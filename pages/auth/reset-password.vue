@@ -44,7 +44,32 @@ this.$router.push('/auth/verify-email')
 |
 */
 export default {
-  layout: 'auth',
+  layout: 'empty',
+  auth: false,
+  async asyncData({ route, $axios, redirect }) {
+    const token = route.query.token;
+    if (token == null) {
+      console.error("Token");
+
+      redirect("/auth/signin");
+    }
+    const user = await $axios
+      .$get(`/api/user/confirmed/${route.query.token}`)
+      .catch((err) => {
+        console.error("Error: " + err);
+        redirect("/auth/signin");
+      });
+    if (!user) {
+      redirect("/auth/signin");
+    }
+    return {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      phone: user.phone,
+      token: token,
+    };
+  },
   data() {
     return {
       isLoading: false,

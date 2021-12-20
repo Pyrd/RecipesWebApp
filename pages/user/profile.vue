@@ -26,25 +26,36 @@
               <v-btn class="mt-1" small>Edit Avatar</v-btn>
             </div>-->
             <div class="flex-grow-1 pt-2 pa-sm-2">
+              <v-text-field readonly v-model="user.email" label="Email" hide-details></v-text-field>
               <v-text-field
                 readonly
                 v-model="user.displayName"
                 label="Display name"
                 placeholder="name"
               ></v-text-field>
-              <v-text-field readonly v-model="user.email" label="Email" hide-details></v-text-field>
+              <v-text-field
+                readonly
+                v-model="user.firstname"
+                label="First name"
+                placeholder="name"
+                hide-details
+              ></v-text-field>
+              <v-text-field
+                readonly
+                v-model="user.lastname"
+                label="Last name"
+                placeholder="name"
+                hide-details
+              ></v-text-field>
 
-              <div class="d-flex flex-column">
-                <v-checkbox readonly v-model="user.confirmed" dense label="Email Verified"></v-checkbox>
-                <div>
-                  <v-btn v-if="!user.confirmed">
-                    <v-icon left small>mdi-email</v-icon>Send Verification Email
-                  </v-btn>
-                </div>
-              </div>
-
-              <v-text-field readonly v-model="user.phone" label="Phone" hide-details></v-text-field>
-              <v-text-field readonly v-model="user.role" label="Role" hide-details></v-text-field>
+              <v-text-field readonly v-model="user.birth_date" label="Birth Date" hide-details></v-text-field>
+              <v-text-field
+                readonly
+                v-if="user.role == 'ADMIN'"
+                v-model="user.role"
+                label="Role"
+                hide-details
+              ></v-text-field>
               <!-- <div class="mt-2">
                 <v-btn color="primary" @click>Save</v-btn>
               </div>-->

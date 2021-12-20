@@ -2,9 +2,7 @@
   <div>
     <v-card class="text-center pa-1">
       <v-card-title class="justify-center display-1 mb-2">{{ $t('forgot.title') }}</v-card-title>
-      <v-card-subtitle>
-        {{ $t('forgot.subtitle') }}
-      </v-card-subtitle>
+      <v-card-subtitle>{{ $t('forgot.subtitle') }}</v-card-subtitle>
 
       <!-- reset form -->
       <v-card-text>
@@ -34,9 +32,7 @@
     </v-card>
 
     <div class="text-center mt-6">
-      <router-link :to="localePath('/auth/signin')">
-        {{ $t('forgot.backtosign') }}
-      </router-link>
+      <router-link :to="localePath('/auth/login')">{{ $t('forgot.backtosign') }}</router-link>
     </div>
   </div>
 </template>
