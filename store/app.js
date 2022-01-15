@@ -32,6 +32,7 @@ export const getters = {
 
 export const mutations = {
   setDrawer(state, drawer) {
+    console.log("SetDrawer", drawer)
     state.drawer = drawer
   },
   setTheme: (state, theme) => {
@@ -93,6 +94,7 @@ export const mutations = {
   },
   initCoreTheme(state, payload) {
     console.log("[initCoreTheme] start")
+    state.drawer = true
     // vuetify = payload.context.vuetify;
     // let app = payload.context
     // vuetify.preset.theme.themes.light.primary = state.color
