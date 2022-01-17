@@ -18,7 +18,7 @@ export default {
     background: '#ffffff',
     surface: '#f2f5f8',
     primary: '#6F42C0',
-    secondary: '#a0b9c8',
+    secondary: '#ff6f61;',
     accent: '#048ba8',
     error: '#ef476f',
     info: '#2196F3',

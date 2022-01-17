@@ -8,8 +8,8 @@
       <v-spacer></v-spacer>
       <v-btn color="primary" class="mr-2">Create</v-btn>
       <FileInputModal
-        @submit="batchImportTsv"
-        activator_btn="Import from TSV"
+        @submit="batchImportJson"
+        activator_btn="Import from JSON"
         success_btn="Import ingredients"
         :loading="batchImportLoading"
       ></FileInputModal>
@@ -148,11 +148,11 @@ export default {
     }
   },
   methods: {
-    async searchUser() { 
+    async searchUser() {
       const query = this.searchQuery
       console.log(`SEARCH ${query}`)
       const resp = await this.$axios.$post('/api/items/search', {
-          query: query
+        query: query
       })
       this.ingredients = resp
 
@@ -162,7 +162,7 @@ export default {
       const resp = await this.$axios.$get('/api/items')
       this.ingredients = resp
     },
-    async batchImportTsv(file) {
+    async batchImportJson(file) {
       const form = new FormData()
       form.append('file', file)
       try {
