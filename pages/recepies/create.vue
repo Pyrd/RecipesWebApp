@@ -250,6 +250,22 @@
                                                 </v-rating>
                                             </v-row>
                                         </v-row>
+                                        <!-- Photos -->
+                                        <v-row class="d-flex flex-column mb-12">
+                                            <span class="font-weight-bold">Photos</span>
+                                            <v-row class="mt-2 d-flex">
+                                                <draggable v-model="photos" class="d-flex">
+                                                    <transition-group class="grid">
+                                                        <div
+                                                            v-for="(element, i) in photos"
+                                                            :key="'photo' + i"
+                                                        >
+                                                            <PhotoInput v-model="photos[i]" />
+                                                        </div>
+                                                    </transition-group>
+                                                </draggable>
+                                            </v-row>
+                                        </v-row>
                                     </v-form>
                                 </div>
                             </v-card-actions>
@@ -289,13 +305,15 @@
 <script>
 import CopyLabel from '../../components/common/CopyLabel'
 import FileInputModal from '../../components/modals/file-input.vue'
+import PhotoInput from '../../components/common/PhotoInput.vue'
 
 export default {
     middleware: "is_admin",
 
     components: {
         CopyLabel,
-        FileInputModal
+        FileInputModal,
+        PhotoInput
     },
     async asyncData({ $axios }) {
         const resp = await $axios.$get('/api/recepie')
@@ -370,11 +388,35 @@ export default {
                 { label: "Autres" },
             ],
             grid_selected: '',
-            grid2_selected: ''
+            grid2_selected: '',
+            input_photo: null,
+            photo_count: 0,
+            photos: [null,],
+            photo_lock: false
         }
     },
     watch: {
-        selectedRecepies(val) {
+        photos(val, old) {
+            if (!this.photo_lock) {
+                this.photo_lock = true
+                let count = 0;
+                for (let i = 0; i < val.length; i++) {
+                    const e = val[i]
+                    if (e != null) {
+                        count++
+                    }
+                    else {
+                        val.splice(i, 1)
+                    }
+                }
+                if (count <= 6) {
+                    val.push(null)
+                }
+                this.photo_count = count
+                setTimeout(() => {
+                    this.photo_lock = false
+                }, 100)
+            }
 
         }
     },
@@ -396,6 +438,13 @@ export default {
 </script>
 
 <style lang="scss">
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    margin: -12px;
+}
+
 .grid-card-hover {
     border-color: var(--v-primary-base) !important;
 }

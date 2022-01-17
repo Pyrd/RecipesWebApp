@@ -15,7 +15,7 @@
             <v-card width="400">
                 <v-card-title
                     class="text-h3 font-weight-black d-flex justify-center align-center"
-                >Receipes</v-card-title>
+                >Recepies</v-card-title>
                 <v-card-actions class="px-4">
                     <v-form
                         ref="form"

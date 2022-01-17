@@ -2,7 +2,7 @@
     <v-app-bar app clipped-left dark>
         <v-app-bar-nav-icon @click.stop="toggleDrawer"></v-app-bar-nav-icon>
 
-        <v-toolbar-title @click="goTo('/')">Receipes </v-toolbar-title>
+        <v-toolbar-title @click="goTo('/')">Recepies</v-toolbar-title>
         <span
             class="ml-1 mt-6 font-weight-black items-center d-inline-flex primary--text version"
             v-font="$getFont('DM Mono', 400)"

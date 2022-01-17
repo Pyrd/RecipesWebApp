@@ -31,6 +31,7 @@ export default {
     '~/plugins/helpers.ts',
     { src: '~/plugins/vue-unicon.js', mode: 'client' },
     { src: '~/plugins/apexcharts.js', mode: 'client' },
+    { src: '~/plugins/draggable.js',},
     { src: '~/plugins/clipboard.js', mode: 'client' },
     { src: '~plugins/vuex-persistedstate.js' },
     // Filters
