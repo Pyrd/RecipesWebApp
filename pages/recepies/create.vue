@@ -432,13 +432,12 @@
                                         </v-list>
                                         <v-card outlined class="px-4 py-2 mt-2">
                                             <v-row class="mt-2 fwidth">
-                                                <v-col cols="12">
+                                                <v-col cols="12" md="10">
                                                     <v-container fluid>
                                                         <v-textarea
                                                             auto-grow
                                                             label="Instruction"
                                                             rows="2"
-                                                            row-height="20"
                                                             solo
                                                             clearable
                                                             v-model="instruction_model"
@@ -446,13 +445,18 @@
                                                             clear-icon="mdi-close-circle"
                                                             counter
                                                             :rules="instruction_rules"
+                                                            hide-details
                                                         ></v-textarea>
                                                     </v-container>
                                                 </v-col>
-                                                <v-col cols="12" class="d-flex mb-2">
-                                                    <v-spacer></v-spacer>
+                                                <v-col
+                                                    cols="12"
+                                                    md="2"
+                                                    class="d-flex mb-2 centered"
+                                                >
                                                     <v-btn
                                                         solo
+                                                        block
                                                         color="success"
                                                         @click="add_instruction"
                                                     >Ajouter</v-btn>
