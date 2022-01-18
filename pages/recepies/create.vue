@@ -48,17 +48,15 @@
                         <v-card outlined class="mb-12 py-4" width="100%">
                             <v-card-actions class="fwidth fheight px-12">
                                 <div>
-                                    <span class="font-weight-bold">Nom</span>
-
-                                    <p>
-                                        <b class="primary--text font-weight-bold">{{ entity.name }}</b>
-                                    </p>
-                                </div>
-                            </v-card-actions>
-
-                            <v-card-actions class="fwidth fheight px-12">
-                                <div>
                                     <v-form v-model="step2form">
+                                        <v-row class="d-flex flex-column mb-2">
+                                            <span class="font-weight-bold">Nom</span>
+                                            <p>
+                                                <b
+                                                    class="primary--text font-weight-bold"
+                                                >{{ entity.name }}</b>
+                                            </p>
+                                        </v-row>
                                         <!-- Type de recette -->
                                         <v-row class="d-flex flex-column mb-2">
                                             <span class="font-weight-bold">Types de recette</span>
@@ -274,15 +272,200 @@
                         <v-btn text @click="step = 1">Retour</v-btn>
                     </v-stepper-content>
 
-                    <v-stepper-step
-                        :complete="step > 3"
-                        step="3"
-                    >Select an ad format and name ad unit</v-stepper-step>
+                    <v-stepper-step :complete="step > 3" step="3">Les ingrédients et étapes</v-stepper-step>
 
                     <v-stepper-content step="3">
-                        <v-card outlined class="mb-12 py-4" height="300px" width="100%"></v-card>
+                        <v-card outlined class="mb-12 py-4" width="100%">
+                            <v-card-actions class="fwidth fheight px-12">
+                                <v-form v-model="step3form" class="fwidth">
+                                    <v-row class="d-flex flex-column mb-2">
+                                        <span class="font-weight-bold">Nom</span>
+                                        <p>
+                                            <b
+                                                class="primary--text font-weight-bold"
+                                            >{{ entity.name }}</b>
+                                        </p>
+                                    </v-row>
+
+                                    <!-- Type de recette -->
+                                    <v-row class="d-flex flex-column mb-2 fwidth">
+                                        <span class="font-weight-bold">Ingrédients</span>
+                                        <v-card outlined class="px-4 py-2 mt-2">
+                                            <v-row class="mt-2 fwidth">
+                                                <v-col cols="12" md="6">
+                                                    <v-autocomplete
+                                                        solo
+                                                        clearable
+                                                        v-model="ingredient_query_model"
+                                                        :items="ingredient_query_items"
+                                                        :loading="ingredient_query_loading"
+                                                        :search-input.sync="ingredient_query_search"
+                                                        hide-no-data
+                                                        hide-selected
+                                                        item-text="label_fr"
+                                                        item-value="code"
+                                                        placeholder="Ingrédient"
+                                                        prepend-icon="mdi-food"
+                                                        return-object
+                                                    >
+                                                        <template v-slot:selection="data">
+                                                            <v-list-item-avatar>
+                                                                <img :src="data.item.images[0].url" />
+                                                            </v-list-item-avatar>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title
+                                                                    v-html="data.item.label_fr"
+                                                                ></v-list-item-title>
+                                                                <v-list-item-subtitle
+                                                                    v-html="data.item.code"
+                                                                ></v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </template>
+                                                        <template v-slot:item="data">
+                                                            <v-list-item-avatar>
+                                                                <img :src="data.item.images[0].url" />
+                                                            </v-list-item-avatar>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title
+                                                                    v-html="data.item.label_fr"
+                                                                ></v-list-item-title>
+                                                                <v-list-item-subtitle
+                                                                    v-html="data.item.code"
+                                                                ></v-list-item-subtitle>
+                                                            </v-list-item-content>
+                                                        </template>
+                                                    </v-autocomplete>
+                                                </v-col>
+                                                <v-col cols="6" md="2">
+                                                    <v-text-field
+                                                        type="number"
+                                                        v-model="ingredient_query_count"
+                                                        placeholder="Quantité"
+                                                        solo
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col cols="6" md="4">
+                                                    <v-text-field
+                                                        class="d-inline"
+                                                        v-model="ingredient_query_unit"
+                                                        placeholder="Unité"
+                                                        solo
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" class="d-flex">
+                                                    <v-text-field
+                                                        solo
+                                                        v-model="ingredient_query_complement"
+                                                        placeholder="Compléments"
+                                                    ></v-text-field>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn
+                                                        solo
+                                                        color="success"
+                                                        @click="add_ingredient"
+                                                    >Ajouter</v-btn>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card>
+                                    </v-row>
+                                    <v-row>
+                                        <v-list class="fwidth">
+                                            <div v-for="(e, i) in entity.items" :key="i">
+                                                <v-list-item
+                                                    outlined
+                                                    class="fwidth outlined-list-item mb-2"
+                                                >
+                                                    <v-list-item-avatar>
+                                                        <img :src="e.item.images[0].url" />
+                                                    </v-list-item-avatar>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title
+                                                            class="font-weight-bold subtitle"
+                                                        >{{ e.count }} {{ e.unit }} {{ e.item.label_fr }} {{ e.complement }}</v-list-item-title>
+                                                        <v-list-item-subtitle v-html="e.code"></v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                    <v-list-item-actions>
+                                                        <v-btn icon @click="remove_ingredient(i)">
+                                                            <v-icon>mdi-close-circle</v-icon>
+                                                        </v-btn>
+                                                    </v-list-item-actions>
+                                                </v-list-item>
+                                            </div>
+                                        </v-list>
+                                    </v-row>
+                                    <v-row class="d-flex flex-column mb-2 fwidth">
+                                        <span class="font-weight-bold">Instructions</span>
+                                        <v-list class="fwidth">
+                                            <draggable
+                                                v-model="entity.instructions"
+                                                class="d-flex flex-column"
+                                            >
+                                                <transition-group class="d-flex flex-column">
+                                                    <div
+                                                        v-for="(e, i) in entity.instructions"
+                                                        :key="'instruction' + i"
+                                                    >
+                                                        <v-list-item
+                                                            outlined
+                                                            class="fwidth outlined-list-item mb-2"
+                                                        >
+                                                            <v-list-item-content>
+                                                                <v-list-item-title class="subtitle">
+                                                                    <span
+                                                                        class="font-weight-bold"
+                                                                    >{{ i + 1 }}.</span>
+                                                                    {{ e.description }}
+                                                                </v-list-item-title>
+                                                            </v-list-item-content>
+                                                            <v-list-item-actions>
+                                                                <v-btn
+                                                                    icon
+                                                                    @click="remove_instruction(i)"
+                                                                >
+                                                                    <v-icon>mdi-close-circle</v-icon>
+                                                                </v-btn>
+                                                            </v-list-item-actions>
+                                                        </v-list-item>
+                                                    </div>
+                                                </transition-group>
+                                            </draggable>
+                                        </v-list>
+                                        <v-card outlined class="px-4 py-2 mt-2">
+                                            <v-row class="mt-2 fwidth">
+                                                <v-col cols="12">
+                                                    <v-container fluid>
+                                                        <v-textarea
+                                                            auto-grow
+                                                            label="Instruction"
+                                                            rows="2"
+                                                            row-height="20"
+                                                            solo
+                                                            clearable
+                                                            v-model="instruction_model"
+                                                            placeholder="Couper les oignons"
+                                                            clear-icon="mdi-close-circle"
+                                                            counter
+                                                            :rules="instruction_rules"
+                                                        ></v-textarea>
+                                                    </v-container>
+                                                </v-col>
+                                                <v-col cols="12" class="d-flex mb-2">
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn
+                                                        solo
+                                                        color="success"
+                                                        @click="add_instruction"
+                                                    >Ajouter</v-btn>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card>
+                                    </v-row>
+                                </v-form>
+                            </v-card-actions>
+                        </v-card>
+
                         <v-btn color="primary" @click="step = 4">Continuer</v-btn>
-                        <v-btn text>Cancel</v-btn>
+                        <v-btn text @click="step = 2">Retour</v-btn>
                     </v-stepper-content>
 
                     <v-stepper-step step="4">View setup instructions</v-stepper-step>
@@ -315,18 +498,13 @@ export default {
         FileInputModal,
         PhotoInput
     },
-    async asyncData({ $axios }) {
-        const resp = await $axios.$get('/api/recepie')
-        console.log(resp)
-        return {
-            recepies: resp
-        }
-    },
     data() {
         return {
-            step: 2,
+            step: 3,
             step1form: true,
             step2form: true,
+            step3form: true,
+            step4form: true,
             entity: {
                 name: "Recette Poulet croustillant",
                 access: 0,
@@ -345,7 +523,9 @@ export default {
                     min: '',
                 },
                 difficulty: 0,
-                cost: 0
+                cost: 0,
+                items: [],
+                instructions: []
             },
             isLoading: false,
             batchImportLoading: false,
@@ -356,8 +536,6 @@ export default {
             }, {
                 text: 'Create'
             }],
-            recepies: [],
-            searchQuery: '',
             selectedRecepies: [],
             headers: [
                 { text: 'Id', align: 'left', value: 'id' },
@@ -392,9 +570,21 @@ export default {
             input_photo: null,
             photo_count: 0,
             photos: [null,],
-            photo_lock: false
+            photo_lock: false,
+            // step3
+            ingredient_query_search: "",
+            ingredient_query_model: null,
+            ingredient_query_result: [],
+            ingredient_query_loading: false,
+            ingredient_query_count: null,
+            ingredient_query_unit: null,
+            ingredient_query_complement: null,
+            instruction_rules: [v => v.length <= 300 || 'Max 300 characters'],
+            instruction_model: "",
+
         }
-    },
+    }
+    ,
     watch: {
         photos(val, old) {
             if (!this.photo_lock) {
@@ -418,17 +608,68 @@ export default {
                 }, 100)
             }
 
+        },
+        ingredient_query_search(val) {
+            console.log(val)
+            // Items have already been loaded
+
+            // Items have already been requested
+            if (this.ingredient_query_loading) return
+
+            this.ingredient_query_loading = true
+
+            // Lazily load input items
+            this.searchIngredients()
+                .catch(err => {
+                    console.log(err)
+                })
+                .finally(() => (this.ingredient_query_loading = false))
+        }
+    },
+    computed: {
+        ingredient_query_items() {
+            return this.ingredient_query_result.map(entry => {
+                const Description = entry.label_fr.length > this.descriptionLimit
+                    ? entry.label_fr.slice(0, 80) + '...'
+                    : entry.label_fr
+
+                return Object.assign({}, entry, { Description })
+            })
         }
     },
     methods: {
         async searchIngredients() {
-            const query = this.searchQuery
+            const query = this.ingredient_query_search
             console.log(`SEARCH ${query}`)
-            const resp = await this.$axios.$post('/api/recepie/search', {
+            const resp = await this.$axios.$post('/api/items/search', {
                 query: query
             })
-            this.recepies = resp
+            this.ingredient_query_result = resp
 
+        },
+        add_ingredient() {
+            this.entity.items.push({
+                item: this.ingredient_query_model,
+                count: this.ingredient_query_count,
+                unit: this.ingredient_query_unit,
+                complement: this.ingredient_query_complement,
+            })
+            this.ingredient_query_model = null
+            this.ingredient_query_count = null
+            this.ingredient_query_unit = null
+            this.ingredient_query_complement = null
+        },
+        remove_ingredient(i) {
+            this.entity.items.splice(i, 1)
+        },
+        add_instruction() {
+            this.entity.instructions.push({
+                description: this.instruction_model,
+            })
+            this.instruction_model = ""
+        },
+        remove_instruction(i) {
+            this.entity.instructions.splice(i, 1)
         },
         async create() {
 
@@ -476,5 +717,11 @@ export default {
 .circle {
     height: 35px;
     width: 35px;
+}
+
+.outlined-list-item {
+    border: 1px solid #ebe5e3;
+    border-radius: 8px;
+    width: 100%;
 }
 </style>
