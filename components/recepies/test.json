@@ -1,0 +1,116 @@
+{
+    "name": "Recette Poulet croustillant",
+    "access": 0,
+    "type": "main_dish",
+    "cook_type": "oven",
+    "person_count": "4",
+    "person_count_unit": "personnes",
+    "estimated_preparation_time": {
+        "hour": "",
+        "min": "20"
+    },
+    "estimated_cook_time": {
+        "hour": "1",
+        "min": ""
+    },
+    "estimated_rest_time": {
+        "hour": "",
+        "min": "50"
+    },
+    "difficulty": 2,
+    "cost": 1,
+    "items": [
+        {
+            "item": {
+                "id": 4,
+                "label_en": null,
+                "label_fr": "Abricot",
+                "code": "abricot",
+                "letter": "A",
+                "ingredient_url": "/recettes/index/ingredient/abricot",
+                "created": "2022-01-23T02:44:20.193Z",
+                "updated": "2022-01-23T02:44:20.193Z",
+                "images": [
+                    {
+                        "id": "eb135134-3b3b-4faa-854f-15557d799a79",
+                        "mimetype": "jpg",
+                        "url": "https://assets.afcdn.com/recipe/20170607/67622_w200h200cx256cy192cxt0cyt0cxb700cyb700.jpg",
+                        "created": "2022-01-23T02:44:20.193Z",
+                        "updated": "2022-01-23T02:44:20.193Z"
+                    }
+                ],
+                "Description": "Abricot"
+            },
+            "count": "1",
+            "unit": {
+                "value": "CENTILITER",
+                "label": "centilitre",
+                "abbr": "cl"
+            },
+            "complement": null
+        },
+        {
+            "item": {
+                "id": 7,
+                "label_en": null,
+                "label_fr": "Absinthe",
+                "code": "absinthe",
+                "letter": "A",
+                "ingredient_url": "/recettes/index/ingredient/absinthe",
+                "created": "2022-01-23T02:44:20.210Z",
+                "updated": "2022-01-23T02:44:20.210Z",
+                "images": [
+                    {
+                        "id": "20c8d094-8bea-4f59-b448-99ebda1674e3",
+                        "mimetype": "jpg",
+                        "url": "https://assets.afcdn.com/recipe/20100101/ingredient_default_w200h200c1.jpg",
+                        "created": "2022-01-23T02:44:20.210Z",
+                        "updated": "2022-01-23T02:44:20.210Z"
+                    }
+                ],
+                "Description": "Absinthe"
+            },
+            "count": "12",
+            "unit": {
+                "value": "MILLILITER",
+                "label": "millimetre",
+                "abbr": "ml"
+            },
+            "complement": null
+        },
+        {
+            "item": {
+                "id": 5,
+                "label_en": null,
+                "label_fr": "Abricot au sirop",
+                "code": "abricot au sirop",
+                "letter": "A",
+                "ingredient_url": "/recettes/index/ingredient/abricot",
+                "created": "2022-01-23T02:44:20.198Z",
+                "updated": "2022-01-23T02:44:20.198Z",
+                "images": [
+                    {
+                        "id": "2d87df66-4bad-4b21-b001-1d33427cb50f",
+                        "mimetype": "jpg",
+                        "url": "https://assets.afcdn.com/recipe/20180404/78359_w200h200cx1650cy1650cxt0cyt0cxb3300cyb3300.jpg",
+                        "created": "2022-01-23T02:44:20.198Z",
+                        "updated": "2022-01-23T02:44:20.198Z"
+                    }
+                ],
+                "Description": "Abricot au sirop"
+            },
+            "count": "123",
+            "unit": {
+                "value": "LITER",
+                "label": "litre",
+                "abbr": "L"
+            },
+            "complement": null
+        }
+    ],
+    "instructions": [
+        {
+            "description": "dazda"
+        }
+    ]
+}

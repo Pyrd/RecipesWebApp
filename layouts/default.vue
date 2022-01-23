@@ -13,7 +13,7 @@
     <Appbar></Appbar>
     <NavigationDrawer></NavigationDrawer>
     <v-main>
-      <v-container>
+      <v-container fluid>
         <transition name="fade" mode="out-in">
           <Nuxt />
         </transition>

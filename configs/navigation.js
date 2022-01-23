@@ -12,7 +12,7 @@ export default {
     { title: "Users", icon: 'tachometer-fast-alt', to: "/users", },
     { title: "Ingredients", icon: 'pizza-slice', to: "/ingredients/", },
     { title: "Recepies", icon: 'restaurant', to: "/recepies/", },
-    { title: "Tags", icon: 'tag', to: "/tags/", },
+    { title: "Tags", icon: 'tag-alt', to: "/tags/", },
 
   ],
 
