@@ -160,9 +160,6 @@ export default {
     right: 100px;
 }
 
-.carousel-btn {
-}
-
 .carousel-wrapper {
     margin-top: 10px;
     width: 100%;

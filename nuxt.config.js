@@ -65,11 +65,11 @@ export default {
   },
 
   env: {
-    baseURL: 'http://localhost:8000/api'
+    baseURL: process.env.BACKEND_URL || 'http://localhost:8000/api'
   },
   proxy: {
     '/api': {
-      target: 'http://localhost:8000/api',
+      target: process.env.BACKEND_URL || 'http://localhost:8000/api',
       pathRewrite: { '^/api': '' }
     }
   },

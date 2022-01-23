@@ -147,19 +147,23 @@ export default {
             const preparation = this.value.estimated_preparation_time;
             const cook = this.value.estimated_cook_time;
             const rest = this.value.estimated_rest_time;
-            console.log(JSON.stringify({ preparation, cook, rest }));
             const total_min = parseInt("0" + preparation.min) + parseInt("0" + cook.min) + parseInt("0" + rest.min);
             const total_hour = parseInt("0" + preparation.hour) + parseInt("0" + cook.hour) + parseInt("0" + rest.hour);
             const delta_hour = total_min / 60;
-            console.log(total_min, delta_hour);
             const hours = Math.floor(delta_hour) + total_hour;
             const mins = total_min % 60;
             return `${hours > 0 ? hours + "h" : ""}${mins <= 9 ? "0" + mins : mins}`;
         },
         getTypeLabel() {
+            if (!this.value.type) {
+                return ""
+            }
             return this.recepie_types.find((e) => e.id == this.value.type).label;
         },
         getCookTypeLabel() {
+            if (!this.value.cook_type) {
+                return ""
+            }
             return this.cook_types.find((e) => e.id == this.value.cook_type).label;
         },
         getDifficultyLabel() {
@@ -171,8 +175,10 @@ export default {
                 case 3:
                     return "Difficile";
                 case 4:
-                default:
                     return "Très difficle";
+
+                default:
+                    return ""
             }
         },
         getCostLabel() {
@@ -182,8 +188,10 @@ export default {
                 case 2:
                     return "Coût moyen";
                 case 3:
-                default:
                     return "Assez cher";
+
+                default:
+                    return ""
             }
         }
     },

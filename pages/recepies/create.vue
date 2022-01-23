@@ -71,24 +71,24 @@ export default {
             entity: {
                 name: "Recette Poulet croustillant",
                 access: 0,
-                type: 'main_dish',
-                cook_type: 'oven',
-                person_count: "4",
+                type: '',
+                cook_type: '',
+                person_count: "",
                 person_count_unit: "personnes",
                 estimated_preparation_time: {
                     hour: '',
-                    min: '20',
+                    min: '',
                 },
                 estimated_cook_time: {
-                    hour: '1',
+                    hour: '',
                     min: '',
                 },
                 estimated_rest_time: {
                     hour: '',
-                    min: '50',
+                    min: '',
                 },
-                difficulty: 2,
-                cost: 1,
+                difficulty: null,
+                cost: null,
                 items: [{
                     "item": {
                         "id": 4,
