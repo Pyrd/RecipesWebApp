@@ -52,14 +52,8 @@
           </v-btn>
         </v-col>
       </v-row>
-
-      <v-data-table
-        v-model="selectedRecepies"
-        show-select
-        :headers="headers"
-        :recepie="recepies"
-        class="flex-grow-1"
-      >
+      {{ recepies }}
+      <v-data-table v-model="selectedRecepies" show-select :headers="headers" :items="recepies" class="flex-grow-1">
         <template v-slot:item.id="{ item }">
           <div class="font-weight-bold">
             #
@@ -70,17 +64,26 @@
         <!-- <template v-slot:item.code="{ item }">
           <div>{{ item.code }}</div>
         </template>-->
-        <template v-slot:item.label="{ item }">
-          <div>{{ item.label }}</div>
+        <template v-slot:item.name="{ item }">
+          <div>{{ item.name }}</div>
         </template>
-        <template v-slot:item.duration="{ item }">
-          <div>{{ item.duration_label }} {{ item.duration_unit }}</div>
-        </template>duration
+        <template v-slot:item.total_duration="{ item }">
+          <div>{{ item.total_duration }} min</div>
+        </template>
+        <template v-slot:item.author="{ item }">
+          <div>{{ item.author }}</div>
+        </template>
         <template v-slot:item.created="{ item }">
           <div>{{ item.created | formatDate('ll') }}</div>
         </template>
         <template v-slot:item.updated="{ item }">
           <div>{{ item.created | formatDate('ll') }}</div>
+        </template>
+        <template v-slot:item.access="{ item }">
+          <div>{{ item.access }}</div>
+        </template>
+        <template v-slot:item.status="{ item }">
+          <div>{{ item.status }}</div>
         </template>
         <template v-slot:item.action="{ item }">
           <div class="actions">
@@ -99,7 +102,7 @@ import CopyLabel from '../../components/common/CopyLabel'
 import FileInputModal from '../../components/modals/file-input.vue'
 
 export default {
-  middleware: "is_admin",
+  middleware: 'is_admin',
 
   components: {
     CopyLabel,
@@ -116,32 +119,35 @@ export default {
     return {
       isLoading: false,
       batchImportLoading: false,
-      breadcrumbs: [{
-        text: 'Recepies',
-        disabled: false,
-        href: '#'
-      }, {
-        text: 'List'
-      }],
+      breadcrumbs: [
+        {
+          text: 'Recepies',
+          disabled: false,
+          href: '#'
+        },
+        {
+          text: 'List'
+        }
+      ],
       recepies: [],
       searchQuery: '',
       selectedRecepies: [],
       headers: [
         { text: 'Id', align: 'left', value: 'id' },
         // { text: 'Code', value: 'code' },
-        { text: 'Title', value: 'title' },
-        { text: 'Duration', align: 'left', value: 'duration' },
+        { text: 'Name', value: 'name' },
+        { text: 'Duration', align: 'left', value: 'total_duration' },
+        { text: 'Author', align: 'left', value: 'author' },
         { text: 'Created', value: 'created' },
         { text: 'Updated', value: 'updated' },
-        { text: 'Disabled', value: 'disable' },
+        { text: 'Access', value: 'access' },
+        { text: 'Status', value: 'status' },
         { text: '', sortable: false, align: 'right', value: 'action' }
-      ],
+      ]
     }
   },
   watch: {
-    selectedRecepies(val) {
-
-    }
+    selectedRecepies(val) {}
   },
   methods: {
     async search() {
@@ -151,9 +157,8 @@ export default {
         query: query
       })
       this.recepies = resp
-
     },
-    open() { },
+    open() {},
     async refresh() {
       const resp = await this.$axios.$get('/api/recepie')
       this.recepies = resp
