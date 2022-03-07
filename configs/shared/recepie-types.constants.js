@@ -18,3 +18,7 @@ export const cook_types = [
     { label: "Sans-cuisson", icon: "no-cooking", id: "NOCOOKING" },
     { label: "Autres", icon: "miscs", id: "MISCS" },
 ]
+
+export const recepies_status = [
+    'DELETED', 'TO_BE_APPROVED', 'ACTIVE'
+]

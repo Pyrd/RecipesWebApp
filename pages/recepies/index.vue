@@ -52,18 +52,25 @@
           </v-btn>
         </v-col>
       </v-row>
-      {{ recepies }}
-      <v-data-table v-model="selectedRecepies" show-select :headers="headers" :items="recepies" class="flex-grow-1">
+      <!-- {{ recepies }} -->
+      <v-data-table
+        v-model="selectedRecepies"
+        show-select
+        :expanded.sync="expanded"
+        item-key="id"
+        show-expand
+        :headers="headers"
+        :items="recepies"
+        class="flex-grow-1"
+        >
+        </v-data-table>
+      >
         <template v-slot:item.id="{ item }">
           <div class="font-weight-bold">
             #
             <copy-label :text="item.id + ''" />
           </div>
         </template>
-
-        <!-- <template v-slot:item.code="{ item }">
-          <div>{{ item.code }}</div>
-        </template>-->
         <template v-slot:item.name="{ item }">
           <div>{{ item.name }}</div>
         </template>
@@ -80,10 +87,20 @@
           <div>{{ item.created | formatDate('ll') }}</div>
         </template>
         <template v-slot:item.access="{ item }">
-          <div>{{ item.access }}</div>
+          <div>
+            <v-chip :color="item.access == 0 ? 'success' : 'primary'">{{
+              item.access == 0 ? 'Public' : 'Private'
+            }}</v-chip>
+          </div>
         </template>
         <template v-slot:item.status="{ item }">
-          <div>{{ item.status }}</div>
+          <div class="centered">
+            <v-select hide-details dense outlined v-model="item.status" :items="recepies_status">
+              <template v-slot:selection="{ item }">
+                <v-chip :color="getStatusChipColor(item)">{{ formatStatus(item) }}</v-chip>
+              </template>
+            </v-select>
+          </div>
         </template>
         <template v-slot:item.action="{ item }">
           <div class="actions">
@@ -91,6 +108,85 @@
               <v-icon>mdi-open-in-new</v-icon>
             </v-btn>
           </div>
+        </template>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            <!-- <v-row>
+              <v-col cols="12" md="4" class="pt-4 px-12">
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Rating</p>
+                  <p>WIP</p>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Description</p>
+                  <p>{{ item.description }}</p>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Cost</p>
+                  <p>{{ item.cost }}</p>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Difficulty</p>
+                  <p>{{ item.difficulty }}</p>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Estimated preparation time:</p>
+                  <p>{{ item.duration.estimated_prepare_time }} min</p>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Estimated cook time:</p>
+                  <p>{{ item.duration.estimated_cook_time }} min</p>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <p class="font-weight-bold">Estimated rest time</p>
+                  <p>{{ item.duration.estimated_rest_time }} min</p>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4">
+                <p class="font-weight-bold">Ingrédients</p>
+                <!-- <v-row>
+                  <v-list class="fwidth pr-8">
+                    <div v-for="(e, i) in item.items" :key="i">
+                      <v-list-item outlined class="fwidth outlined-list-item mb-2">
+                        <v-list-item-avatar>
+                          <img :src="e.item.images[0].url" />
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-title class="font-weight-bold subtitle"
+                            >{{ e.count }} {{ e.unit }} {{ e.item.label_fr }} {{ e.complement }}</v-list-item-title
+                          >
+                          <v-list-item-subtitle v-html="e.code"></v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </div>
+                  </v-list>
+                </v-row> 
+              </v-col>
+              <v-col cols="12" md="4"
+                >{{ JSON.stringify(item, null, 2) }}
+
+                <p class="font-weight-bold">Instructions</p>
+                <v-row>
+                  <v-list class="fwidth pr-8" v-if="item.instructions && item.instructions.length > 0">
+                    <v-list-item
+                      v-for="(e, i) in item.instructions"
+                      :key="i"
+                      outlined
+                      class="fwidth outlined-list-item mb-2"
+                    >
+                      <v-list-item-content>
+                        <v-list-item-title class="subtitle">
+                          <span class="font-weight-bold">{{ i + 1 }}.</span>
+                          {{ e }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                  <p v-else class="mt-4 ml-8">Pas d'instructions :(</p>
+                </v-row>
+              </v-col>
+            </v-row> -->
+          </td>
         </template>
       </v-data-table>
     </v-card>
@@ -100,7 +196,7 @@
 <script>
 import CopyLabel from '../../components/common/CopyLabel'
 import FileInputModal from '../../components/modals/file-input.vue'
-
+import { recepies_status } from '~/configs/shared/recepie-types.constants'
 export default {
   middleware: 'is_admin',
 
@@ -117,6 +213,7 @@ export default {
   },
   data() {
     return {
+      recepies_status,
       isLoading: false,
       batchImportLoading: false,
       breadcrumbs: [
@@ -141,14 +238,16 @@ export default {
         { text: 'Created', value: 'created' },
         { text: 'Updated', value: 'updated' },
         { text: 'Access', value: 'access' },
-        { text: 'Status', value: 'status' },
+        { text: 'Status', value: 'status', width: '70px' },
         { text: '', sortable: false, align: 'right', value: 'action' }
-      ]
+      ],
+      expanded: []
     }
   },
   watch: {
     selectedRecepies(val) {}
   },
+  computed: {},
   methods: {
     async search() {
       const query = this.searchQuery
@@ -176,6 +275,47 @@ export default {
       } catch (err) {
         this.$notifyError(`An error occured: ${err}`)
       }
+    },
+    getStatusChipColor(status) {
+      switch (status) {
+        case 'DELETED':
+          return 'error'
+        case 'TO_BE_APPROVED':
+          return 'warning'
+        case 'ACTIVE':
+          return 'primary'
+      }
+      return ''
+    },
+    formatStatus(status) {
+      try {
+        if (!status || typeof status != 'string') {
+          return ''
+        }
+        const tmp = status.replaceAll('_', ' ').toLowerCase()
+        return tmp.charAt(0).toUpperCase() + tmp.slice(1)
+      } catch (e) {
+        return ''
+      }
+    },
+    async updateItem(item) {
+      try {
+        await this.$axios.$patch(`/api/recepie/${item.id}`, item)
+        this.$notifySuccess('Item updated successfully')
+      } catch (e) {
+        console.error(e)
+        this.$notifyError('An error occurred while updating')
+      }
+    },
+    async getItemsOfRecepie(item) {
+      const id = item.item.id
+      console.log(id)
+      try {
+        item.items = await this.$axios.$get(`/api/recepie/${id}/items`)
+      } catch (e) {
+        console.error(e)
+        this.$notifyError('An error occurred while fetching data')
+      }
     }
   }
 }
@@ -192,5 +332,9 @@ export default {
 .slide-fade-leave-to {
   transform: translateX(10px);
   opacity: 0;
+}
+
+.v-input--is-focused > div:nth-child(1) > div:nth-child(1) {
+  box-shadow: none !important;
 }
 </style>
