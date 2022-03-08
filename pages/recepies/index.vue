@@ -11,30 +11,7 @@
 
     <v-card>
       <v-row dense class="pa-2 align-center">
-        <v-col cols="6">
-          <!-- <v-menu offset-y left>
-            <template v-slot:activator="{ on }">
-              <transition name="slide-fade" mode="out-in">
-                <v-btn v-show="selectedRecepies.length > 0" v-on="on">
-                  Actions
-                  <v-icon right>mdi-menu-down</v-icon>
-                </v-btn>
-              </transition>
-            </template>
-            <v-list dense>
-              <v-list-item @click>
-                <v-list-item-title>Verify</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click>
-                <v-list-item-title>Disable</v-list-item-title>
-              </v-list-item>
-              <v-divider></v-divider>
-              <v-list-item @click>
-                <v-list-item-title>Delete</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>-->
-        </v-col>
+        <v-col cols="6"> </v-col>
         <v-col cols="6" class="d-flex text-right align-center">
           <v-text-field
             v-model="searchQuery"
@@ -62,8 +39,7 @@
         :headers="headers"
         :items="recepies"
         class="flex-grow-1"
-        >
-        </v-data-table>
+        @item-expanded="getItemsOfRecepie"
       >
         <template v-slot:item.id="{ item }">
           <div class="font-weight-bold">
@@ -71,6 +47,7 @@
             <copy-label :text="item.id + ''" />
           </div>
         </template>
+
         <template v-slot:item.name="{ item }">
           <div>{{ item.name }}</div>
         </template>
@@ -78,7 +55,7 @@
           <div>{{ item.total_duration }} min</div>
         </template>
         <template v-slot:item.author="{ item }">
-          <div>{{ item.author }}</div>
+          <div>{{ item.author ? item.author.displayname : '' }}</div>
         </template>
         <template v-slot:item.created="{ item }">
           <div>{{ item.created | formatDate('ll') }}</div>
@@ -95,7 +72,14 @@
         </template>
         <template v-slot:item.status="{ item }">
           <div class="centered">
-            <v-select hide-details dense outlined v-model="item.status" :items="recepies_status">
+            <v-select
+              hide-details
+              dense
+              outlined
+              v-model="item.status"
+              :items="recepies_status"
+              v-on:change="updateItem(item)"
+            >
               <template v-slot:selection="{ item }">
                 <v-chip :color="getStatusChipColor(item)">{{ formatStatus(item) }}</v-chip>
               </template>
@@ -103,24 +87,44 @@
           </div>
         </template>
         <template v-slot:item.action="{ item }">
-          <div class="actions">
-            <v-btn icon :to="localePath(`/recepies/edit?id=${item.id}`)">
-              <v-icon>mdi-open-in-new</v-icon>
-            </v-btn>
+          <div class="d-flex flex-row justify-center">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-hover v-slot="{ hover }">
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    :color="hover ? 'error' : ''"
+                    icon
+                    :to="localePath(`/recepies/edit?id=${item.id}`)"
+                  >
+                    <v-icon>mdi-trash-can</v-icon>
+                  </v-btn>
+                </v-hover>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-hover v-slot="{ hover }">
+                  <v-btn v-bind="attrs" v-on="on" :color="hover ? 'primary' : ''" icon>
+                    <v-icon>mdi-open-in-new</v-icon>
+                  </v-btn>
+                </v-hover>
+              </template>
+              <span>View</span>
+            </v-tooltip>
           </div>
         </template>
         <template v-slot:expanded-item="{ headers, item }">
           <td :colspan="headers.length">
-            <!-- <v-row>
+            <v-row>
               <v-col cols="12" md="4" class="pt-4 px-12">
                 <div class="d-flex justify-space-between">
                   <p class="font-weight-bold">Rating</p>
                   <p>WIP</p>
                 </div>
-                <div class="d-flex justify-space-between">
-                  <p class="font-weight-bold">Description</p>
-                  <p>{{ item.description }}</p>
-                </div>
+
                 <div class="d-flex justify-space-between">
                   <p class="font-weight-bold">Cost</p>
                   <p>{{ item.cost }}</p>
@@ -144,29 +148,32 @@
               </v-col>
               <v-col cols="12" md="4">
                 <p class="font-weight-bold">Ingrédients</p>
-                <!-- <v-row>
+                <v-row>
                   <v-list class="fwidth pr-8">
                     <div v-for="(e, i) in item.items" :key="i">
                       <v-list-item outlined class="fwidth outlined-list-item mb-2">
-                        <v-list-item-avatar>
+                        <v-list-item-avatar v-if="e.item != null">
                           <img :src="e.item.images[0].url" />
                         </v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-title class="font-weight-bold subtitle"
-                            >{{ e.count }} {{ e.unit }} {{ e.item.label_fr }} {{ e.complement }}</v-list-item-title
+                            >{{ e.count }} {{ e.unit }} {{ e.item ? e.item.label_fr : 'loading' }}
+                            {{ e.complement }}</v-list-item-title
                           >
                           <v-list-item-subtitle v-html="e.code"></v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
                   </v-list>
-                </v-row> 
+                </v-row>
               </v-col>
-              <v-col cols="12" md="4"
-                >{{ JSON.stringify(item, null, 2) }}
-
-                <p class="font-weight-bold">Instructions</p>
-                <v-row>
+              <v-col cols="12" md="4">
+                <div class="d-flex flex-column">
+                  <p class="font-weight-bold">Description</p>
+                  <p>{{ item.description || 'No description available' }}</p>
+                </div>
+                <div class="d-flex flex-column">
+                  <p class="font-weight-bold">Instructions</p>
                   <v-list class="fwidth pr-8" v-if="item.instructions && item.instructions.length > 0">
                     <v-list-item
                       v-for="(e, i) in item.instructions"
@@ -183,9 +190,9 @@
                     </v-list-item>
                   </v-list>
                   <p v-else class="mt-4 ml-8">Pas d'instructions :(</p>
-                </v-row>
+                </div>
               </v-col>
-            </v-row> -->
+            </v-row>
           </td>
         </template>
       </v-data-table>
@@ -309,9 +316,10 @@ export default {
     },
     async getItemsOfRecepie(item) {
       const id = item.item.id
-      console.log(id)
+      item.loading
       try {
-        item.items = await this.$axios.$get(`/api/recepie/${id}/items`)
+        const resp = await this.$axios.$get(`/api/recepie/${id}/items`)
+        item.item.items = resp
       } catch (e) {
         console.error(e)
         this.$notifyError('An error occurred while fetching data')

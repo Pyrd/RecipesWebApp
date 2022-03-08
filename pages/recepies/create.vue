@@ -198,6 +198,10 @@ export default {
       console.log('Creating recepie !')
       try {
         await this.$axios.$post('/api/recepie', this.createPostPackage())
+        this.$notifySuccess('Recepie created successfully ! Redirecting...')
+        setTimeout(() => {
+          this.goBack()
+        }, 3000)
       } catch (err) {
         console.error(err)
         this.$notifyError('Une erreur est survenue !')
