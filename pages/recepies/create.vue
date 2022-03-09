@@ -4,6 +4,8 @@
       <div>
         <div class="display-1">Recepies</div>
         <v-breadcrumbs :recepie="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
+        <v-spacer></v-spacer>
+        <v-btn solo color="primary" @click="createFake"> DEV </v-btn>
       </div>
       <v-spacer></v-spacer>
     </div>
@@ -58,7 +60,7 @@ export default {
   },
   data() {
     return {
-      step: 4,
+      step: 1,
       breadcrumbs: [
         {
           text: 'Recepies',
@@ -70,6 +72,89 @@ export default {
         }
       ],
       entity: {
+        name: '',
+        access: 0,
+        type: '',
+        cook_type: '',
+        person_count: '0',
+        person_count_unit: 'portions',
+        estimated_preparation_time: {
+          hour: '',
+          min: ''
+        },
+        estimated_cook_time: {
+          hour: '',
+          min: ''
+        },
+        estimated_rest_time: {
+          hour: '',
+          min: ''
+        },
+        difficulty: null,
+        cost: null,
+        items: [],
+        instructions: [],
+        images: []
+      }
+    }
+  },
+  methods: {
+    computeTotalTime() {
+      const preparation = this.entity.estimated_preparation_time
+      const cook = this.entity.estimated_cook_time
+      const rest = this.entity.estimated_rest_time
+      const total_min = parseInt('0' + preparation.min) + parseInt('0' + cook.min) + parseInt('0' + rest.min)
+      const total_hour = parseInt('0' + preparation.hour) + parseInt('0' + cook.hour) + parseInt('0' + rest.hour)
+      return total_min + total_hour * 60
+    },
+    createPostPackage() {
+      const preparation = this.entity.estimated_preparation_time
+      const cook = this.entity.estimated_cook_time
+      const rest = this.entity.estimated_rest_time
+      return {
+        name: this.entity.name,
+        description: '',
+        tags: [],
+        instructions: this.entity.instructions,
+        items: this.entity.items.map((e) => ({
+          item_id: e.item.id,
+          count: +e.count,
+          unit: e.unit.value,
+          complement: e.complement
+        })),
+        access: this.entity.access,
+        type: this.entity.type,
+        cook_type: this.entity.cook_type,
+        person_count: this.entity.person_count,
+        person_count_unit: this.entity.person_count_unit,
+        total_duration: this.computeTotalTime(),
+        duration: {
+          estimated_prepare_time: parseInt('0' + preparation.min) + parseInt('0' + preparation.hour) * 60,
+          estimated_cook_time: parseInt('0' + cook.min) + parseInt('0' + cook.hour) * 60,
+          estimated_rest_time: parseInt('0' + rest.min) + parseInt('0' + rest.hour) * 60
+        },
+        difficulty: this.entity.difficulty,
+        cost: this.entity.cost
+      }
+    },
+    async create() {
+      console.log('Creating recepie !')
+      try {
+        await this.$axios.$post('/api/recepie', this.createPostPackage())
+        this.$notifySuccess('Recepie created successfully ! Redirecting...')
+        setTimeout(() => {
+          this.goBack()
+        }, 3000)
+      } catch (err) {
+        console.error(err)
+        this.$notifyError('Une erreur est survenue !')
+      }
+    },
+    goBack() {
+      this.$router.push('/recepies')
+    },
+    createFake() {
+      this.entity = {
         name: 'Recette Poulet croustillant',
         access: 0,
         type: 'MAIN_DISH',
@@ -153,62 +238,7 @@ export default {
         instructions: ['Couper les oignons'],
         images: []
       }
-    }
-  },
-  methods: {
-    computeTotalTime() {
-      const preparation = this.entity.estimated_preparation_time
-      const cook = this.entity.estimated_cook_time
-      const rest = this.entity.estimated_rest_time
-      const total_min = parseInt('0' + preparation.min) + parseInt('0' + cook.min) + parseInt('0' + rest.min)
-      const total_hour = parseInt('0' + preparation.hour) + parseInt('0' + cook.hour) + parseInt('0' + rest.hour)
-      return total_min + total_hour * 60
-    },
-    createPostPackage() {
-      const preparation = this.entity.estimated_preparation_time
-      const cook = this.entity.estimated_cook_time
-      const rest = this.entity.estimated_rest_time
-      return {
-        name: this.entity.name,
-        description: '',
-        tags: [],
-        instructions: this.entity.instructions,
-        items: this.entity.items.map((e) => ({
-          item_id: e.item.id,
-          count: +e.count,
-          unit: e.unit.value,
-          complement: e.complement
-        })),
-        access: this.entity.access,
-        type: this.entity.type,
-        cook_type: this.entity.cook_type,
-        person_count: this.entity.person_count,
-        person_count_unit: this.entity.person_count_unit,
-        total_duration: this.computeTotalTime(),
-        duration: {
-          estimated_prepare_time: parseInt('0' + preparation.min) + parseInt('0' + preparation.hour) * 60,
-          estimated_cook_time: parseInt('0' + cook.min) + parseInt('0' + cook.hour) * 60,
-          estimated_rest_time: parseInt('0' + rest.min) + parseInt('0' + rest.hour) * 60
-        },
-        difficulty: this.entity.difficulty,
-        cost: this.entity.cost
-      }
-    },
-    async create() {
-      console.log('Creating recepie !')
-      try {
-        await this.$axios.$post('/api/recepie', this.createPostPackage())
-        this.$notifySuccess('Recepie created successfully ! Redirecting...')
-        setTimeout(() => {
-          this.goBack()
-        }, 3000)
-      } catch (err) {
-        console.error(err)
-        this.$notifyError('Une erreur est survenue !')
-      }
-    },
-    goBack() {
-      this.$router.push('/recepies')
+      this.step = 4
     }
   }
 }

@@ -132,7 +132,7 @@
                       <v-list-item-content>
                         <v-list-item-title class="subtitle">
                           <span class="font-weight-bold">{{ i + 1 }}.</span>
-                          {{ e.description }}
+                          {{ e }}
                         </v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-action>
@@ -203,6 +203,8 @@ export default {
       instruction_rules: [(v) => (v && v.length <= 300) || 'Max 300 characters'],
       instruction_model: '',
       units: [
+        { value: 'PIECE', label: 'pièce', label_en: 'piece', abbr: '' },
+
         { value: 'LITER', label: 'litre', abbr: 'L' },
         { value: 'MILLILITER', label: 'millimetre', abbr: 'ml' },
         { value: 'DECILITER', label: 'décilitre', abbr: 'dl' },
@@ -228,7 +230,7 @@ export default {
         { value: 'JAR', label: 'bocal', label_en: 'jar', abbr: '' },
         { value: 'BAR', label: 'barre', label_en: 'bar', abbr: '' },
         { value: 'FLASK', label: 'flacon', label_en: 'flask', abbr: '' },
-        { value: 'PIECE', label: 'morceau', label_en: 'piece', abbr: '' },
+        { value: 'PINCH', label: 'pincé', label_en: 'pinch', abbr: '' },
         { value: 'GLASS', label: 'verre', label_en: 'glass', abbr: '' },
         { value: 'BOUQUET', label: 'bouquet', label_en: 'bouquet', abbr: '' },
         { value: 'CHIP', label: 'copeau', label_en: 'chip', abbr: '' },

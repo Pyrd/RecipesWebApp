@@ -219,7 +219,7 @@
             <!-- Photos -->
             <v-row class="d-flex flex-column mb-12">
               <span class="font-weight-bold">Photos</span>
-              <v-row class="mt-2 d-flex">
+              <v-row class="mt-8 d-flex">
                 <draggable v-model="photos" class="d-flex">
                   <transition-group class="grid">
                     <div v-for="(element, i) in photos" :key="'photo' + i">
@@ -364,13 +364,28 @@ export default {
       if (!this.value.cook_type) {
         this.errors.cook_type = true
       }
-      if (!this.value.estimated_cook_time.min && !this.value.estimated_cook_time.hour) {
+      if (
+        !this.value.estimated_cook_time.min &&
+        !this.value.estimated_cook_time.hour &&
+        this.value.estimated_cook_time.min != '0' &&
+        this.value.estimated_cook_time.hour != '0'
+      ) {
         this.errors.cook = true
       }
-      if (!this.value.estimated_preparation_time.min && !this.value.estimated_preparation_time.hour) {
+      if (
+        !this.value.estimated_preparation_time.min &&
+        !this.value.estimated_preparation_time.hour &&
+        this.value.estimated_preparation_time.min != '0' &&
+        this.value.estimated_preparation_time.hour != '0'
+      ) {
         this.errors.preparation = true
       }
-      if (!this.value.estimated_rest_time.min && !this.value.estimated_rest_time.hour) {
+      if (
+        !this.value.estimated_rest_time.min &&
+        !this.value.estimated_rest_time.hour &&
+        this.value.estimated_rest_time.min != '0' &&
+        this.value.estimated_rest_time.hour != '0'
+      ) {
         this.errors.rest = true
       }
       console.log(

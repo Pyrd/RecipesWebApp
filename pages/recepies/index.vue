@@ -91,13 +91,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-hover v-slot="{ hover }">
-                  <v-btn
-                    v-bind="attrs"
-                    v-on="on"
-                    :color="hover ? 'error' : ''"
-                    icon
-                    :to="localePath(`/recepies/edit?id=${item.id}`)"
-                  >
+                  <v-btn v-bind="attrs" v-on="on" :color="hover ? 'error' : ''" icon @click="deleteItem(item.id)">
                     <v-icon>mdi-trash-can</v-icon>
                   </v-btn>
                 </v-hover>
@@ -107,7 +101,13 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-hover v-slot="{ hover }">
-                  <v-btn v-bind="attrs" v-on="on" :color="hover ? 'primary' : ''" icon>
+                  <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    :color="hover ? 'primary' : ''"
+                    icon
+                    :to="localePath(`/recepies/edit?id=${item.id}`)"
+                  >
                     <v-icon>mdi-open-in-new</v-icon>
                   </v-btn>
                 </v-hover>
@@ -309,9 +309,20 @@ export default {
       try {
         await this.$axios.$patch(`/api/recepie/${item.id}`, item)
         this.$notifySuccess('Item updated successfully')
+        this.refreshData()
       } catch (e) {
         console.error(e)
         this.$notifyError('An error occurred while updating')
+      }
+    },
+    async deleteItem(id) {
+      try {
+        await this.$axios.$delete(`/api/recepie/${id}`)
+        this.$notifySuccess('Item deleted successfully')
+        this.refreshData()
+      } catch (e) {
+        console.error(e)
+        this.$notifyError('An error occurred while deleting')
       }
     },
     async getItemsOfRecepie(item) {
@@ -324,7 +335,32 @@ export default {
         console.error(e)
         this.$notifyError('An error occurred while fetching data')
       }
+    },
+    async batchEdit(action) {
+      switch (action) {
+        case 'access':
+          this.entity.access = this.entity.access == 0 ? 1 : 0
+          break
+      }
+    },
+    async refreshData() {
+      try {
+        const resp = await this.$axios.$get(`/api/recepie/`)
+        this.recepies = resp
+      } catch (e) {
+        console.error(e)
+        this.$notifyError('An error occurred while fetching data')
+      }
     }
+    // async exportData(){
+    //   try {
+    //     const resp = await this.$axios.$get(`/api/recepie/`)
+    //     this.recepies = resp
+    //   } catch (e) {
+    //     console.error(e)
+    //     this.$notifyError('An error occurred while fetching data')
+    //   }
+    // }
   }
 }
 </script>
