@@ -1,9 +1,20 @@
 {
+    "trailingSlash": false,
     "builds": [
         {
             "src": "nuxt.config.js",
             "use": "@nuxtjs/vercel-builder",
             "config": {}
         }
-    ]
+    ],
+    "env": {
+        "env": {
+            "BACKEND_BASEURL": "api.recepies.io"
+        }
+    },
+    "build": {
+        "env": {
+            "BACKEND_BASEURL": "api.recepies.io"
+        }
+    }
 }
