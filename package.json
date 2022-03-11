@@ -9,7 +9,9 @@
     "generate": "nuxt generate",
     "heroku:postbuild": "npm run build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  },
   "devDependencies": {
     "@nuxtjs/auth-next": "5.0.0-1637745161.ea53f98",
     "@nuxtjs/axios": "^5.13.6",
@@ -20,7 +22,6 @@
     "cookie": "^0.4.1",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.15.1",
-    "dotenv": "^16.0.0",
     "flag-icon-css": "^4.1.7",
     "js-cookie": "^3.0.1",
     "moment": "^2.29.1",
