@@ -1,5 +1,5 @@
 import config from './configs'
-
+require("dotenv").config();
 const { locale, availableLocales, fallbackLocale } = config.locales
 export default {
 
@@ -64,11 +64,12 @@ export default {
   },
 
   env: {
-    baseURL: 'http://localhost:8000/api'
+    baseURL: process.env.BACKEND_BASEURL
   },
+
   proxy: {
     '/api': {
-      target: 'http://localhost:8000/api',
+      target: process.env.BACKEND_BASEURL,
       pathRewrite: { '^/api': '' }
     }
   },
