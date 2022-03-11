@@ -13,7 +13,7 @@
       <!-- users list -->
       <v-row dense class="pa-2 align-center">
         <v-col cols="6">
-          <v-menu offset-y left>
+          <!-- <v-menu offset-y left>
             <template v-slot:activator="{ on }">
               <transition name="slide-fade" mode="out-in">
                 <v-btn v-show="selectedUsers.length > 0" v-on="on">
@@ -34,7 +34,7 @@
                 <v-list-item-title>Delete</v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-menu>
+          </v-menu>-->
         </v-col>
         <v-col cols="6" class="d-flex text-right align-center">
           <v-text-field

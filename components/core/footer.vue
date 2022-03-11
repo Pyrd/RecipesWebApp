@@ -3,7 +3,7 @@
         <v-spacer></v-spacer>
         <span>
             &copy; 2021 —
-            <strong>Receipes</strong>
+            <strong>Recepies</strong>
         </span>
     </v-footer>
 </template>

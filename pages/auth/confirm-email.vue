@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="centered flex-column fheight">
     <v-card class="text-center pa-1">
       <v-card-title class="justify-center display-1 mb-2">
         {{

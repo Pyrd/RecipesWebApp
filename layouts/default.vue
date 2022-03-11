@@ -12,8 +12,8 @@
 
     <Appbar></Appbar>
     <NavigationDrawer></NavigationDrawer>
-    <v-main>
-      <v-container>
+    <v-main class="pr-4">
+      <v-container fluid>
         <transition name="fade" mode="out-in">
           <Nuxt />
         </transition>
@@ -28,16 +28,16 @@ import { mapState, mapMutations } from 'vuex'
 
 export default {
   speedkitComponents: {
-    Appbar: () => import("~/components/core/appbar"),
-    Footer: () => import("~/components/core/footer"),
-    NavigationDrawer: () => import("~/components/core/navigation-drawer.vue"),
+    Appbar: () => import('~/components/core/appbar'),
+    Footer: () => import('~/components/core/footer'),
+    NavigationDrawer: () => import('~/components/core/navigation-drawer.vue')
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
     ...mapState('app', {
-      theme: state => state.theme,
+      theme: (state) => state.theme
     }),
     isRouterLoaded: function () {
       if (this.$route.name !== null) return true
@@ -53,13 +53,12 @@ export default {
   methods: {
     ...mapMutations({
       initTheme: 'app/initTheme' // attacher `this.add()` à `this.$store.commit('increment')`
-    }),
+    })
   },
   created() {
     this.initTheme({
-      context: this,
-    },
-    )
+      context: this
+    })
 
     this.$vuetify.theme.dark = this.theme == 'dark'
     // this.$vuetify.theme.themes.light.primary = this.color

@@ -1,4 +1,4 @@
-# receipes-webapp
+# recepies-webapp
 
 ## Build Setup
 

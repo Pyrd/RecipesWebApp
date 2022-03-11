@@ -28,50 +28,59 @@
           class="text-h3 font-weight-black d-flex justify-center align-center"
           >Receipes</v-card-title
         >
-        <v-card-actions class="px-4">
-          <v-form
-            ref="form"
-            v-model="formValid"
-            lazy-validation
-            class="d-flex justify-center align-center flex-column"
-          >
-            <v-text-field
-              class="fwidth"
-              solo
-              v-model="email"
-              :rules="[rules.required]"
-              :error="error"
-              @change="resetErrors"
-              :label="$t('login.email')"
-            ></v-text-field>
-            <v-text-field
-              class="fwidth"
-              solo
-              v-model="password"
-              :error="error"
-              :rules="[rules.required]"
-              :error-messages="errorMessages"
-              name="password"
-              :label="$t('login.password')"
-              type="password"
-              :type="showPassword ? 'text' : 'password'"
-              @change="resetErrors"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append="showPassword = !showPassword"
-            ></v-text-field>
-            <v-alert
-              class="mx-4 text-subtitle d-flex justify-end"
-              v-if="displayConfirmationEmailActivator"
-              border="left"
-              colored-border
-              type="info"
-              elevation="2"
-            >
-              <div>Do you wish to resend a confirmation e-mail ?</div>
-              <v-btn small color="success" @click="resendConfirmationEmail"
-                >Re-send</v-btn
-              >
-            </v-alert>
+            <img style="height:66%;width:100%" src="~/assets/images/login.svg" alt="Login" />
+        </v-col>
+        <v-col
+            cols="12"
+            md="6"
+            class="fill-height d-flex justify-center align-center login-background"
+        >
+            <v-card width="400">
+                <v-card-title
+                    class="text-h3 font-weight-black d-flex justify-center align-center"
+                >Recepies</v-card-title>
+                <v-card-actions class="px-4">
+                    <v-form
+                        ref="form"
+                        v-model="formValid"
+                        lazy-validation
+                        class="d-flex justify-center align-center flex-column"
+                    >
+                        <v-text-field
+                            class="fwidth"
+                            solo
+                            v-model="email"
+                            :rules="[rules.required]"
+                            :error="error"
+                            @change="resetErrors"
+                            :label="$t('login.email')"
+                        ></v-text-field>
+                        <v-text-field
+                            class="fwidth"
+                            solo
+                            v-model="password"
+                            :error="error"
+                            :rules="[rules.required]"
+                            :error-messages="errorMessages"
+                            name="password"
+                            :label="$t('login.password')"
+                            type="password"
+                            :type="showPassword ? 'text' : 'password'"
+                            @change="resetErrors"
+                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append="showPassword = !showPassword"
+                        ></v-text-field>
+                        <v-alert
+                            class="mx-4 text-subtitle d-flex justify-end"
+                            v-if="displayConfirmationEmailActivator"
+                            border="left"
+                            colored-border
+                            type="info"
+                            elevation="2"
+                        >
+                            <div>Do you wish to resend a confirmation e-mail ?</div>
+                            <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
+                        </v-alert>
 
             <v-btn
               :loading="isLoading"
@@ -125,8 +134,8 @@ export default {
     displayConfirmationEmailModal: false,
     isLoading: false,
     rules: {
-      required: (value) => (value && Boolean(value)) || 'Required',
-    },
+      required: (value) => (value && Boolean(value)) || 'Required'
+    }
   }),
   methods: {
     async submit() {
@@ -141,7 +150,7 @@ export default {
     resendConfirmationEmail() {
       this.$axios
         .$post(`api/user/sendconfirmationemail`, {
-          email: this.email,
+          email: this.email
         })
         .then(() => {
           this.$notifySuccess('Verification Email sent successfully')
@@ -175,8 +184,8 @@ export default {
           .loginWith('cookie', {
             data: {
               email,
-              password,
-            },
+              password
+            }
           })
           .catch((err) => {
             // eslint-disable-next-line no-console
@@ -205,8 +214,8 @@ export default {
 
       this.errorProvider = false
       this.errorProviderMessages = ''
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -220,11 +229,6 @@ export default {
         rgba(0, 212, 255, 1) 100%
     ); */
 
-  background: linear-gradient(
-    45deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(218, 1, 58, 1) 0%,
-    rgba(0, 213, 255, 1) 100%
-  );
+  background: linear-gradient(45deg, rgba(2, 0, 36, 1) 0%, rgba(218, 1, 58, 1) 0%, rgba(0, 213, 255, 1) 100%);
 }
 </style>

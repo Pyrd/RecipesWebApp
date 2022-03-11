@@ -31,6 +31,7 @@ export default {
     '~/plugins/helpers.ts',
     { src: '~/plugins/vue-unicon.js', mode: 'client' },
     { src: '~/plugins/apexcharts.js', mode: 'client' },
+    { src: '~/plugins/draggable.js', },
     { src: '~/plugins/clipboard.js', mode: 'client' },
     { src: '~plugins/vuex-persistedstate.js' },
     // Filters
@@ -64,12 +65,12 @@ export default {
   },
 
   env: {
-    baseURL: process.env.BACKEND_BASEURL
+    baseURL: process.env.BACKEND_URL || 'http://localhost:8000/api'
   },
 
   proxy: {
     '/api': {
-      target: process.env.BACKEND_BASEURL,
+      target: process.env.BACKEND_URL || 'http://localhost:8000/api',
       pathRewrite: { '^/api': '' }
     }
   },
