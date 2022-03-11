@@ -5,12 +5,6 @@
     </v-col>
     <v-col cols="12" md="6" class="fill-height d-flex justify-center align-center login-background">
       <v-card width="400">
-        <v-card-title class="text-h3 font-weight-black d-flex justify-center align-center">Receipes</v-card-title>
-        <img style="height: 66%; width: 100%" src="~/assets/images/login.svg" alt="Login" />
-      </v-card>
-    </v-col>
-    <v-col cols="12" md="6" class="fill-height d-flex justify-center align-center login-background">
-      <v-card width="400">
         <v-card-title class="text-h3 font-weight-black d-flex justify-center align-center">Recepies</v-card-title>
         <v-card-actions class="px-4">
           <v-form ref="form" v-model="formValid" lazy-validation class="d-flex justify-center align-center flex-column">
@@ -87,8 +81,8 @@ export default {
   auth: 'guest',
   data: () => ({
     formValid: true,
-    email: '',
-    password: '',
+    email: 'mathieu.cailly@gmail.com',
+    password: 'test',
     error: false,
     errorMessages: '',
     showPassword: false,
