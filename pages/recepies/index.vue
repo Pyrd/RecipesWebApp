@@ -6,12 +6,66 @@
         <v-breadcrumbs :items="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
       </div>
       <v-spacer></v-spacer>
-      <v-btn color="primary" class="mr-2" to="/recepies/create">Create</v-btn>
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-hover v-slot="{ hover }">
+            <v-btn v-bind="attrs" v-on="on" :color="hover ? 'success' : 'primary'" fab small class="mr-2">
+              <v-icon>mdi-import</v-icon>
+            </v-btn>
+          </v-hover>
+        </template>
+        <span>Import</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-hover v-slot="{ hover }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              :color="hover ? 'warning' : 'primary'"
+              fab
+              small
+              class="mr-2"
+              href="/api/recepie/export"
+              download
+            >
+              <v-icon>mdi-export</v-icon>
+            </v-btn>
+          </v-hover>
+        </template>
+        <span>Export</span>
+      </v-tooltip>
+      <FileInputModal
+        @submit="batchImport"
+        activator_btn="Import"
+        success_btn="Import"
+        :loading="batchImportLoading"
+        class="mr-2"
+      >
+        <!-- <template v-slot:btn>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-hover v-slot="{ hover }">
+                <v-btn v-bind="attrs" v-on="on" :color="hover ? 'success' : 'primary'" fab small class="mr-2">
+                  <v-icon>mdi-import</v-icon>
+                </v-btn>
+              </v-hover>
+            </template>
+            <span>Import</span>
+          </v-tooltip>
+        </template> -->
+      </FileInputModal>
+      <v-hover v-slot="{ hover }">
+        <v-btn :color="hover ? 'success' : 'primary'" class="mr-2" to="/recepies/create">Create</v-btn>
+      </v-hover>
     </div>
 
     <v-card>
       <v-row dense class="pa-2 align-center">
-        <v-col cols="6"> </v-col>
+        <v-col cols="6">
+          <span class="text-caption ml-4">Found a total of {{ count }} recepies.</span>
+        </v-col>
         <v-col cols="6" class="d-flex text-right align-center">
           <v-text-field
             v-model="searchQuery"
@@ -203,6 +257,7 @@
 <script>
 import CopyLabel from '../../components/common/CopyLabel'
 import FileInputModal from '../../components/modals/file-input.vue'
+import { getStatusChipColor, formatStatus } from '~/utils/recepies-helper'
 import { recepies_status } from '~/configs/shared/recepie-types.constants'
 export default {
   middleware: 'is_admin',
@@ -212,10 +267,11 @@ export default {
     FileInputModal
   },
   async asyncData({ $axios }) {
-    const resp = await $axios.$get('/api/recepie')
-    console.log(resp)
+    const { data, count } = await $axios.$get('/api/recepie')
+    console.log(data, count)
     return {
-      recepies: resp
+      recepies: data,
+      count: count
     }
   },
   data() {
@@ -234,6 +290,7 @@ export default {
         }
       ],
       recepies: [],
+      count: 0,
       searchQuery: '',
       selectedRecepies: [],
       headers: [
@@ -265,16 +322,14 @@ export default {
       this.recepies = resp
     },
     open() {},
-    async refresh() {
-      const resp = await this.$axios.$get('/api/recepie')
-      this.recepies = resp
-    },
-    async batchImportTsv(file) {
+    getStatusChipColor,
+    formatStatus,
+    async batchImport(file) {
       const form = new FormData()
       form.append('file', file)
       try {
         this.batchImportLoading = true
-        const resp = await this.$axios.$post('/api/init/recepies', form)
+        const resp = await this.$axios.$post('/api/recepie/import', form)
         this.batchImportLoading = false
 
         this.$notifySuccess(`Imported successfully ${resp.length} new recepies`)
@@ -283,33 +338,11 @@ export default {
         this.$notifyError(`An error occured: ${err}`)
       }
     },
-    getStatusChipColor(status) {
-      switch (status) {
-        case 'DELETED':
-          return 'error'
-        case 'TO_BE_APPROVED':
-          return 'warning'
-        case 'ACTIVE':
-          return 'primary'
-      }
-      return ''
-    },
-    formatStatus(status) {
-      try {
-        if (!status || typeof status != 'string') {
-          return ''
-        }
-        const tmp = status.replaceAll('_', ' ').toLowerCase()
-        return tmp.charAt(0).toUpperCase() + tmp.slice(1)
-      } catch (e) {
-        return ''
-      }
-    },
     async updateItem(item) {
       try {
         await this.$axios.$patch(`/api/recepie/${item.id}`, item)
         this.$notifySuccess('Item updated successfully')
-        this.refreshData()
+        this.refresh()
       } catch (e) {
         console.error(e)
         this.$notifyError('An error occurred while updating')
@@ -319,7 +352,7 @@ export default {
       try {
         await this.$axios.$delete(`/api/recepie/${id}`)
         this.$notifySuccess('Item deleted successfully')
-        this.refreshData()
+        this.refresh()
       } catch (e) {
         console.error(e)
         this.$notifyError('An error occurred while deleting')
@@ -343,10 +376,11 @@ export default {
           break
       }
     },
-    async refreshData() {
+    async refresh() {
       try {
-        const resp = await this.$axios.$get(`/api/recepie/`)
-        this.recepies = resp
+        const { data, count } = await this.$axios.$get(`/api/recepie/`)
+        this.recepies = data
+        this.count = count
       } catch (e) {
         console.error(e)
         this.$notifyError('An error occurred while fetching data')
