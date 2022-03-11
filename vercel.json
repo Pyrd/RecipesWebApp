@@ -8,9 +8,7 @@
         }
     ],
     "env": {
-        "env": {
-            "BACKEND_BASEURL": "api.recepies.io"
-        }
+        "BACKEND_BASEURL": "api.recepies.io"
     },
     "build": {
         "env": {
