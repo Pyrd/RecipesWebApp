@@ -1,86 +1,54 @@
 <template>
   <v-row justify-center align-center class>
-    <v-col
-      cols="12"
-      md="6"
-      class="
-        fill-height
-        d-none d-md-flex
-        justify-center
-        align-center
-        py-8
-        px-16
-      "
-    >
-      <img
-        style="height: 66%; width: 100%"
-        src="~/assets/images/login.svg"
-        alt="Login"
-      />
+    <v-col cols="12" md="6" class="fill-height d-none d-md-flex justify-center align-center py-8 px-16">
+      <img style="height: 66%; width: 100%" src="~/assets/images/login.svg" alt="Login" />
     </v-col>
-    <v-col
-      cols="12"
-      md="6"
-      class="fill-height d-flex justify-center align-center login-background"
-    >
+    <v-col cols="12" md="6" class="fill-height d-flex justify-center align-center login-background">
       <v-card width="400">
-        <v-card-title
-          class="text-h3 font-weight-black d-flex justify-center align-center"
-          >Receipes</v-card-title
-        >
-            <img style="height:66%;width:100%" src="~/assets/images/login.svg" alt="Login" />
-        </v-col>
-        <v-col
-            cols="12"
-            md="6"
-            class="fill-height d-flex justify-center align-center login-background"
-        >
-            <v-card width="400">
-                <v-card-title
-                    class="text-h3 font-weight-black d-flex justify-center align-center"
-                >Recepies</v-card-title>
-                <v-card-actions class="px-4">
-                    <v-form
-                        ref="form"
-                        v-model="formValid"
-                        lazy-validation
-                        class="d-flex justify-center align-center flex-column"
-                    >
-                        <v-text-field
-                            class="fwidth"
-                            solo
-                            v-model="email"
-                            :rules="[rules.required]"
-                            :error="error"
-                            @change="resetErrors"
-                            :label="$t('login.email')"
-                        ></v-text-field>
-                        <v-text-field
-                            class="fwidth"
-                            solo
-                            v-model="password"
-                            :error="error"
-                            :rules="[rules.required]"
-                            :error-messages="errorMessages"
-                            name="password"
-                            :label="$t('login.password')"
-                            type="password"
-                            :type="showPassword ? 'text' : 'password'"
-                            @change="resetErrors"
-                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                            @click:append="showPassword = !showPassword"
-                        ></v-text-field>
-                        <v-alert
-                            class="mx-4 text-subtitle d-flex justify-end"
-                            v-if="displayConfirmationEmailActivator"
-                            border="left"
-                            colored-border
-                            type="info"
-                            elevation="2"
-                        >
-                            <div>Do you wish to resend a confirmation e-mail ?</div>
-                            <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
-                        </v-alert>
+        <v-card-title class="text-h3 font-weight-black d-flex justify-center align-center">Receipes</v-card-title>
+        <img style="height: 66%; width: 100%" src="~/assets/images/login.svg" alt="Login" />
+      </v-card>
+    </v-col>
+    <v-col cols="12" md="6" class="fill-height d-flex justify-center align-center login-background">
+      <v-card width="400">
+        <v-card-title class="text-h3 font-weight-black d-flex justify-center align-center">Recepies</v-card-title>
+        <v-card-actions class="px-4">
+          <v-form ref="form" v-model="formValid" lazy-validation class="d-flex justify-center align-center flex-column">
+            <v-text-field
+              class="fwidth"
+              solo
+              v-model="email"
+              :rules="[rules.required]"
+              :error="error"
+              @change="resetErrors"
+              :label="$t('login.email')"
+            ></v-text-field>
+            <v-text-field
+              class="fwidth"
+              solo
+              v-model="password"
+              :error="error"
+              :rules="[rules.required]"
+              :error-messages="errorMessages"
+              name="password"
+              :label="$t('login.password')"
+              type="password"
+              :type="showPassword ? 'text' : 'password'"
+              @change="resetErrors"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append="showPassword = !showPassword"
+            ></v-text-field>
+            <v-alert
+              class="mx-4 text-subtitle d-flex justify-end"
+              v-if="displayConfirmationEmailActivator"
+              border="left"
+              colored-border
+              type="info"
+              elevation="2"
+            >
+              <div>Do you wish to resend a confirmation e-mail ?</div>
+              <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
+            </v-alert>
 
             <v-btn
               :loading="isLoading"
@@ -93,9 +61,7 @@
               >{{ $t('login.button') }}</v-btn
             >
             <div class="mt-5">
-              <router-link :to="localePath('/auth/forgot-password')">{{
-                $t('login.forgot')
-              }}</router-link>
+              <router-link :to="localePath('/auth/forgot-password')">{{ $t('login.forgot') }}</router-link>
             </div>
           </v-form>
         </v-card-actions>
@@ -103,11 +69,9 @@
         <v-card-actions class="d-flex justify-center align-center">
           <div class="text-center mt-6">
             {{ $t('login.noaccount') }}
-            <router-link
-              :to="localePath('/auth/signup')"
-              class="font-weight-bold"
-              >{{ $t('login.create') }}</router-link
-            >
+            <router-link :to="localePath('/auth/signup')" class="font-weight-bold">{{
+              $t('login.create')
+            }}</router-link>
           </div>
         </v-card-actions>
       </v-card>
