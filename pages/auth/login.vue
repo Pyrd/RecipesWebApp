@@ -81,8 +81,8 @@ export default {
   auth: 'guest',
   data: () => ({
     formValid: true,
-    email: 'mathieu.cailly@gmail.com',
-    password: 'test',
+    email: '',
+    password: '',
     error: false,
     errorMessages: '',
     showPassword: false,
