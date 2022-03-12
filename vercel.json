@@ -13,11 +13,11 @@
         }
     ],
     "env": {
-        "BACKEND_BASEURL": "api.recepies.io"
+        "BACKEND_BASEURL": "api.recepies.io/api"
     },
     "build": {
         "env": {
-            "BACKEND_BASEURL": "api.recepies.io"
+            "BACKEND_BASEURL": "api.recepies.io/api"
         }
     },
     "rewrites": [
