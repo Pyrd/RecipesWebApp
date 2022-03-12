@@ -103,6 +103,8 @@ export default {
         token: {
           required: true,
         },
+        maxAge: 60 * 10,
+        secure: true,
         user: {
           property: false,//"data",
         },
