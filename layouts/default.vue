@@ -27,7 +27,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  speedkitComponents: {
+  components: {
     Appbar: () => import('~/components/core/appbar'),
     Footer: () => import('~/components/core/footer'),
     NavigationDrawer: () => import('~/components/core/navigation-drawer.vue')
