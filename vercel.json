@@ -22,8 +22,8 @@
     },
     "rewrites": [
         {
-            "source": "/api",
-            "destination": "https://api.recepies.io/api"
+            "source": "/api/:match*",
+            "destination": "https://api.recepies.io/api/:match*"
         }
     ]
 }
