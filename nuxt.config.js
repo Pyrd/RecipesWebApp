@@ -52,7 +52,6 @@ export default {
 
   // Modules
   modules: [
-    'nuxt-speedkit',
     '@nuxtjs/toast',
     '@nuxtjs/auth-next',
     '@nuxtjs/axios', '@nuxtjs/i18n',
