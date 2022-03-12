@@ -9,6 +9,23 @@
 //     url(~assets/poppins/Oxygen-Regular.ttf) format("truetype");
 // }
 
+@font-face {
+    font-family: "Poppins";
+    src: local("Poppins"), url(~assets/fonts/poppins/Poppins-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "DM Mono";
+    src: local("DM Mono"), url(~assets/fonts/dm-mono/DMMono-Medium.ttf) format("truetype");
+}
+
+.caption {
+    font-family: "DM Mono", arial, helvetica, sans-serif;
+}
+
+html {
+    font-family: "Poppins";
+}
 $body-font-family: Poppins;
 
 .word-keep-all {

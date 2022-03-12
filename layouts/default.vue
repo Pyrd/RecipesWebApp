@@ -1,5 +1,5 @@
 <template>
-  <v-app v-font="$getFont('Poppins', 300)">
+  <v-app>
     <!-- <v-snackbar v-model="toast.show" :timeout="toast.timeout" :color="toast.color" bottom>
       {{ toast.message }}
       <v-btn
