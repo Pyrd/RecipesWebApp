@@ -19,5 +19,11 @@
         "env": {
             "BACKEND_BASEURL": "api.recepies.io"
         }
-    }
+    },
+    "rewrites": [
+        {
+            "source": "/api",
+            "destination": "https://api.recepies.io/api"
+        }
+    ]
 }
