@@ -113,6 +113,7 @@ export default {
           login: {
             url: "/api/auth/login",
             method: "post",
+            withCredentials: true
           },
           logout: { url: "/api/auth/logout", method: "post" },
           user: { url: "/api/user/me", method: "get" },

@@ -1,7 +1,10 @@
 import { inspect } from 'util' // or directly
 export const actions = {
     async nuxtServerInit({ commit, }, { req, app }) {
-        // const cookies = req.headers.cookie?.split(';')
+        const cookies = req.headers.cookie?.split(';')
+        if (cookies) {
+            console.log(">>>cookie>>>", cookies)
+        }
         // if (cookies) {
         //     const jwt = cookies.find(() => "jwt")
         //     if (jwt) {
