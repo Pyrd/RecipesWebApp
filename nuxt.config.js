@@ -60,7 +60,8 @@ export default {
 
   axios: {
     proxy: true,
-    proxyHeaders: false
+    proxyHeaders: false,
+    credentials: true
   },
 
   env: {
