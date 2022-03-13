@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import CopyLabel from '../../components/common/CopyLabel'
+import CopyLabel from '~/components/common/CopyLabel'
 import { recepies_status } from '~/configs/shared/recepie-types.constants'
 import { getStatusChipColor, formatStatus } from '~/utils/recepies-helper'
 export default {

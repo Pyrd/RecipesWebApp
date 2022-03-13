@@ -143,7 +143,7 @@ import CopyLabel from '~/components/common/CopyLabel'
 import { recepie_types, cook_types } from '~/configs/shared/recepie-types.constants'
 import PhotoGallery from '~/components/common/PhotoGallery.vue'
 export default {
-  middleware: 'is_admin',
+  middleware: 'admin',
   components: {
     CopyLabel,
     PhotoGallery

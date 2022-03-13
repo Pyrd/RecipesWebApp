@@ -11,10 +11,7 @@
       </v-btn>-->
     </div>
 
-    <div
-      v-if="user.role === 'ADMIN'"
-      class="d-flex align-center font-weight-bold primary--text my-2"
-    >
+    <div v-if="user.role === 'ADMIN'" class="d-flex align-center font-weight-bold primary--text my-2">
       <v-icon small color="primary">mdi-security</v-icon>
       <span class="ma-1">Administrator</span>
     </div>
@@ -52,12 +49,12 @@
 </template>
 
 <script>
-import CopyLabel from '../../components/common/CopyLabel'
-import AccountTab from '../../components/user/AccountTab'
-import InformationTab from '../../components/user/InformationTab'
+import CopyLabel from '~/components/common/CopyLabel'
+import AccountTab from '~/components/user/AccountTab'
+import InformationTab from '~/components/user/InformationTab'
 
 export default {
-  middleware: "is_admin",
+  middleware: 'admin',
 
   components: {
     CopyLabel,

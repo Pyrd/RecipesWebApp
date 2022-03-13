@@ -1,4 +1,4 @@
-const locale = 'en'
+const locale = 'fr'
 
 export default {
   // current locale

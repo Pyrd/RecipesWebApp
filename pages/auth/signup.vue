@@ -48,14 +48,9 @@
             @click:append="showPassword = !showPassword"
           ></v-text-field>
 
-          <v-btn
-            :loading="isLoading"
-            :disabled="isSignUpDisabled"
-            block
-            x-large
-            color="primary"
-            @click="submit"
-          >{{ $t('register.button') }}</v-btn>
+          <v-btn :loading="isLoading" :disabled="isSignUpDisabled" block x-large color="primary" @click="submit">{{
+            $t('register.button')
+          }}</v-btn>
 
           <div class="caption font-weight-bold text-uppercase my-3">{{ $t('register.orsign') }}</div>
 
@@ -79,7 +74,8 @@
           <div class="mt-5 overline">
             {{ $t('register.agree') }}
             <br />
-            <router-link to>{{ $t('common.tos') }}</router-link>&
+            <router-link to>{{ $t('common.tos') }}</router-link
+            >&
             <router-link to>{{ $t('common.policy') }}</router-link>
           </div>
         </v-form>
@@ -88,10 +84,7 @@
 
     <div class="text-center mt-6">
       {{ $t('register.account') }}
-      <router-link
-        :to="localePath('/auth/signin')"
-        class="font-weight-bold"
-      >{{ $t('register.signin') }}</router-link>
+      <router-link :to="localePath('/auth/signin')" class="font-weight-bold">{{ $t('register.signin') }}</router-link>
     </div>
   </div>
 </template>
@@ -107,7 +100,8 @@
 */
 export default {
   layout: 'empty',
-  auth: 'guest',
+  middleware: 'guest',
+
   data() {
     return {
       // sign up buttons
@@ -135,15 +129,18 @@ export default {
       showPassword: false,
 
       // external providers
-      providers: [{
-        id: 'google',
-        label: 'Google',
-        isLoading: false
-      }, {
-        id: 'facebook',
-        label: 'Facebook',
-        isLoading: false
-      }],
+      providers: [
+        {
+          id: 'google',
+          label: 'Google',
+          isLoading: false
+        },
+        {
+          id: 'facebook',
+          label: 'Facebook',
+          isLoading: false
+        }
+      ],
 
       // input rules
       rules: {
@@ -159,8 +156,8 @@ export default {
         this.signUp(this.email, this.password)
       }
     },
-    signUp(email, password) { },
-    signInProvider(provider) { },
+    signUp(email, password) {},
+    signInProvider(provider) {},
     resetErrors() {
       this.errorName = false
       this.errorEmail = false

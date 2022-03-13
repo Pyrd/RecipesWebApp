@@ -45,12 +45,12 @@
 </template>
 
 <script>
-import CreateRecepieStep1 from '../../components/recepies/CreateRecepieStep1.vue'
-import CreateRecepieStep2 from '../../components/recepies/CreateRecepieStep2.vue'
-import CreateRecepieStep3 from '../../components/recepies/CreateRecepieStep3.vue'
-import CreateRecepieStep4 from '../../components/recepies/CreateRecepieStep4.vue'
+import CreateRecepieStep1 from '~/components/recepies/CreateRecepieStep1.vue'
+import CreateRecepieStep2 from '~/components/recepies/CreateRecepieStep2.vue'
+import CreateRecepieStep3 from '~/components/recepies/CreateRecepieStep3.vue'
+import CreateRecepieStep4 from '~/components/recepies/CreateRecepieStep4.vue'
 export default {
-  middleware: 'is_admin',
+  middleware: 'admin',
 
   components: {
     CreateRecepieStep1,

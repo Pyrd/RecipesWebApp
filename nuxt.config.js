@@ -2,8 +2,6 @@ import config from './configs'
 require("dotenv").config();
 const { locale, availableLocales, fallbackLocale } = config.locales
 export default {
-
-
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - Recepies',
@@ -20,6 +18,10 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
+  },
+
+  server: {
+    port: process.env.PORT || 3000
   },
 
   // router: {
@@ -53,9 +55,16 @@ export default {
   // Modules
   modules: [
     '@nuxtjs/toast',
-    '@nuxtjs/auth-next',
+    // '@nuxtjs/auth-next',
     '@nuxtjs/axios', '@nuxtjs/i18n',
     'cookie-universal-nuxt',
+    "@nuxtjs/gtm",
+    "@nuxtjs/firebase",
+    '@nuxtjs/pwa',
+    "@nuxtjs/recaptcha",
+    "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
+    // "@nuxtjs/google-gtag"
   ],
 
   axios: {
@@ -65,7 +74,10 @@ export default {
   },
 
   env: {
-    baseURL: process.env.BACKEND_URL || 'http://localhost:8000/api'
+    baseURL: process.env.BACKEND_URL || 'http://localhost:8000/api',
+    gtm: {
+      id: process.env.GOOGLE_TAG_MANAGER_ID
+    },
   },
 
   proxy: {
@@ -93,42 +105,6 @@ export default {
     }
   },
 
-  auth: {
-    redirect: {
-      login: "/auth/login"
-    },
-    strategies: {
-      local: false,
-      cookie: {
-        scope: true,
-        token: {
-          required: true,
-        },
-        maxAge: 60 * 10,
-        secure: true,
-        user: {
-          property: false,//"data",
-        },
-        endpoints: {
-          login: {
-            url: "/api/auth/login",
-            method: "post",
-            withCredentials: true
-          },
-          logout: { url: "/api/auth/logout", method: "post" },
-          user: { url: "/api/user/me", method: "get" },
-        },
-
-      },
-    },
-  },
-
-  // Axios module
-  axios: {
-    // baseURL: 'http://localhost:8000/api',
-    credentials: true,
-    proxy: true
-  },
 
   publicRuntimeConfig: {
     axios: {
@@ -153,87 +129,177 @@ export default {
     treeShake: true,
   },
 
-  speedkit: {
-    // detection: {
-    //   performance: true,
-    //   browserSupport: true
-    // },
-    // performanceMetrics: {
-    //   device: {
-    //     hardwareConcurrency: { min: 2, max: 48 },
-    //     deviceMemory: { min: 2 }
-    //   },
-    //   timing: {
-    //     fcp: 800,
-    //     dcl: 1200
-    //   },
-    //   lighthouseDetectionByUserAgent: false
-    // },
 
-    fonts: [{
-      family: 'Poppins',
-      locals: ['Poppins'],
-      fallback: ['Roboto', 'sans-serif'],
-      variances: [
-        {
-          style: 'normal',
-          weight: 100,
-          sources: [
-            { src: '~/assets/fonts/poppins/Poppins-Thin.ttf', type: 'truetype' },
-          ]
-        },
-        {
-          style: 'normal',
-          weight: 300,
-          sources: [
-            { src: '~/assets/fonts/poppins/Poppins-Light.ttf', type: 'truetype' },
-          ]
-        },
-        {
-          style: 'normal',
-          weight: 400,
-          sources: [
-            { src: '~/assets/fonts/poppins/Poppins-Regular.ttf', type: 'truetype' },
-          ]
-        },
-        {
-          style: 'normal',
-          weight: 500,
-          sources: [
-            { src: '~/assets/fonts/poppins/Poppins-Medium.ttf', type: 'truetype' },
-          ]
-        },
-        {
-          style: 'italic',
-          weight: 400,
-          sources: [
-            { src: '~/assets/fonts/poppins/Poppins-Italic.ttf', type: 'truetype' },
-          ]
-        },
-      ]
+  // "google-gtag": {
+  //   id: "G-1YXGSF3BT8", // required
+  //   config: {
+  //     send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+  //     linker: {
+  //       domains: [
+  //         "localhost",
+  //         "foncierpublic.com",
+  //         "dev.foncierpublic.com",
+  //         "foncierpublic-frontend-seo.herokuapp.com",
+  //         "herokuapp.com"
+  //       ]
+  //     }
+  //   },
+  //   debug: false, // enable to track in dev mode
+  //   disableAutoPageTrack: false // disable if you don't want to track each page route with router.afterEach(...)
+  // },
+
+  gtm: {
+    id: "GTM-K26FLNC", // Used as fallback if no runtime config is provided
+    enabled: true
+  },
+
+  // 'google-gtag': {
+  //   id: gaId,
+  //   debug: true, // enable to track in dev mode
+  //   disableAutoPageTrack: false // disable if you don't want to track each page route with router.afterEach(...).
+  // },
+
+  /* Nuxt Firebase */
+
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+  firebase: {
+    config: {
+      apiKey: "AIzaSyCrA536DKTm_Yjw8TmHWZ0GguVxq5tHkfc",
+      authDomain: "recepies-a83e7.firebaseapp.com",
+      projectId: "recepies-a83e7",
+      storageBucket: "recepies-a83e7.appspot.com",
+      messagingSenderId: "571541950703",
+      appId: "1:571541950703:web:cb3d33fe96ad9c740f0b1a",
+      measurementId: "G-0NNWM9H6S2"
     },
-    {
-      family: 'DM Mono',
-      locals: ['DM Mono'],
-      fallback: ['Poppins', 'sans-serif'],
-      variances: [
-        {
-          style: 'normal',
-          weight: 400,
-          sources: [
-            { src: '~/assets/fonts/dm-mono/DMMono-Medium.ttf', type: 'truetype' },
-          ]
+    services: {
+      auth: {
+        initialize: {
+          onAuthStateChangedAction: "auth/onAuthStateChanged"
         },
-      ]
-    }],
-    lazyOffset: {
-      component: '0%',
-      asset: '0%'
+        ssr: {
+          // credential: true,
+          ignorePaths: [
+            /^api/
+          ]
+        }
+      },
+      analytics: {
+        collectionEnabled: true // default
+      },
+      firestore: false,
+      functions: false,
+      storage: false,
+      database: false,
+      messaging: false,
+      performance: false,
+      remoteConfig: false
+    }
+  },
+  pwa: {
+    // disable the modules you don't need
+    meta: false,
+    icon: false,
+    // if you omit a module key form configuration sensible defaults will be applied
+    // manifest: false,
+
+    workbox: {
+      importScripts: [
+        // ...
+        '/firebase-auth-sw.js'
+      ],
+      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
+      // only set this true for testing and remember to always clear your browser cache in development
+      dev: process.env.NODE_ENV === 'development',
     }
   },
 
+
+  recaptcha: {
+    hideBadge: false, // Hide badge element (v3 & v2 via size=invisible)
+    siteKey: "6Ld5vB4aAAAAAAFipA3nzSCKgJtpeAt-YxONXYaK", // Site key for requests
+    version: 2, // Version
+    size: "normal" // Size: 'compact', 'normal', 'invisible' (v2)
+  },
+
+  // Nuxt Optimized Images
+  optimizedImages: {
+    optimizeImages: true
+  },
+
+  // Nuxt robots
+  robots: {
+    UserAgent: "*",
+    Disallow: "/admin/*"
+  },
+  // Nuxt sitemap
+  sitemap: {
+    hostname: "recepies.io",
+    i18n: {
+      defaultLocale: "fr",
+      locales: ["fr"]
+    },
+    exclude: ["/admin", "/admin/**"],
+    defaults: {
+      changefreq: "daily",
+      priority: 1,
+      lastmod: new Date()
+    }
+    // routes: async () => {
+    //   let sitemap = await axios.get(`${process.env.BACKEND_BASEURL}/sitemap`);
+    //   return sitemap.data;
+    // }
+  },
+
+
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    // analyze: true,
+    // html: {
+    //   minify: {
+    //     collapseBooleanAttributes: true,
+    //     decodeEntities: true,
+    //     minifyCSS: true,
+    //     minifyJS: true,
+    //     processConditionalComments: true,
+    //     removeEmptyAttributes: true,
+    //     removeRedundantAttributes: true,
+    //     trimCustomFragments: true,
+    //     useShortDoctype: true
+    //   }
+    // },
+    // cache: true,
+
+    // optimization: {
+    //   minimize: true,
+    //   runtimeChunk: true,
+    //   // -concatenateModules: true,
+    //   splitChunks: {
+    //     chunks: 'all',
+    //     minSize: 30000,
+    //     maxSize: 0,
+    //     minChunks: 1,
+    //     maxAsyncRequests: 20,
+    //     maxInitialRequests: 3,
+    //     automaticNameDelimiter: '~',
+    //     name: true,
+    //     cacheGroups: {
+    //       vendors: {
+    //         test: /[\\/]node_modules[\\/]/,
+    //         priority: -10
+    //       },
+    //       default: {
+    //         minChunks: 2,
+    //         priority: -20,
+    //         reuseExistingChunk: true
+    //       }
+    //     }
+    //   }
+    // },
+    // extractCSS: true,
+    // optimizeCSS: true,
   },
   render: {
     // compressor: shrinkRay(),

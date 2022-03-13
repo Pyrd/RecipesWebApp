@@ -24,13 +24,7 @@
               min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="date"
-                  label="Birthday date"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
+                <v-text-field v-model="date" label="Birthday date" readonly v-bind="attrs" v-on="on"></v-text-field>
               </template>
               <v-date-picker
                 ref="picker"
@@ -61,18 +55,20 @@
 
 <script>
 export default {
+  middleware: 'auth',
+
   data: () => ({
     date: '1990-10-09',
     menu: false,
     gender: 'male'
   }),
   watch: {
-    menu (val) {
+    menu(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
     }
   },
   methods: {
-    save (date) {
+    save(date) {
       this.$refs.menu.save(date)
     }
   }

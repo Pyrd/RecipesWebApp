@@ -2,26 +2,21 @@
   <div class="d-flex flex-column flex-grow-1">
     <div class="d-flex align-center py-3">
       <div>
-        <div class="display-1">Ingredients</div>
+        <div class="display-1">Users</div>
         <v-breadcrumbs :items="breadcrumbs" class="pa-0 py-2"></v-breadcrumbs>
       </div>
       <v-spacer></v-spacer>
-      <v-btn color="primary" class="mr-2">Create</v-btn>
-      <FileInputModal
-        @submit="batchImportJson"
-        activator_btn="Import from JSON"
-        success_btn="Import ingredients"
-        :loading="batchImportLoading"
-      ></FileInputModal>
+      <v-btn color="primary">Create User</v-btn>
     </div>
 
     <v-card>
+      <!-- users list -->
       <v-row dense class="pa-2 align-center">
         <v-col cols="6">
           <!-- <v-menu offset-y left>
             <template v-slot:activator="{ on }">
               <transition name="slide-fade" mode="out-in">
-                <v-btn v-show="selectedIngredients.length > 0" v-on="on">
+                <v-btn v-show="selectedUsers.length > 0" v-on="on">
                   Actions
                   <v-icon right>mdi-menu-down</v-icon>
                 </v-btn>
@@ -51,19 +46,20 @@
             dense
             clearable
             placeholder="e.g. filter for id, email, name, etc"
-            @keyup.native="searchUser"
+            @keyup.enter="searchUser(searchQuery)"
           ></v-text-field>
-          <v-btn :loading="isLoading" icon small class="ml-2" @click="refresh">
+          <v-btn :loading="isLoading" icon small class="ml-2" @click>
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-col>
       </v-row>
 
       <v-data-table
-        v-model="selectedIngredients"
+        v-model="selectedUsers"
         show-select
         :headers="headers"
-        :items="ingredients"
+        :items="users"
+        :search="searchQuery"
         class="flex-grow-1"
       >
         <template v-slot:item.id="{ item }">
@@ -73,22 +69,52 @@
           </div>
         </template>
 
-        <!-- <template v-slot:item.code="{ item }">
-          <div>{{ item.code }}</div>
-        </template>-->
-        <template v-slot:item.label="{ item }">
-          <div>{{ item.label }}</div>
+        <template v-slot:item.email="{ item }">
+          <div class="d-flex align-center py-1">
+            <v-avatar size="32" class="elevation-1 grey lighten-3">
+              <v-img :src="item.avatar" />
+            </v-avatar>
+            <div class="ml-1 caption font-weight-bold">
+              <copy-label :text="item.email" />
+            </div>
+          </div>
+        </template>
+        <template v-slot:item.name="{ item }">
+          <div class="d-flex align-center py-1">
+            <div class="ml-1 caption font-weight-bold">
+              {{ item.firstname }}
+              {{ item.lastname }}
+            </div>
+          </div>
+        </template>
+        <template v-slot:item.confirmed="{ item }">
+          <v-icon v-if="item.confirmed" small color="success">mdi-check-circle</v-icon>
+          <v-icon v-else small>mdi-circle-outline</v-icon>
+        </template>
+
+        <template v-slot:item.disable="{ item }">
+          <v-chip :color="item.disable ? 'error' : 'success'">{{
+            item.disable ? 'disabled' : 'active' | capitalize
+          }}</v-chip>
+        </template>
+
+        <template v-slot:item.role="{ item }">
+          <v-chip label small class="font-weight-bold" :color="item.role === 'ADMIN' ? 'primary' : undefined">{{
+            item.role | capitalize
+          }}</v-chip>
         </template>
 
         <template v-slot:item.created="{ item }">
           <div>{{ item.created | formatDate('ll') }}</div>
         </template>
-        <template v-slot:item.updated="{ item }">
-          <div>{{ item.created | formatDate('ll') }}</div>
+
+        <template v-slot:item.lastLogin="{ item }">
+          <div>{{ item.lastLogin | formatDate('lll') }}</div>
         </template>
+
         <template v-slot:item.action="{ item }">
           <div class="actions">
-            <v-btn icon :to="localePath(`/ingredients/edit?id=${item.id}`)">
+            <v-btn icon :to="localePath(`/users/edit?id=${item.id}`)">
               <v-icon>mdi-open-in-new</v-icon>
             </v-btn>
           </div>
@@ -99,83 +125,55 @@
 </template>
 
 <script>
-import CopyLabel from '../../components/common/CopyLabel'
-import FileInputModal from '../../components/modals/file-input.vue'
+import CopyLabel from '~/components/common/CopyLabel'
 
 export default {
-  middleware: "is_admin",
+  middleware: 'admin',
 
   components: {
-    CopyLabel,
-    FileInputModal
+    CopyLabel
   },
   async asyncData({ $axios }) {
-    const resp = await $axios.$get('/api/items')
-    console.log(resp)
+    const resp = await $axios.$get('/api/user')
     return {
-      ingredients: resp
+      users: resp
     }
   },
   data() {
     return {
       isLoading: false,
-      batchImportLoading: false,
-      breadcrumbs: [{
-        text: 'Ingredients',
-        disabled: false,
-        href: '#'
-      }, {
-        text: 'List'
-      }],
-      ingredients: [],
+      breadcrumbs: [
+        {
+          text: 'Users',
+          disabled: false,
+          href: '#'
+        },
+        {
+          text: 'List'
+        }
+      ],
+
       searchQuery: '',
-      selectedIngredients: [],
+      selectedUsers: [],
       headers: [
         { text: 'Id', align: 'left', value: 'id' },
-        // { text: 'Code', value: 'code' },
-        { text: 'Label', value: 'label' },
-        { text: 'code', align: 'left', value: 'code' },
+        { text: 'Email', value: 'email' },
+        { text: 'Confirmed', value: 'confirmed' },
+        { text: 'Name', align: 'left', value: 'name' },
+        { text: 'Role', value: 'role' },
         { text: 'Created', value: 'created' },
-        { text: 'Updated', value: 'updated' },
+        { text: 'Last SignIn', value: 'lastLogin' },
         { text: 'Disabled', value: 'disable' },
         { text: '', sortable: false, align: 'right', value: 'action' }
-      ],
+      ]
     }
   },
   watch: {
-    selectedIngredients(val) {
-
-    }
+    selectedUsers(val) {}
   },
   methods: {
-    async searchUser() {
-      const query = this.searchQuery
-      console.log(`SEARCH ${query}`)
-      const resp = await this.$axios.$post('/api/items/search', {
-        query: query
-      })
-      this.ingredients = resp
-
-    },
-    open() { },
-    async refresh() {
-      const resp = await this.$axios.$get('/api/items')
-      this.ingredients = resp
-    },
-    async batchImportJson(file) {
-      const form = new FormData()
-      form.append('file', file)
-      try {
-        this.batchImportLoading = true
-        const resp = await this.$axios.$post('/api/init/ingredients', form)
-        this.batchImportLoading = false
-
-        this.$notifySuccess(`Imported successfully ${resp.length} new ingredients`)
-        await this.refresh()
-      } catch (err) {
-        this.$notifyError(`An error occured: ${err}`)
-      }
-    }
+    searchUser() {},
+    open() {}
   }
 }
 </script>

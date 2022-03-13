@@ -23,9 +23,9 @@ entity_model
 </template>
 
 <script>
-import CrudReadEntity from '../../components/crud/readEntity'
+import CrudReadEntity from '~/components/crud/readEntity'
 export default {
-  middleware: "is_admin",
+  middleware: 'admin',
 
   components: {
     CrudReadEntity
@@ -35,19 +35,16 @@ export default {
     return { entities }
   },
   data: () => ({
-    basepath: "/tags",
-    entity_key: "tags",
-    api_route: "/api/tags",
+    basepath: '/tags',
+    entity_key: 'tags',
+    api_route: '/api/tags',
     entity_model: {
-      id: "",
-      label: "",
-      color: "",
+      id: '',
+      label: '',
+      color: ''
     },
-    headers: [
-      { text: 'Color', align: 'left', value: 'color' },
-    ]
+    headers: [{ text: 'Color', align: 'left', value: 'color' }]
   })
-
 }
 </script>
 

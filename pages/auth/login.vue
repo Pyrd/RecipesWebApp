@@ -43,6 +43,7 @@
               <div>Do you wish to resend a confirmation e-mail ?</div>
               <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
             </v-alert>
+            <div><v-checkbox v-model="stay_logged_in"></v-checkbox>Rester connecté</div>
 
             <v-btn
               :loading="isLoading"
@@ -78,8 +79,9 @@
 export default {
   components: { Keypress: () => import('vue-keypress') },
   layout: 'empty',
-  auth: 'guest',
+  middleware: 'guest',
   data: () => ({
+    stay_logged_in: false,
     formValid: true,
     email: '',
     password: '',
@@ -95,6 +97,16 @@ export default {
       required: (value) => (value && Boolean(value)) || 'Required'
     }
   }),
+  watch: {
+    stay_logged_in(val, oldVal) {
+      console.log('stay_logged_in', val)
+      if (val) {
+        this.$fire.auth.setPersistence(this.$fireModule.auth.Auth.Persistence.LOCAL)
+      } else {
+        this.$fire.auth.setPersistence(this.$fireModule.auth.Auth.Persistence.SESSION)
+      }
+    }
+  },
   methods: {
     async submit() {
       if (this.$refs.form.validate()) {
@@ -103,6 +115,14 @@ export default {
         await this.login(this.email, this.password)
         this.isLoading = false
         this.isSignInDisabled = false
+      }
+    },
+    async signInWithGoogle() {
+      var provider = new this.$fireModule.auth.GoogleAuthProvider()
+      try {
+        const authUser = await this.$fire.auth.signInWithPopup(provider)
+      } catch (err) {
+        console.log(err)
       }
     },
     resendConfirmationEmail() {
@@ -121,45 +141,39 @@ export default {
     displayErrors(errorCode) {
       let err = 'An unknow error occured :('
       switch (errorCode) {
-        case 'ERROR.USER_NOT_CONFIRMED':
-          err = 'Email not confirmed'
-          this.displayConfirmationEmailActivator = true
+        case 'auth/wrong-password':
+          this.handleBadPassword()
           break
-        case 'ERROR.BAD_CREDENTIALS':
-        case 'ERROR.USER_NOT_FOUND':
-          err = 'Bad credentials, try again !'
+        case 'auth/user-not-found':
+          this.handleNotFound()
           break
-        case 'ERROR.USER_DISABLED':
-          err = 'Your accound has been disabled'
+        case 'auth/too-many-requests':
+          this.handleToomanyRequests()
           break
+        case 'auth/invalid-email':
+          this.handleBadformat()
+          break
+        default:
+          console.log(err)
+          this.$notifyError('Un problème est survenu !')
       }
       this.errorMessages = err
     },
     async login(email, password) {
       console.log(`Login in: ${this.email}`)
       try {
-        let response = await this.$auth
-          .loginWith('cookie', {
-            data: {
-              email,
-              password
-            }
-          })
-          .catch((err) => {
-            // eslint-disable-next-line no-console
-            this.error = true
-            this.displayErrors(err.response?.data.message)
-            // this.errorMessages = err.response?.data.message
-            this.password = ''
-            return err
-          })
-        // let response = await this.$auth.loginWith('local', {
-        //     data: {
-        //         email: this.email,
-        //         password: this.password
-        //     }
-        // })
-        if (response && response.status == 200) {
+        const authUser = await this.$fire.auth.signInWithEmailAndPassword(email, password).catch((err) => {
+          // eslint-disable-next-line no-console
+          this.error = true
+          this.displayErrors(err.code)
+
+          this.password = ''
+          return err
+        })
+        console.log('>>>', JSON.stringify(authUser, null, 2))
+        if (authUser) {
+          console.log('>>>', '<<<')
+
           this.$router.push('/dashboard/analytics')
         }
       } catch (err) {
@@ -172,6 +186,25 @@ export default {
 
       this.errorProvider = false
       this.errorProviderMessages = ''
+    },
+    handleNotFound() {
+      this.password = ''
+      this.email = ''
+      this.emailErrorState = true
+      this.emailErrorMsg = 'Cette addresse e-mail est introuvable !'
+    },
+    handleToomanyRequests() {
+      this.password = ''
+      this.email = ''
+      this.emailErrorState = true
+      this.emailErrorMsg =
+        'Vous avez tenté de vous connectez à de trop nombreuses reprises !\nVotre compte est temporairement bloqué ! Réessayer plus tard ou changez votre mot de passe !'
+    },
+    handleBadformat() {
+      this.password = ''
+      this.email = ''
+      this.emailErrorState = true
+      this.emailErrorMsg = "L'addresse e-mail est mal formattée"
     }
   }
 }

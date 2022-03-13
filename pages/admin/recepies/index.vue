@@ -255,12 +255,12 @@
 </template>
 
 <script>
-import CopyLabel from '../../components/common/CopyLabel'
-import FileInputModal from '../../components/modals/file-input.vue'
+import CopyLabel from '~/components/common/CopyLabel'
+import FileInputModal from '~/components/modals/file-input.vue'
 import { getStatusChipColor, formatStatus } from '~/utils/recepies-helper'
 import { recepies_status } from '~/configs/shared/recepie-types.constants'
 export default {
-  middleware: 'is_admin',
+  middleware: 'admin',
 
   components: {
     CopyLabel,

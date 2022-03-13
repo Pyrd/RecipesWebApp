@@ -240,7 +240,7 @@
 
 
 <script>
-import PhotoInput from '../../components/common/PhotoInput.vue'
+import PhotoInput from '~/components/common/PhotoInput.vue'
 import { recepie_types, cook_types } from '~/configs/shared/recepie-types.constants'
 
 export default {

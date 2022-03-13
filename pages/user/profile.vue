@@ -5,9 +5,7 @@
         <v-card-title>User Disabled</v-card-title>
         <v-card-subtitle>This user has been disabled! Login accesss has been revoked.</v-card-subtitle>
         <v-card-text>
-          <v-btn dark @click="user.disabled = false">
-            <v-icon left small>mdi-account-check</v-icon>Enable User
-          </v-btn>
+          <v-btn dark @click="user.disabled = false"> <v-icon left small>mdi-account-check</v-icon>Enable User </v-btn>
         </v-card-text>
       </v-card>
 
@@ -27,12 +25,7 @@
             </div>-->
             <div class="flex-grow-1 pt-2 pa-sm-2">
               <v-text-field readonly v-model="user.email" label="Email" hide-details></v-text-field>
-              <v-text-field
-                readonly
-                v-model="user.displayName"
-                label="Display name"
-                placeholder="name"
-              ></v-text-field>
+              <v-text-field readonly v-model="user.displayName" label="Display name" placeholder="name"></v-text-field>
               <v-text-field
                 readonly
                 v-model="user.firstname"
@@ -150,7 +143,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="disableDialog = false">Cancel</v-btn>
-          <v-btn color="warning" @click="user.disabled = true; disableDialog = false">Disable</v-btn>
+          <v-btn
+            color="warning"
+            @click="
+              user.disabled = true
+              disableDialog = false
+            "
+            >Disable</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -172,9 +172,10 @@
 
 <script>
 export default {
+  middleware: 'auth',
 
   async asyncData({ $axios }) {
-    console.log("Async data")
+    console.log('Async data')
     const me = await $axios.$get('/api/user/me')
     console.log(me)
     me.displayName = `${me.firstname} ${me.lastname}`

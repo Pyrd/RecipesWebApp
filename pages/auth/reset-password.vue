@@ -2,10 +2,7 @@
   <div>
     <v-card class="text-center pa-1">
       <v-card-title class="justify-center display-1 mb-2">New password</v-card-title>
-      <v-card-subtitle>
-        Hi {{ displayName }} !
-        Please, input a brand new password for your account !
-      </v-card-subtitle>
+      <v-card-subtitle> Hi {{ displayName }} ! Please, input a brand new password for your account ! </v-card-subtitle>
 
       <!-- sign up form -->
       <v-card-text>
@@ -27,24 +24,16 @@
             @click:append="showPassword = !showPassword"
           ></v-text-field>
 
-          <v-btn
-            :loading="isLoading"
-            :disabled="isSignUpDisabled"
-            block
-            x-large
-            color="primary"
-            @click="submit"
-          >Reset your password</v-btn>
+          <v-btn :loading="isLoading" :disabled="isSignUpDisabled" block x-large color="primary" @click="submit"
+            >Reset your password</v-btn
+          >
         </v-form>
       </v-card-text>
     </v-card>
 
     <div class="text-center mt-6">
       No need ?
-      <router-link
-        :to="localePath('/auth/signin')"
-        class="font-weight-bold"
-      >{{ $t("register.signin") }}</router-link>
+      <router-link :to="localePath('/auth/signin')" class="font-weight-bold">{{ $t('register.signin') }}</router-link>
     </div>
   </div>
 </template>
@@ -60,28 +49,27 @@
 */
 export default {
   layout: 'empty',
-  auth: false,
-  async asyncData({ route, $axios, redirect }) {
-    const token = route.query.token;
-    if (token == null) {
-      console.error("Token");
+  middleware: 'guest',
 
-      redirect("/auth/login");
+  async asyncData({ route, $axios, redirect }) {
+    const token = route.query.token
+    if (token == null) {
+      console.error('Token')
+
+      redirect('/auth/login')
     }
-    const user = await $axios
-      .$get(`/api/user/confirmed/${route.query.token}`)
-      .catch((err) => {
-        console.error("Error: " + err);
-        redirect("/auth/login");
-      });
+    const user = await $axios.$get(`/api/user/confirmed/${route.query.token}`).catch((err) => {
+      console.error('Error: ' + err)
+      redirect('/auth/login')
+    })
     if (!user) {
-      redirect("/auth/login");
+      redirect('/auth/login')
     }
     return {
       email: user.email,
       token: token,
       displayName: user.displayname
-    };
+    }
   },
   data() {
     return {
@@ -91,55 +79,51 @@ export default {
       isSignUpDisabled: false,
 
       // form
-      token: "",
+      token: '',
       isFormValid: true,
-      email: "",
-      password: "",
+      email: '',
+      password: '',
 
       // form error
       errorPassword: false,
-      errorPasswordMessage: "",
+      errorPasswordMessage: '',
 
       // show password field
       showPassword: false,
 
       // input rules
       rules: {
-        required: (value) => (value && Boolean(value)) || "Required",
-      },
-    };
+        required: (value) => (value && Boolean(value)) || 'Required'
+      }
+    }
   },
 
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-        this.isLoading = true;
-        this.isSignUpDisabled = true;
-        this.signUp(this.token, this.password);
+        this.isLoading = true
+        this.isSignUpDisabled = true
+        this.signUp(this.token, this.password)
       }
     },
     async signUp(token, password) {
-      await this.$axios
-        .post("/api/user/confirm", { token: token, password: password })
-        .catch((err) => {
-          this.$notifyError(
-            `Error while confirming your inscription ! Error: ${err}`
-          );
-        });
-      this.isLoading = false;
-      this.$router.push("/auth/login");
+      await this.$axios.post('/api/user/confirm', { token: token, password: password }).catch((err) => {
+        this.$notifyError(`Error while confirming your inscription ! Error: ${err}`)
+      })
+      this.isLoading = false
+      this.$router.push('/auth/login')
     },
     resetErrors() {
-      this.errorName = false;
-      this.errorEmail = false;
-      this.errorPassword = false;
-      this.errorNameMessage = "";
-      this.errorEmailMessage = "";
-      this.errorPasswordMessage = "";
+      this.errorName = false
+      this.errorEmail = false
+      this.errorPassword = false
+      this.errorNameMessage = ''
+      this.errorEmailMessage = ''
+      this.errorPasswordMessage = ''
 
-      this.errorProvider = false;
-      this.errorProviderMessages = "";
-    },
-  },
-};
+      this.errorProvider = false
+      this.errorProviderMessages = ''
+    }
+  }
+}
 </script>

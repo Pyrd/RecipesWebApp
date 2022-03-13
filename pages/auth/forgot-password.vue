@@ -25,7 +25,8 @@
             x-large
             color="primary"
             @click="submit"
-          >{{ $t('forgot.button') }}</v-btn>
+            >{{ $t('forgot.button') }}</v-btn
+          >
         </v-form>
       </v-card-text>
       <v-card-text class="mt-0">
@@ -54,7 +55,8 @@
 export default {
   components: { Keypress: () => import('vue-keypress') },
   layout: 'empty',
-  auth: 'guest',
+  middleware: 'guest',
+
   data() {
     return {
       // reset button
@@ -80,19 +82,18 @@ export default {
         this.isLoading = true
         await this.resetEmail(this.email)
         this.isLoading = false
-
       }
     },
     async resetEmail(email) {
-      console.log("Before")
-      const resp = await this.$axios.$post('/api/user/resetpassword', { email }).catch(err => {
-        if (err.message == "ERROR.USER_NOT_CONFIRMED") {
-          this.$notifyError("Email not confirmed, check your emails")
+      console.log('Before')
+      const resp = await this.$axios.$post('/api/user/resetpassword', { email }).catch((err) => {
+        if (err.message == 'ERROR.USER_NOT_CONFIRMED') {
+          this.$notifyError('Email not confirmed, check your emails')
         } else {
           this.$notifyError(`Error: ${err}`)
         }
       })
-      this.email = ""
+      this.email = ''
       this.$notifySuccess('If your e-mail is valid, you should received an e-mail to reset your password !')
     },
     resetErrors() {
@@ -105,11 +106,6 @@ export default {
 
 <style lang="scss">
 .reset-pwd-background {
-  background: linear-gradient(
-    45deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(218, 1, 58, 1) 0%,
-    rgba(0, 213, 255, 1) 100%
-  );
+  background: linear-gradient(45deg, rgba(2, 0, 36, 1) 0%, rgba(218, 1, 58, 1) 0%, rgba(0, 213, 255, 1) 100%);
 }
 </style>

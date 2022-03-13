@@ -61,6 +61,8 @@
 
 <script>
 export default {
+  middleware: 'auth',
+
   async asyncData({ $axios }) {
     const { showcase } = await $axios.$get('/api/recepie/explore')
     return {
