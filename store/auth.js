@@ -27,7 +27,7 @@ export const mutations = {
   },
 
   SET_AUTH_USER: (state, authUser) => {
-    console.log('set user')
+    // console.log('set user')
     state.authLoading = false
     state.authUser = {}
     state.authUser = { uid: authUser.uid, email: authUser.email, role: authUser.role, token: authUser.idToken }
@@ -41,14 +41,14 @@ export const mutations = {
 
 export const actions = {
   async onAuthStateChanged({ commit }, { authUser, claims }) {
-    console.log("onAuthStateChanged", authUser)
+    // console.log("onAuthStateChanged", authUser)
 
 
     if (authUser) {
       try {
         // console.log(`onAuthStateChanged ${authUser.idToken}`)
         // const me = await API_GetMe(authUser.idToken ? authUser.idToken : undefined)
-        const me = {role: 'ADMIN', }
+        const me = { role: 'ADMIN', }
         authUser.role = me.role
         commit('SET_USER', me)
       } catch (err) {

@@ -87,10 +87,6 @@ export default {
     }
   },
 
-  router: {
-    middleware: ['auth']
-  },
-
   i18n: {
     detectBrowserLanguage: {
       useCookie: true,

@@ -111,7 +111,6 @@ export default {
   },
   async asyncData({ $axios }) {
     const resp = await $axios.$get('/api/items')
-    console.log(resp)
     return {
       ingredients: resp
     }
@@ -151,7 +150,6 @@ export default {
   methods: {
     async searchUser() {
       const query = this.searchQuery
-      console.log(`SEARCH ${query}`)
       const resp = await this.$axios.$post('/api/items/search', {
         query: query
       })

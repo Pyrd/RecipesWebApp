@@ -286,7 +286,6 @@ export default {
   },
   watch: {
     ingredient_query_search(val) {
-      console.log(val)
       // Items have already been requested
       if (this.ingredient_query_loading) return
 
@@ -295,12 +294,11 @@ export default {
       // Lazily load input items
       this.searchIngredients()
         .catch((err) => {
-          console.log(err)
+          console.error(err)
         })
         .finally(() => (this.ingredient_query_loading = false))
     },
     unit_query_search(val) {
-      console.log(val)
       // Items have already been requested
       if (this.unit_query_loading) return
 
@@ -309,7 +307,7 @@ export default {
       // Lazily load input items
       this.searchIngredients()
         .catch((err) => {
-          console.log(err)
+          console.error(err)
         })
         .finally(() => (this.unit_query_loading = false))
     }

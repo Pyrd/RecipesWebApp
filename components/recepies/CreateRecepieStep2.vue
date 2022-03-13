@@ -388,14 +388,6 @@ export default {
       ) {
         this.errors.rest = true
       }
-      console.log(
-        Object.keys(this.errors).map((e) => this.errors[e]),
-        Object.keys(this.errors)
-          .map((e) => this.errors[e])
-          .reduce((prev, curr, i) => {
-            return prev && curr
-          })
-      )
       for (let key of Object.keys(this.errors)) {
         const e = this.errors[key]
         if (e) {

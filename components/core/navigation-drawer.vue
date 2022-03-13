@@ -21,7 +21,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item
-          v-if="user.role == 'ADMIN'"
+          v-if="user && user.role == 'ADMIN'"
           v-for="(nav, i) in getAdmin"
           :key="'admin' + i"
           link

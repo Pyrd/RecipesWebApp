@@ -175,9 +175,7 @@ export default {
   middleware: 'auth',
 
   async asyncData({ $axios }) {
-    console.log('Async data')
     const me = await $axios.$get('/api/user/me')
-    console.log(me)
     me.displayName = `${me.firstname} ${me.lastname}`
     return {
       user: me

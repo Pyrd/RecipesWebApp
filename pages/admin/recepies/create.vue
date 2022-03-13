@@ -138,7 +138,6 @@ export default {
       }
     },
     async create() {
-      console.log('Creating recepie !')
       try {
         await this.$axios.$post('/api/recepie', this.createPostPackage())
         this.$notifySuccess('Recepie created successfully ! Redirecting...')

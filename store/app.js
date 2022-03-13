@@ -32,7 +32,6 @@ export const getters = {
 
 export const mutations = {
   setDrawer(state, drawer) {
-    console.log("SetDrawer", drawer)
     state.drawer = drawer
   },
   setTheme: (state, theme) => {
@@ -43,7 +42,6 @@ export const mutations = {
   },
   setColor: (state, color) => {
     // this.$vuetify.framework.theme.dark = theme === 'dark'
-    console.log("SetColor", state.color, color);
     state.color = color
     context.$vuetify.theme.themes.dark.primary = color
     context.$vuetify.theme.themes.light.primary = color
@@ -80,7 +78,7 @@ export const mutations = {
     }
   },
   initTheme(state, payload) {
-    console.log("[initTheme] start")
+    // console.log("[initTheme] start")
 
     context = payload.context
     // context.$vuetify.theme.dark = state.theme == 'dark'
@@ -89,11 +87,11 @@ export const mutations = {
 
 
     // payload.context.$vuetify.theme.dark = state.theme == 'dark'
-    console.log("[initTheme] state theme", state.theme == 'dark')
-    console.log("[initTheme] state color", state.color)
+    // console.log("[initTheme] state theme", state.theme == 'dark')
+    // console.log("[initTheme] state color", state.color)
   },
   initCoreTheme(state, payload) {
-    console.log("[initCoreTheme] start")
+    // console.log("[initCoreTheme] start")
     state.drawer = true
     // vuetify = payload.context.vuetify;
     // let app = payload.context

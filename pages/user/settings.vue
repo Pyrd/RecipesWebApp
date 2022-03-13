@@ -142,7 +142,6 @@ export default {
   },
   watch: {
     localcolor(val) {
-      console.log('new color', val)
       // this.$vuetify.theme.themes.dark.primary = val
       // this.$vuetify.theme.themes.light.primary = val
       this.setGlobalColor(val)

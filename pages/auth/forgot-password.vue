@@ -80,12 +80,13 @@ export default {
     async submit(e) {
       if (this.email && this.email.length > 0 && !this.isLoading) {
         this.isLoading = true
-        await this.resetEmail(this.email)
+        await this.$fire.auth.sendPasswordResetEmail(this.email)
+        // await this.resetEmail(this.email)
         this.isLoading = false
+        this.$notifySuccess('Un email a été envoyé si votre adresse est reconnue.')
       }
     },
     async resetEmail(email) {
-      console.log('Before')
       const resp = await this.$axios.$post('/api/user/resetpassword', { email }).catch((err) => {
         if (err.message == 'ERROR.USER_NOT_CONFIRMED') {
           this.$notifyError('Email not confirmed, check your emails')

@@ -268,7 +268,6 @@ export default {
   },
   async asyncData({ $axios }) {
     const { data, count } = await $axios.$get('/api/recepie')
-    console.log(data, count)
     return {
       recepies: data,
       count: count
@@ -315,7 +314,6 @@ export default {
   methods: {
     async search() {
       const query = this.searchQuery
-      console.log(`SEARCH ${query}`)
       const resp = await this.$axios.$post('/api/recepie/search', {
         query: query
       })

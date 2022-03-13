@@ -61,6 +61,7 @@ export default {
       console.log('Good bye :)')
       await this.$fire.auth.signOut()
       this.$store.dispatch('auth/disconnect')
+      this.$router.push('/auth/login')
     },
     navigationReducer(e) {
       switch (e.action) {

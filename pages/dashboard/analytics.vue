@@ -23,6 +23,7 @@
 import SalesCard from '@/components/dashboard/SalesCard'
 
 export default {
+  middleware: 'auth',
   components: {
     SalesCard
   },

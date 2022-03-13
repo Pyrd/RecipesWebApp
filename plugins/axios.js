@@ -1,6 +1,5 @@
 // plugins/axios.js
 export default function ({ $axios, store, $cookies, error: nuxtError }) {
-    console.log("Axios interceptor")
     // $axios.onError(error => {
     //     nuxtError({
     //         statusCode: error.response.status,

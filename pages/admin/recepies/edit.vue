@@ -149,7 +149,6 @@ export default {
     PhotoGallery
   },
   async asyncData({ $axios, route }) {
-    console.log(`/api/recepie/${route.query.id}`)
     const resp = await $axios.$get(`/api/recepie/${route.query.id}`, {
       params: {
         addItems: true

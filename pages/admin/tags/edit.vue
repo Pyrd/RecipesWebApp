@@ -62,7 +62,6 @@ export default {
     InformationTab
   },
   async asyncData({ $axios, route }) {
-    console.log(`/api/user/${route.query.id}`)
     const resp = await $axios.$get(`/api/user/${route.query.id}`)
     return {
       id: route.query.id,

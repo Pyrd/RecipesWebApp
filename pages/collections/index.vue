@@ -24,7 +24,6 @@ export default {
 
   async asyncData({ $axios }) {
     const { showcase } = await $axios.$get('/api/recepie/explore')
-    console.log(resp)
     return {
       showcase
     }

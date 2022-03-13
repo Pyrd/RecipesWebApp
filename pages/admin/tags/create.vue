@@ -74,7 +74,6 @@ export default {
   },
   async asyncData({ $axios }) {
     const resp = await $axios.$get('/api/recepie')
-    console.log(resp)
     return {
       recepies: resp
     }
@@ -115,7 +114,6 @@ export default {
   methods: {
     async searchIngredients() {
       const query = this.searchQuery
-      console.log(`SEARCH ${query}`)
       const resp = await this.$axios.$post('/api/recepie/search', {
         query: query
       })

@@ -8,11 +8,11 @@
         <v-card-title class="text-h3 font-weight-black d-flex justify-center align-center">Recepies</v-card-title>
         <v-card-actions class="px-4">
           <v-form ref="form" v-model="formValid" lazy-validation class="d-flex justify-center align-center flex-column">
+            <!-- :rules="[rules.required]" -->
             <v-text-field
               class="fwidth"
               solo
               v-model="email"
-              :rules="[rules.required]"
               :error="error"
               @change="resetErrors"
               :label="$t('login.email')"
@@ -22,7 +22,6 @@
               solo
               v-model="password"
               :error="error"
-              :rules="[rules.required]"
               :error-messages="errorMessages"
               name="password"
               :label="$t('login.password')"
@@ -43,11 +42,13 @@
               <div>Do you wish to resend a confirmation e-mail ?</div>
               <v-btn small color="success" @click="resendConfirmationEmail">Re-send</v-btn>
             </v-alert>
-            <div><v-checkbox v-model="stay_logged_in"></v-checkbox>Rester connecté</div>
+            <div class="d-flex flex-row justify-left align-center fwidth">
+              <v-checkbox v-model="stay_logged_in"></v-checkbox>Rester connecté
+            </div>
 
             <v-btn
               :loading="isLoading"
-              :disabled="isSignInDisabled"
+              :disabled="isSignInDisabled || !email || !password"
               block
               x-large
               color="primary"
@@ -60,7 +61,6 @@
             </div>
           </v-form>
         </v-card-actions>
-
         <v-card-actions class="d-flex justify-center align-center">
           <div class="text-center mt-6">
             {{ $t('login.noaccount') }}
@@ -99,12 +99,19 @@ export default {
   }),
   watch: {
     stay_logged_in(val, oldVal) {
-      console.log('stay_logged_in', val)
       if (val) {
         this.$fire.auth.setPersistence(this.$fireModule.auth.Auth.Persistence.LOCAL)
       } else {
         this.$fire.auth.setPersistence(this.$fireModule.auth.Auth.Persistence.SESSION)
       }
+    },
+    loggedin() {
+      this.$router.push('/dashboard/analytics')
+    }
+  },
+  computed: {
+    loggedin() {
+      return this.$store.getters['auth/isLoggedIn']
     }
   },
   methods: {
@@ -139,7 +146,6 @@ export default {
         })
     },
     displayErrors(errorCode) {
-      let err = 'An unknow error occured :('
       switch (errorCode) {
         case 'auth/wrong-password':
           this.handleBadPassword()
@@ -154,30 +160,23 @@ export default {
           this.handleBadformat()
           break
         default:
-          console.log(err)
+          console.error(err)
           this.$notifyError('Un problème est survenu !')
       }
-      this.errorMessages = err
     },
     async login(email, password) {
-      console.log(`Login in: ${this.email}`)
       try {
         const authUser = await this.$fire.auth.signInWithEmailAndPassword(email, password).catch((err) => {
-          // eslint-disable-next-line no-console
-          this.error = true
-          this.displayErrors(err.code)
-
-          this.password = ''
-          return err
+          console.error(err)
+          return
         })
-        console.log('>>>', JSON.stringify(authUser, null, 2))
-        if (authUser) {
-          console.log('>>>', '<<<')
-
-          this.$router.push('/dashboard/analytics')
+        if (authUser.name == 'FirebaseError') {
+          this.error = true
+          this.displayErrors(authUser.code)
+          this.password = ''
         }
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     },
     resetErrors() {
@@ -190,21 +189,27 @@ export default {
     handleNotFound() {
       this.password = ''
       this.email = ''
-      this.emailErrorState = true
-      this.emailErrorMsg = 'Cette addresse e-mail est introuvable !'
+      this.error = true
+      this.errorMessages = 'Cette adresse e-mail est introuvable !'
     },
     handleToomanyRequests() {
       this.password = ''
       this.email = ''
-      this.emailErrorState = true
-      this.emailErrorMsg =
+      this.error = true
+      this.errorMessages =
         'Vous avez tenté de vous connectez à de trop nombreuses reprises !\nVotre compte est temporairement bloqué ! Réessayer plus tard ou changez votre mot de passe !'
     },
     handleBadformat() {
       this.password = ''
       this.email = ''
-      this.emailErrorState = true
-      this.emailErrorMsg = "L'addresse e-mail est mal formattée"
+      this.error = true
+      this.errorMessages = "L'adresse e-mail est mal formattée"
+    },
+    handleBadPassword() {
+      this.password = ''
+      this.email = ''
+      this.error = true
+      this.errorMessages = 'Mot de passe incorrect'
     }
   }
 }
