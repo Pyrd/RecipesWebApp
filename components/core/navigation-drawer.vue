@@ -20,13 +20,14 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item
-          v-if="user && user.role == 'ADMIN'"
-          v-for="(nav, i) in getAdmin"
-          :key="'admin' + i"
-          link
-          @click="goTo(nav.to)"
-        >
+      </v-list-item-group>
+      {{ user.role }}
+      <v-list-item-group
+        v-model="group"
+        v-if="user && user.role == 'ADMIN'"
+        active-class="primary--text text--accent-4"
+      >
+        <v-list-item v-for="(nav, i) in getAdmin" :key="'admin' + i" link @click="goTo(nav.to)">
           <v-list-item-icon class="mr-4">
             <client-only>
               <unicon :name="nav.icon" fill></unicon>

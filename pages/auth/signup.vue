@@ -85,7 +85,14 @@
             <v-btn
               class="mt-4"
               :loading="isLoading"
-              :disabled="isSignInDisabled || !user.email || !user.password || !user.displayname || !getPasswordMatching"
+              :disabled="
+                isSignInDisabled ||
+                !user.email ||
+                !user.password ||
+                !user.displayname ||
+                !getPasswordMatching ||
+                password_strength <= 2
+              "
               block
               x-large
               color="primary"
@@ -97,7 +104,7 @@
         </v-card-actions>
       </v-card>
     </v-col>
-    <Keypress key-event="keyup" :key-code="13" @success="login" />
+    <Keypress key-event="keyup" :key-code="13" @success="submit" />
   </v-row>
 </template>
 
@@ -158,7 +165,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.isLoading = true
         this.isSignInDisabled = true
-        await this.login(this.user.email, this.user.password)
+        await this.signup(this.user)
         this.isLoading = false
         this.isSignInDisabled = false
       }
@@ -173,9 +180,14 @@ export default {
           this.$notifyError('Un problème est survenu !')
       }
     },
-    async login(email, password) {
+    async signup(user) {
+      // Checks
+
+      // Preparing package
+      const pkg = user
+      // API Call
       try {
-        const authUser = await this.$fire.auth.signInWithEmailAndPassword(email, password).catch((err) => {
+        const authUser = await this.$axios.$post('/api/user/signup', pkg).catch((err) => {
           console.error(err)
           return
         })
