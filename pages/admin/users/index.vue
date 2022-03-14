@@ -79,11 +79,10 @@
             </div>
           </div>
         </template>
-        <template v-slot:item.name="{ item }">
+        <template v-slot:item.displayname="{ item }">
           <div class="d-flex align-center py-1">
             <div class="ml-1 caption font-weight-bold">
-              {{ item.firstname }}
-              {{ item.lastname }}
+              {{ item.displayname }}
             </div>
           </div>
         </template>
@@ -159,7 +158,7 @@ export default {
         { text: 'Id', align: 'left', value: 'id' },
         { text: 'Email', value: 'email' },
         { text: 'Confirmed', value: 'confirmed' },
-        { text: 'Name', align: 'left', value: 'name' },
+        { text: 'Name', align: 'left', value: 'displayname' },
         { text: 'Role', value: 'role' },
         { text: 'Created', value: 'created' },
         { text: 'Last SignIn', value: 'lastLogin' },

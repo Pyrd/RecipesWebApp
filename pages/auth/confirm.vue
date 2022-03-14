@@ -5,7 +5,7 @@
         {{ $t('register.title') }}
       </v-card-title>
       <v-card-subtitle>
-        Hi {{ displayName }} ! Welcome to Recepies 😍 You can now input a password for your account !
+        Hi {{ displayname }} ! Welcome to Recepies 😍 You can now input a password for your account !
       </v-card-subtitle>
 
       <!-- sign up form -->
@@ -72,7 +72,7 @@ export default {
     return {
       email: user.email,
       token: token,
-      displayName: user.displayname
+      displayname: user.displayname
     }
   },
   data() {

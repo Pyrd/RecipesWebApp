@@ -5,7 +5,7 @@
         {{ $t('register.title') }}
       </v-card-title>
       <v-card-subtitle>
-        Hi {{ displayName }} ! Please verify your email address by visiting the link below !
+        Hi {{ displayname }} ! Please verify your email address by visiting the link below !
       </v-card-subtitle>
 
       <!-- sign up form -->
@@ -54,7 +54,7 @@ export default {
     return {
       email: user.email,
       token: token,
-      displayName: user.displayname
+      displayname: user.displayname
     }
   },
   data() {

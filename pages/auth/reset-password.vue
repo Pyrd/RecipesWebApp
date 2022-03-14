@@ -2,7 +2,7 @@
   <div>
     <v-card class="text-center pa-1">
       <v-card-title class="justify-center display-1 mb-2">New password</v-card-title>
-      <v-card-subtitle> Hi {{ displayName }} ! Please, input a brand new password for your account ! </v-card-subtitle>
+      <v-card-subtitle> Hi {{ displayname }} ! Please, input a brand new password for your account ! </v-card-subtitle>
 
       <!-- sign up form -->
       <v-card-text>
@@ -68,7 +68,7 @@ export default {
     return {
       email: user.email,
       token: token,
-      displayName: user.displayname
+      displayname: user.displayname
     }
   },
   data() {

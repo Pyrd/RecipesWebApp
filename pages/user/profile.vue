@@ -25,7 +25,7 @@
             </div>-->
             <div class="flex-grow-1 pt-2 pa-sm-2">
               <v-text-field readonly v-model="user.email" label="Email" hide-details></v-text-field>
-              <v-text-field readonly v-model="user.displayName" label="Display name" placeholder="name"></v-text-field>
+              <v-text-field readonly v-model="user.displayname" label="Display name" placeholder="name"></v-text-field>
               <v-text-field
                 readonly
                 v-model="user.firstname"
@@ -176,7 +176,6 @@ export default {
 
   async asyncData({ $axios }) {
     const me = await $axios.$get('/api/user/me')
-    me.displayName = `${me.firstname} ${me.lastname}`
     return {
       user: me
     }
