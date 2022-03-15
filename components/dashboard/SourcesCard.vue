@@ -1,6 +1,5 @@
 <template>
   <v-card class="d-flex flex-column flex-grow-1">
-
     <!-- loading spinner -->
     <div v-if="loading" class="d-flex flex-grow-1 align-center justify-center">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -12,24 +11,17 @@
         <div>{{ label }}</div>
         <v-spacer></v-spacer>
         <div>
-          <v-select
-            v-model="selectedInterval"
-            solo
-            dense
-            hide-details
-            hide-selected
-            :items="intervals"
-          ></v-select>
+          <v-select v-model="selectedInterval" solo dense hide-details hide-selected :items="intervals"></v-select>
         </div>
       </v-card-title>
 
       <div class="chart-wrap">
-        <apexchart
+        <!-- <apexchart
           type="donut"
           width="85%"
           :options="chartOptions"
           :series="series"
-        ></apexchart>
+        ></apexchart> -->
       </div>
     </div>
   </v-card>
@@ -49,7 +41,7 @@ export default {
   props: {
     series: {
       type: Array,
-      default: () => ([])
+      default: () => []
     },
     label: {
       type: String,
@@ -83,12 +75,7 @@ export default {
   data() {
     return {
       selectedInterval: 'Last 7 days',
-      intervals: [
-        'Last 7 days',
-        'Last 28 days',
-        'Last month',
-        'Last year'
-      ]
+      intervals: ['Last 7 days', 'Last 28 days', 'Last month', 'Last year']
     }
   },
   computed: {
@@ -132,18 +119,20 @@ export default {
           fontFamily: 'Quicksand',
           fontWeight: 700
         },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              offsetY: 0,
-              position: 'bottom'
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                offsetY: 0,
+                position: 'bottom'
+              }
             }
           }
-        }],
+        ],
         ...this.options
       }
     }

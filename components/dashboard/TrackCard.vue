@@ -24,12 +24,12 @@
 
         <v-spacer></v-spacer>
 
-        <apexchart
+        <!-- <apexchart
           type="area"
           height="60"
           :options="chartOptions"
           :series="series"
-        ></apexchart>
+        ></apexchart> -->
       </div>
     </div>
   </v-card>
@@ -59,7 +59,7 @@ export default {
   props: {
     series: {
       type: Array,
-      default: () => ([])
+      default: () => []
     },
     label: {
       type: String,
@@ -123,7 +123,7 @@ export default {
         tooltip: {
           followCursor: true,
           theme: 'dark', //this.$vuetify.theme.isDark ? 'light' : 'dark',
-          custom: function({ ctx, series, seriesIndex, dataPointIndex, w }) {
+          custom: function ({ ctx, series, seriesIndex, dataPointIndex, w }) {
             const seriesName = w.config.series[seriesIndex].name
             const dataPoint = w.config.series[seriesIndex].data[dataPointIndex]
 

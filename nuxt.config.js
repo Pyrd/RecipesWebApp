@@ -1,4 +1,5 @@
 import config from './configs'
+import webpack from 'webpack'
 require("dotenv").config();
 const { locale, availableLocales, fallbackLocale } = config.locales
 export default {
@@ -32,7 +33,7 @@ export default {
     '~/plugins/axios',
     '~/plugins/helpers.ts',
     { src: '~/plugins/vue-unicon.js', mode: 'client' },
-    { src: '~/plugins/apexcharts.js', mode: 'client' },
+    // { src: '~/plugins/apexcharts.js', mode: 'client' },
     { src: '~/plugins/draggable.js', },
     { src: '~/plugins/clipboard.js', mode: 'client' },
     { src: '~plugins/vuex-persistedstate.js' },
@@ -45,11 +46,13 @@ export default {
   ],
   // Global CSS
   css: [
+    "~/assets/global.scss"
   ],
 
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    // 'nuxt-purgecss',
   ],
 
   // Modules
@@ -125,6 +128,11 @@ export default {
     treeShake: true,
   },
 
+  // purgeCSS: {
+  //   whitelist: ['v-application', 'v-application--wrap'],
+  //   whitelistPatterns: [/^v-.*/, /^v-((?!application).)*$/, /^theme--*/, /.*-transition/],
+  //   whitelistPatternsChildren: [/^v-((?!application).)*$/, /^theme--*/]
+  // },
 
   // "google-gtag": {
   //   id: "G-1YXGSF3BT8", // required
@@ -175,7 +183,6 @@ export default {
           onAuthStateChangedAction: "auth/onAuthStateChanged"
         },
         ssr: {
-          // credential: true,
           ignorePaths: [
             /^api/
           ]
@@ -252,51 +259,61 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    // analyze: true,
-    // html: {
-    //   minify: {
-    //     collapseBooleanAttributes: true,
-    //     decodeEntities: true,
-    //     minifyCSS: true,
-    //     minifyJS: true,
-    //     processConditionalComments: true,
-    //     removeEmptyAttributes: true,
-    //     removeRedundantAttributes: true,
-    //     trimCustomFragments: true,
-    //     useShortDoctype: true
-    //   }
-    // },
-    // cache: true,
+    analyze: true,
+    html: {
+      minify: {
+        collapseBooleanAttributes: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        processConditionalComments: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true,
+        trimCustomFragments: true,
+        useShortDoctype: true
+      }
+    },
+    cache: true,
 
-    // optimization: {
-    //   minimize: true,
-    //   runtimeChunk: true,
-    //   // -concatenateModules: true,
-    //   splitChunks: {
-    //     chunks: 'all',
-    //     minSize: 30000,
-    //     maxSize: 0,
-    //     minChunks: 1,
-    //     maxAsyncRequests: 20,
-    //     maxInitialRequests: 3,
-    //     automaticNameDelimiter: '~',
-    //     name: true,
-    //     cacheGroups: {
-    //       vendors: {
-    //         test: /[\\/]node_modules[\\/]/,
-    //         priority: -10
-    //       },
-    //       default: {
-    //         minChunks: 2,
-    //         priority: -20,
-    //         reuseExistingChunk: true
-    //       }
-    //     }
-    //   }
-    // },
+    optimization: {
+      minimize: true,
+      runtimeChunk: true,
+      // -concatenateModules: true,
+      splitChunks: {
+        chunks: 'all',
+        minSize: 30000,
+        maxSize: 0,
+        minChunks: 1,
+        maxAsyncRequests: 20,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '~',
+        name: true,
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10
+          },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true
+          }
+        }
+      }
+    },
     // extractCSS: true,
-    // optimizeCSS: true,
+    optimizeCSS: true,
+    plugins: [
+      // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),  
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr|en/),
+    ],
+    resolve: {
+      alias: {
+        moment: 'moment/src/moment'
+      }
+    }
   },
+
   render: {
     // compressor: shrinkRay(),
     static: {

@@ -1,6 +1,5 @@
 <template>
   <v-card class="d-flex flex-grow-1 primary darken-4" dark>
-
     <!-- loading spinner -->
     <div v-if="loading" class="d-flex flex-grow-1 align-center justify-center">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -43,12 +42,12 @@
         </div>
       </div>
 
-      <apexchart
+      <!-- <apexchart
         type="area"
         height="120"
         :options="chartOptions"
         :series="series"
-      ></apexchart>
+      ></apexchart> -->
     </div>
   </v-card>
 </template>
@@ -89,10 +88,12 @@ export default {
     },
     series: {
       type: Array,
-      default: () => [{
-        name: 'Sales',
-        data: [11, 32, 45, 32, 34, 52, 41]
-      }]
+      default: () => [
+        {
+          name: 'Sales',
+          data: [11, 32, 45, 32, 34, 52, 41]
+        }
+      ]
     },
     xaxis: {
       type: Object,
@@ -157,7 +158,7 @@ export default {
         tooltip: {
           followCursor: true,
           theme: 'dark',
-          custom: function({ ctx, series, seriesIndex, dataPointIndex, w }) {
+          custom: function ({ ctx, series, seriesIndex, dataPointIndex, w }) {
             const seriesName = w.config.series[seriesIndex].name
 
             return `<div class="rounded-lg pa-1 caption">
