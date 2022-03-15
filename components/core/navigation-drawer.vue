@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer v-model="drawer" app clipped>
     <v-list nav dense>
-      <v-list-item-group v-model="group" active-class="primary--text text--accent-4">
+      <v-list-item-group v-model="group_user" active-class="primary--text text--accent-4">
         <v-list-item v-for="(nav, i) in getNavigation" :key="'nav' + i" link @click="goTo(nav.to)">
           <!-- <v-list-item-icon>
 
@@ -21,9 +21,8 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
-      {{ user.role }}
       <v-list-item-group
-        v-model="group"
+        v-model="group_admin"
         v-if="user && user.role == 'ADMIN'"
         active-class="primary--text text--accent-4"
       >
@@ -51,7 +50,8 @@ import { mapGetters } from 'vuex'
 import navigation from '~/configs/navigation'
 export default {
   data: () => ({
-    group: null,
+    group_admin: null,
+    group_user: null,
     navigation: [
       { title: 'Dashboard', icon: 'dashboard', to: '/dashboard/analytics' },
       { title: 'Users', icon: 'tachometer-fast-alt', to: '/users', role: 'ADMIN' }
@@ -76,7 +76,7 @@ export default {
       }
     },
     user() {
-      return this.$store.getters['auth/getUser']
+      return this.$store.getters['auth/getMe']
     }
   },
   watch: {

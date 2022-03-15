@@ -19,7 +19,8 @@
               v-model="user.email"
               :rules="[rules.required, rules.isemail]"
               :error="error"
-              @change="resetErrors"
+              @keydown="resetErrors"
+              type="email"
               :label="$t('login.email')"
             ></v-text-field>
             <v-text-field
@@ -27,7 +28,7 @@
               solo
               v-model="user.displayname"
               :error="error"
-              @change="resetErrors"
+              @keydown="resetErrors"
               label="Nom d'affichage"
             ></v-text-field>
             <div class="fwidth d-flex align-start justify-center flex-column">
@@ -55,7 +56,7 @@
               hide-details
               :label="$t('login.password')"
               :type="showPassword ? 'text' : 'password'"
-              @change="resetErrors"
+              @keydown="resetErrors"
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="showPassword = !showPassword"
             ></v-text-field>
@@ -69,15 +70,14 @@
               class="fwidth mt-2"
               solo
               v-model="confirmpassword"
-              :error="error"
-              :error-messages="errorMessages"
               :hide-details="!error"
               label="Confirmation du mot de passe"
               :type="showConfirmationPassword ? 'text' : 'password'"
-              @change="resetErrors"
+              @keydown="resetErrors"
               :append-icon="showConfirmationPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append="showConfirmationPassword = !showConfirmationPassword"
             ></v-text-field>
+            <v-alert type="error" dense class="fwidth" v-if="error">{{ errorMessages }}</v-alert>
             <div v-if="user.password && confirmpassword" class="fwidth d-flex align-start justify-center mt-1">
               <span v-if="getPasswordMatching" class="success--text">Les mots de passe correspondent 👍</span>
               <span v-else class="error--text">❌ Les mots de passe ne correspondent pas </span>
@@ -171,12 +171,15 @@ export default {
       }
     },
     displayErrors(errorCode) {
+      this.error = true
+      console.log(errorCode)
       switch (errorCode) {
-        // case 'auth/invalid-email':
-        //   this.handleBadformat()
-        //   break
+        case 409:
+          this.errorMessages = 'Email déjà utilisée !'
+
+          break
         default:
-          console.error(err)
+          console.error(error)
           this.$notifyError('Un problème est survenu !')
       }
     },
@@ -189,21 +192,17 @@ export default {
       try {
         const authUser = await this.$axios.$post('/api/user/signup', pkg).catch((err) => {
           console.error(err)
-          return
+          this.displayErrors(err.response.data.statusCode)
         })
-        if (authUser.name == 'FirebaseError') {
-          this.error = true
-          this.displayErrors(authUser.code)
-          this.password = ''
+        if (authUser) {
+          this.$router.push('/auth/login?signupsuccess=true')
         }
       } catch (err) {
         console.error(err)
       }
     },
 
-    onScore({ score, strength }) {
-      console.log(score) // from 0 to 4
-      console.log(strength) // one of : 'risky', 'guessable', 'weak', 'safe' , 'secure'
+    onScore({ score }) {
       this.password_strength = score
     },
     resetErrors() {

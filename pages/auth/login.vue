@@ -80,6 +80,13 @@ export default {
   components: { Keypress: () => import('vue-keypress') },
   layout: 'empty',
   middleware: 'guest',
+
+  mounted() {
+    const query = this.$route.query.signupsuccess
+    if (query) {
+      this.$notifySuccess('🎉 Bienvenue sur Recepies 🎉')
+    }
+  },
   data: () => ({
     stay_logged_in: false,
     formValid: true,
@@ -105,7 +112,10 @@ export default {
         this.$fire.auth.setPersistence(this.$fireModule.auth.Auth.Persistence.SESSION)
       }
     },
-    loggedin() {
+    loggedin(val, oldVal) {
+      if (!val) {
+        return
+      }
       this.$router.push('/dashboard/analytics')
     }
   },
@@ -160,17 +170,20 @@ export default {
           this.handleBadformat()
           break
         default:
-          console.error(err)
+          console.error(errorCode)
           this.$notifyError('Un problème est survenu !')
       }
     },
     async login(email, password) {
       try {
         const authUser = await this.$fire.auth.signInWithEmailAndPassword(email, password).catch((err) => {
-          console.error(err)
+          this.error = true
+          this.displayErrors(err.code)
+          this.password = ''
           return
         })
-        if (authUser.name == 'FirebaseError') {
+        // console.log(authUser)
+        if (authUser && authUser.name == 'FirebaseError') {
           this.error = true
           this.displayErrors(authUser.code)
           this.password = ''

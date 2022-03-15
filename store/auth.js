@@ -1,4 +1,4 @@
-
+import { API_GetMe } from '../services/apis/user.api'
 
 export const state = () => ({
   user: null,
@@ -33,7 +33,7 @@ export const mutations = {
     state.authUser = { uid: authUser.uid, email: authUser.email, role: authUser.role, token: authUser.idToken }
   },
   SET_USER: (state, user) => {
-    // console.log('set user')
+    console.log('set user', JSON.stringify(user))
     state.user = user
   },
 }
@@ -41,23 +41,28 @@ export const mutations = {
 
 export const actions = {
   async onAuthStateChanged({ commit }, { authUser, claims }) {
-    // console.log("onAuthStateChanged", authUser)
+    authUser = JSON.parse(JSON.stringify(authUser))
+    let token = null
+    if (authUser && authUser.idToken != null) {
+      token = authUser.idToken
 
+    } else if (authUser && authUser.stsTokenManager) {
+      token = authUser.stsTokenManager.accessToken
 
-    if (authUser) {
+    }
+    if (token) {
       try {
-        // console.log(`onAuthStateChanged ${authUser.idToken}`)
-        // const me = await API_GetMe(authUser.idToken ? authUser.idToken : undefined)
-        const me = { role: 'ADMIN', }
+        const me = await API_GetMe(token)
         authUser.role = me.role
         commit('SET_USER', me)
       } catch (err) {
-        console.error("Failed to fetch user data")
+        console.error("Failed to fetch user data:", err)
       }
       commit('SET_AUTH_USER', authUser)
     } else {
       commit('RESET_USER')
     }
+
   },
 
   async disconnect({ commit }) {
