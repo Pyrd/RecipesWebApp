@@ -27,13 +27,13 @@ export const mutations = {
   },
 
   SET_AUTH_USER: (state, authUser) => {
-    // console.log('set user')
+    // console.log('set authUser', authUser)
     state.authLoading = false
     state.authUser = {}
     state.authUser = { uid: authUser.uid, email: authUser.email, role: authUser.role, token: authUser.idToken }
   },
   SET_USER: (state, user) => {
-    console.log('set user', JSON.stringify(user))
+    // console.log('set user', JSON.stringify(user))
     state.user = user
   },
 }
@@ -45,10 +45,8 @@ export const actions = {
     let token = null
     if (authUser && authUser.idToken != null) {
       token = authUser.idToken
-
     } else if (authUser && authUser.stsTokenManager) {
       token = authUser.stsTokenManager.accessToken
-
     }
     if (token) {
       try {

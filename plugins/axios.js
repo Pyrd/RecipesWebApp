@@ -1,19 +1,20 @@
 // plugins/axios.js
-export default function ({ $axios, store, $cookies, error: nuxtError }) {
-    // $axios.onError(error => {
-    //     nuxtError({
-    //         statusCode: error.response.status,
-    //         message: error.message,
+export default function ({ $axios, store, $fireModule, error: nuxtError }) {
+
+    $axios.onRequest(config => {
+        const jwt = store.getters['auth/getUser']
+        // console.log('Making request to ' + config.url, `with jwt ${jwt.token}`)
+        if (jwt && jwt.token) {
+            $axios.setHeader('Authorization', `Bearer ${jwt.token
+                }`)
+        }
+    })
+
+    // export default ({ $axios, env }) => {
+    //     $axios.onRequest(config => {
+    //         config.headers.common['Authorization'] = `Bearer ${env.WP_API_KEY}`;
     //     });
-    //     return Promise.resolve(false);
-    // })
-    // $axios.onRequest(config => {
-    //     const jwt = $cookies.get('jwt')
-    //     console.log('Making request to ' + config.url, `with jwt ${jwt}`)
-    //     if (jwt) {
-    //         $axios.setHeader('Authorization', `Bearer ${jwt}`)
-    //     }
-    // })
+    // }
 
 
 }
