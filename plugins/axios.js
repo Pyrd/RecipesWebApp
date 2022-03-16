@@ -1,12 +1,12 @@
 // plugins/axios.js
-export default function ({ $axios, store, $fireModule, error: nuxtError }) {
+export default function ({ $axios, store }) {
 
     $axios.onRequest(config => {
         const jwt = store.getters['auth/getUser']
-        // console.log('Making request to ' + config.url, `with jwt ${jwt.token}`)
+        console.log('Making request to ' + config.url, `with jwt ${jwt.token}`)
         if (jwt && jwt.token) {
-            $axios.setHeader('Authorization', `Bearer ${jwt.token
-                }`)
+            config.headers.common['Authorization'] = `Bearer ${jwt.token
+                }`
         }
     })
 

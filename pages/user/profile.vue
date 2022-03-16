@@ -2,158 +2,72 @@
   <div class="my-2">
     <div>
       <v-card v-if="user.disabled" class="warning mb-4" light>
-        <v-card-title>User Disabled</v-card-title>
-        <v-card-subtitle>This user has been disabled! Login accesss has been revoked.</v-card-subtitle>
+        <v-card-title>Utilisateur </v-card-title>
+        <v-card-subtitle>Cet utilisateur est désactivé</v-card-subtitle>
         <v-card-text>
           <v-btn dark @click="user.disabled = false"> <v-icon left small>mdi-account-check</v-icon>Enable User </v-btn>
         </v-card-text>
       </v-card>
 
       <v-card>
-        <v-card-title>Basic Information</v-card-title>
+        <v-card-title
+          >Informations Générales
+          <v-chip class="ml-2" v-if="user.role == 'ADMIN'" color="success">Admin</v-chip>
+          <v-spacer></v-spacer>
+          <v-btn solo :disabled="isEdit" color="primary" @click="isEdit = !isEdit">{{
+            !isEdit ? 'Modifier' : 'Mode Edition'
+          }}</v-btn>
+        </v-card-title>
         <v-card-text>
           <div class="d-flex flex-column flex-sm-row">
-            <!-- <div>
-              <v-img
-                :src="user.avatar"
-                aspect-ratio="1"
-                class="blue-grey lighten-4 rounded elevation-3"
-                max-width="90"
-                max-height="90"
-              ></v-img>
-              <v-btn class="mt-1" small>Edit Avatar</v-btn>
-            </div>-->
             <div class="flex-grow-1 pt-2 pa-sm-2">
-              <v-text-field readonly v-model="user.email" label="Email" hide-details></v-text-field>
-              <v-text-field readonly v-model="user.displayname" label="Display name" placeholder="name"></v-text-field>
-              <v-text-field
-                readonly
-                v-model="user.firstname"
-                label="First name"
-                placeholder="name"
-                hide-details
-              ></v-text-field>
-              <v-text-field
-                readonly
-                v-model="user.lastname"
-                label="Last name"
-                placeholder="name"
-                hide-details
-              ></v-text-field>
-
-              <v-text-field readonly v-model="user.birth_date" label="Birth Date" hide-details></v-text-field>
-              <v-text-field
-                readonly
-                v-if="user.role == 'ADMIN'"
-                v-model="user.role"
-                label="Role"
-                hide-details
-              ></v-text-field>
-              <!-- <div class="mt-2">
-                <v-btn color="primary" @click>Save</v-btn>
-              </div>-->
+              <v-row>
+                <v-col cols="12">
+                  <span class="text-caption">Email</span>
+                  <v-text-field :readonly="!isEdit" solo v-model="user.email" label="Email" hide-details></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <span class="text-caption">Nom d'affichage</span>
+                  <v-text-field
+                    :readonly="!isEdit"
+                    solo
+                    v-model="user.displayname"
+                    label="Nom d'affichage"
+                    placeholder="name"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-expand-transition>
+                <v-row v-show="isEdit">
+                  <v-col cols="12">
+                    <div class="mt-2 d-flex">
+                      <v-btn :disabled="loading" color="error" @click="isEdit = !isEdit">Annuler</v-btn>
+                      <v-spacer></v-spacer>
+                      <v-btn :loading="loading" color="success" @click="saveEdition">Sauvegarder</v-btn>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-expand-transition>
             </div>
           </div>
         </v-card-text>
       </v-card>
 
       <v-expansion-panels v-model="panel" multiple class="mt-3">
-        <!-- <v-expansion-panel>
-          <v-expansion-panel-header class="title">Actions</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div class="mb-2">
-              <div class="title">Reset User Password</div>
-              <div class="subtitle mb-2">Sends a reset password email to the user.</div>
-              <v-btn class="mb-2" @click>
-                <v-icon left small>mdi-email</v-icon>Send Reset Password Email
-              </v-btn>
-            </div>
-
-            <v-divider></v-divider>
-
-            <div class="my-2">
-              <div class="title">Export Account Data</div>
-              <div class="subtitle mb-2">Export all the platform metadata for this user.</div>
-              <v-btn class="mb-2">
-                <v-icon left small>mdi-clipboard-account</v-icon>Export User Data
-              </v-btn>
-            </div>
-
-            <v-divider></v-divider>
-
-            <div class="my-2">
-              <div class="error--text title">Danger Zone</div>
-              <div class="subtitle mb-2">Full administrator with access to this dashboard.</div>
-
-              <div class="my-2">
-                <v-btn v-if="user.role === 'ADMIN'" color="primary" @click="user.role = 'USER'">
-                  <v-icon left small>mdi-security</v-icon>Remove admin access
-                </v-btn>
-                <v-btn v-else color="primary" @click="user.role = 'ADMIN'">
-                  <v-icon left small>mdi-security</v-icon>Set User as Admin
-                </v-btn>
-              </div>
-
-              <v-divider></v-divider>
-
-              <div class="subtitle mt-3 mb-2">Prevent the user from signing in on the platform.</div>
-              <div class="my-2">
-                <v-btn v-if="user.disabled" color="warning" @click="user.disabled = false">
-                  <v-icon left small>mdi-account-check</v-icon>Enable User
-                </v-btn>
-                <v-btn v-else color="warning" @click="disableDialog = true">
-                  <v-icon left small>mdi-cancel</v-icon>Disable User
-                </v-btn>
-              </div>
-
-              <v-divider></v-divider>
-              <div
-                class="subtitle mt-3 mb-2"
-              >To delete the user please transfer ownership or delete user's subscriptions.</div>
-              <v-btn color="error" @click="deleteDialog = true">
-                <v-icon left small>mdi-delete</v-icon>Delete User
-              </v-btn>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>-->
         <v-expansion-panel>
           <v-expansion-panel-header class="title">Metadata</v-expansion-panel-header>
           <v-expansion-panel-content class="body-2">
-            <span class="font-weight-bold">Created</span>
+            <span class="font-weight-bold">Crée le</span>
             {{ user.created | formatDate('lll') }}
             <br />
-            <span class="font-weight-bold">Last Sign In</span>
+            <span class="font-weight-bold">Dernière connexion le</span>
             {{ user.lastLogin | formatDate('lll') }}
           </v-expansion-panel-content>
         </v-expansion-panel>
-        <!-- <v-expansion-panel>
-          <v-expansion-panel-header class="title">Raw Data</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <pre class="body-2">{{ user }}</pre>
-          </v-expansion-panel-content>
-        </v-expansion-panel>-->
       </v-expansion-panels>
     </div>
-
-    <!-- disable modal -->
-    <v-dialog v-model="disableDialog" max-width="290">
-      <v-card>
-        <v-card-title class="headline">Disable User</v-card-title>
-        <v-card-text>Are you sure you want to disable this user?</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="disableDialog = false">Cancel</v-btn>
-          <v-btn
-            color="warning"
-            @click="
-              user.disabled = true
-              disableDialog = false
-            "
-            >Disable</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <!-- delete modal -->
     <v-dialog v-model="deleteDialog" max-width="290">
@@ -174,17 +88,58 @@
 export default {
   middleware: 'auth',
 
-  async asyncData({ $axios }) {
-    const me = await $axios.$get('/api/user/me')
+  async asyncData({ params, store }) {
+    const isEdit = params['edit'] ? true : false
+    const user = store.getters['auth/getMe']
     return {
-      user: me
+      isEdit,
+      user: Object.assign({}, user),
+      ref_user: Object.assign({}, user)
+    }
+  },
+  watch: {
+    isEdit(val, oldVal) {
+      if (!val) {
+        this.user = Object.assign(this.ref_user)
+      }
     }
   },
   data() {
     return {
+      isEdit: false,
       panel: [1],
       deleteDialog: false,
-      disableDialog: false
+      disableDialog: false,
+      // user: null,
+      loading: false,
+      ref_user: {}
+    }
+  },
+  // computed: {
+  //   user() {
+  //     return this.$store.getters['auth/getMe']
+  //   }
+  // },
+  methods: {
+    // async fetch() {
+    //   this.loading = true
+    //   const me = await this.$axios.$get('/api/user/me')
+    //   this.user = me
+    //   this.loading = false
+    // }
+    async saveEdition() {
+      try {
+        this.loading = true
+        const payload = { email: this.user.email, displayname: this.user.displayname }
+        const resp = await this.$axios.$patch(`/api/user/me`, payload)
+        this.loading = false
+        this.ref_user = resp
+        this.isEdit = false
+        this.$notifySuccess('Informations misent à jour avec succès !')
+      } catch (e) {
+        console.log('Error: ' + e.message)
+        this.$notifyError("Une erreur s'est produite lors de la sauvegarde !")
+      }
     }
   }
 }
