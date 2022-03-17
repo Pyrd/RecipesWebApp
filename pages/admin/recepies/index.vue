@@ -334,6 +334,7 @@ export default {
         await this.refresh()
       } catch (err) {
         this.$notifyError(`An error occured: ${err}`)
+        this.batchImportLoading = false
       }
     },
     async updateItem(item) {
